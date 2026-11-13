@@ -1,6 +1,6 @@
 {
   "name": "popover",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "Popover, Tooltip",
   "description": "Content that opens from a button and stays until you click away or press\nEscape: a short form, filters, a picker. For actions, use Menu; for a hint,\nTooltip; for a task that needs full attention, Dialog.",

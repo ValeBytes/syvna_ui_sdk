@@ -1,6 +1,6 @@
 {
   "name": "spinner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "Spinner",
   "description": "Something is loading. Inside a button, the button's own loading prop draws it.",

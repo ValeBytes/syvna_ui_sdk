@@ -1,6 +1,6 @@
 {
   "name": "menu",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "Menu",
   "description": "A short list of actions on one thing: a row's Edit, Duplicate, Delete; the account's Settings, Sign out. Arrow keys move, Escape closes.",

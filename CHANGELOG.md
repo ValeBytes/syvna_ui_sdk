@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.2.0 (2026-11-13)
+
 ### Added
 
 - **Palettes beyond light and dark.** `createPalette({ brand, accent, chrome, neutral })` makes every colour token, light and dark, in OKLCH, contrast-checked; 12 ready-made palettes (`palettePresets`: Neutral, Admin navy, Ocean, Forest, Plum, Midnight, Sand, Coral, Slate and lime, Rose, Emerald, Amber); `PaletteStyle` applies one; `paletteCss` and `paletteVars` for other setups.

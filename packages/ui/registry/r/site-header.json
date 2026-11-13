@@ -1,6 +1,6 @@
 {
   "name": "site-header",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "SiteHeader",
   "description": "A website's top bar: the brand, the main links and one call to action. On a phone, the links fold into a menu.",

@@ -1,6 +1,6 @@
 {
   "name": "table",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "Table",
   "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.",

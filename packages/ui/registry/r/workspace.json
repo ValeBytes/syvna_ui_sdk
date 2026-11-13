@@ -1,6 +1,6 @@
 {
   "name": "workspace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "NotificationCenter, AuditLog, PermissionMatrix, InviteMembers, UsageMeter, PlanSummary, SetupChecklist, SaveBar, ConfirmByTyping, ApprovalCard",
   "description": "The bell: how many are unread, and a list of what happened, grouped by Today and Earlier, with Mark all as read.",

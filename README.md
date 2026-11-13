@@ -71,8 +71,8 @@ import { PaletteStyle } from "@syvna/ui";
 Copy in only the components an app needs, at a release. The app owns the code and ships nothing it doesn't use:
 
 ```bash
-npx github:ValeBytes/syvna_ui_sdk#v0.1.0 init
-npx github:ValeBytes/syvna_ui_sdk#v0.1.0 add Button DateRangePicker PaletteStyle
+npx github:ValeBytes/syvna_ui_sdk#v0.2.0 init
+npx github:ValeBytes/syvna_ui_sdk#v0.2.0 add Button DateRangePicker PaletteStyle
 ```
 
 Later, `npx github:ValeBytes/syvna_ui_sdk upgrade` moves the app to the newest release and keeps any file the app has changed.

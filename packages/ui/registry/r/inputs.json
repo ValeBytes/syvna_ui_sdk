@@ -1,6 +1,6 @@
 {
   "name": "inputs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "registry:ui",
   "title": "Input, Textarea, Select",
   "description": "A one-line text field, in fifteen looks, with the extras forms need: a clear\nbutton, a counter, a copy button, add-ons, an inline action. Put it in a Field\nfor its label, hint and error (or use floating, notched or inline, which draw\nthe label inside). A password field has a button that shows what was typed.",
