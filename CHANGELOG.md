@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.1.0 (2026-11-13)
+
 ### Added
 
 - **Three kits** in the docs: Dashboard, Website and Agent.
