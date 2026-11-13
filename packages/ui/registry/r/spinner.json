@@ -1,0 +1,21 @@
+{
+  "name": "spinner",
+  "version": "0.1.0",
+  "type": "registry:ui",
+  "title": "Spinner",
+  "description": "Something is loading. Inside a button, the button's own loading prop draws it.",
+  "dependencies": [],
+  "registryDependencies": [
+    "core"
+  ],
+  "components": [
+    "Spinner"
+  ],
+  "files": [
+    {
+      "path": "components/spinner.tsx",
+      "type": "registry:ui",
+      "content": "import { cn } from \"../cx\";\n\nexport interface SpinnerProps {\n  /** Pixels; it inherits the text colour. */\n  size?: number;\n  /** Read by screen readers. */\n  label?: string;\n  className?: string;\n}\n\n/** Something is loading. Inside a button, the button's own loading prop draws it. */\nexport function Spinner({ size = 16, label = \"Loading\", className }: SpinnerProps) {\n  return (\n    <svg\n      className={cn(\"flex-none animate-spin motion-reduce:[animation-duration:1.5s]\", className)}\n      width={size}\n      height={size}\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      role=\"status\"\n      aria-label={label}\n    >\n      <circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"currentColor\" strokeOpacity=\"0.2\" strokeWidth=\"2.5\" />\n      <path d=\"M21 12a9 9 0 0 0-9-9\" stroke=\"currentColor\" strokeWidth=\"2.5\" strokeLinecap=\"round\" />\n    </svg>\n  );\n}\n"
+    }
+  ]
+}

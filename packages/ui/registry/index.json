@@ -1,0 +1,608 @@
+{
+  "name": "syvna",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ValeBytes/syvna_ui_sdk",
+  "items": [
+    {
+      "name": "core",
+      "title": "Core",
+      "description": "cn(), the tone classes, theme.css (Tailwind theme) and tokens.css (the design's values). Every item needs it.",
+      "components": [],
+      "dependencies": [
+        "tailwind-merge@3.3.1"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "basics",
+      "title": "Accordion, Kbd, AvatarGroup, RelativeTime, Banner, Stepper",
+      "description": "Sections that open one at a time or together: settings groups, details, help.",
+      "components": [
+        "Accordion",
+        "Kbd",
+        "AvatarGroup",
+        "RelativeTime",
+        "Banner",
+        "Stepper"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "display",
+        "icons"
+      ]
+    },
+    {
+      "name": "button",
+      "title": "Button, ButtonGroup, SplitButton, ToggleButton, CopyButton",
+      "description": "A button. Verb first, sentence case: \"Save changes\", \"Add customer\".",
+      "components": [
+        "Button",
+        "ButtonGroup",
+        "SplitButton",
+        "ToggleButton",
+        "CopyButton"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "menu",
+        "spinner"
+      ]
+    },
+    {
+      "name": "chat",
+      "title": "Conversation, Message, Thinking, StreamCaret, MessageActions, Attachment, Suggestions, PromptInput, Confirmation, Questionnaire, VariantChooser, ModelSelector, ContextMeter",
+      "description": "The scrolling list of messages. It stays at the bottom while replies stream\nin, unless they've scrolled up to read; then a \"Latest\" button takes them back.",
+      "components": [
+        "Conversation",
+        "Message",
+        "Thinking",
+        "StreamCaret",
+        "MessageActions",
+        "Attachment",
+        "Suggestions",
+        "PromptInput",
+        "Confirmation",
+        "Questionnaire",
+        "VariantChooser",
+        "ModelSelector",
+        "ContextMeter"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "button",
+        "icons",
+        "overlays",
+        "popover",
+        "trace"
+      ]
+    },
+    {
+      "name": "choices",
+      "title": "Checkbox, Switch",
+      "description": "On or off for one thing, or one of several in a list. Takes effect when the form is saved; for an instant setting use Switch.",
+      "components": [
+        "Checkbox",
+        "Switch"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons"
+      ]
+    },
+    {
+      "name": "combobox",
+      "title": "Combobox",
+      "description": "Pick one from a long list by typing: a customer, a country, a product.\nFor under about 12 choices, Select is simpler.",
+      "components": [
+        "Combobox"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "inputs",
+        "popover"
+      ]
+    },
+    {
+      "name": "command",
+      "title": "CommandPalette",
+      "description": "Search and jump anywhere from the keyboard: screens, records, actions.\nOpens with ⌘K or Ctrl K (useCommandKey) or from a search button. Arrow keys\nmove, Enter runs, Escape closes.",
+      "components": [
+        "CommandPalette"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "focus"
+      ]
+    },
+    {
+      "name": "data",
+      "title": "Pagination, FilterBar, Timeline, BarChart, LineChart",
+      "description": "Moves through a long list a page at a time, under a Table.",
+      "components": [
+        "Pagination",
+        "FilterBar",
+        "Timeline",
+        "BarChart",
+        "LineChart"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "popover"
+      ]
+    },
+    {
+      "name": "datepicker",
+      "title": "Calendar, DatePicker",
+      "description": "A month to pick a day from. DatePicker opens one from a field; use it alone for a booking screen.",
+      "components": [
+        "Calendar",
+        "DatePicker"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "inputs",
+        "popover"
+      ]
+    },
+    {
+      "name": "daterange",
+      "title": "DateRangePicker, RangeCalendar",
+      "description": "A field for a period (a report's dates, a filter): presets, two months to pick on, and Apply.",
+      "components": [
+        "DateRangePicker",
+        "RangeCalendar"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "inputs",
+        "popover",
+        "button"
+      ]
+    },
+    {
+      "name": "dev",
+      "title": "CodeBlock, Terminal, StackTrace, TestResults, FileTree",
+      "description": "Code to read and copy, with its file name or language and a Copy button.",
+      "components": [
+        "CodeBlock",
+        "Terminal",
+        "StackTrace",
+        "TestResults",
+        "FileTree"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "button",
+        "icons",
+        "trace"
+      ]
+    },
+    {
+      "name": "display",
+      "title": "Badge, Avatar, Card, StatCard, EmptyState, Skeleton, Progress",
+      "description": "One or two words of status. The same status gets the same tone on every screen.",
+      "components": [
+        "Badge",
+        "Avatar",
+        "Card",
+        "StatCard",
+        "EmptyState",
+        "Skeleton",
+        "Progress"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons"
+      ]
+    },
+    {
+      "name": "field",
+      "title": "Field",
+      "description": "A label, a control, and its hint or error, wired together for screen readers.",
+      "components": [
+        "Field"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "fields-more",
+      "title": "TagInput, NumberInput, CurrencyInput, InlineEdit, KeyValueEditor, ApiKeyField, Slider",
+      "description": "Several values in one field: emails to invite, tags, recipients. Enter,\ncomma or Tab adds what's typed; pasting a list adds them all; Backspace\nin an empty field removes the last.",
+      "components": [
+        "TagInput",
+        "NumberInput",
+        "CurrencyInput",
+        "InlineEdit",
+        "KeyValueEditor",
+        "ApiKeyField",
+        "Slider"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "button",
+        "icons",
+        "inputs",
+        "popover"
+      ]
+    },
+    {
+      "name": "focus",
+      "title": "focus",
+      "description": "Shared code the components use (focus.ts).",
+      "components": [],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "hero",
+      "title": "Hero",
+      "description": "The top of a landing page: what it is, why it matters, and the one thing to do next.",
+      "components": [
+        "Hero"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "inputs",
+        "site"
+      ]
+    },
+    {
+      "name": "icons",
+      "title": "icons",
+      "description": "Shared code the components use (icons.tsx).",
+      "components": [],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "inputs",
+      "title": "Input, Textarea, Select",
+      "description": "A one-line text field, in fifteen looks, with the extras forms need: a clear\nbutton, a counter, a copy button, add-ons, an inline action. Put it in a Field\nfor its label, hint and error (or use floating, notched or inline, which draw\nthe label inside). A password field has a button that shows what was typed.",
+      "components": [
+        "Input",
+        "Textarea",
+        "Select"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "spinner"
+      ]
+    },
+    {
+      "name": "menu",
+      "title": "Menu",
+      "description": "A short list of actions on one thing: a row's Edit, Duplicate, Delete; the account's Settings, Sign out. Arrow keys move, Escape closes.",
+      "components": [
+        "Menu"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "overlays",
+      "title": "Dialog, Alert",
+      "description": "A task that needs the whole of someone's attention: a short form, or a confirmation. Focus stays inside until it closes.",
+      "components": [
+        "Dialog",
+        "Alert"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "focus",
+        "icons"
+      ]
+    },
+    {
+      "name": "panel",
+      "title": "SidePanel, DetailList",
+      "description": "One row's details, opened beside its list so people keep their place:\nan order from the orders table, a customer from customers. Focus stays\ninside until it closes.",
+      "components": [
+        "SidePanel",
+        "DetailList"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "focus",
+        "icons",
+        "overlays"
+      ]
+    },
+    {
+      "name": "popover",
+      "title": "Popover, Tooltip",
+      "description": "Content that opens from a button and stays until you click away or press\nEscape: a short form, filters, a picker. For actions, use Menu; for a hint,\nTooltip; for a task that needs full attention, Dialog.",
+      "components": [
+        "Popover",
+        "Tooltip"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "pricing",
+      "title": "PricingTable",
+      "description": "Two to four plans, the recommended one marked, with a monthly/yearly switch; 21 looks.",
+      "components": [
+        "PricingTable"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "selection",
+        "site"
+      ]
+    },
+    {
+      "name": "selection",
+      "title": "RadioGroup, SegmentedControl",
+      "description": "One of a few choices, all on show: a plan, a delivery speed, who can see something. For many choices, Select.",
+      "components": [
+        "RadioGroup",
+        "SegmentedControl"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "shell",
+      "title": "AppShell, Sidebar, NavSection, NavItem, Topbar, Breadcrumbs",
+      "description": "The frame of an app's signed-in screens: a sidebar on the left, a top bar,\nand the screen. It fills the window (or its className's height) and the\nscreen scrolls inside it, so the sidebar always fits. From 768px wide the\nsidebar stays on show; narrower, it slides in from the Topbar's menu button\nand closes when a link is picked. Those widths are the shell's own (container\nqueries), so it fits a box as well as the window; its main area is a\ncontainer too, for screens laid out with",
+      "components": [
+        "AppShell",
+        "Sidebar",
+        "NavSection",
+        "NavItem",
+        "Topbar",
+        "Breadcrumbs"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons"
+      ]
+    },
+    {
+      "name": "shop",
+      "title": "ProductCard, PriceTag, Rating, QuantityStepper, CartSummary",
+      "description": "A product in a grid: photo, name, price and, when asked, a button to add it to the cart.",
+      "components": [
+        "ProductCard",
+        "PriceTag",
+        "Rating",
+        "QuantityStepper",
+        "CartSummary"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "site"
+      ]
+    },
+    {
+      "name": "sidenav",
+      "title": "SideNav",
+      "description": "The app's navigation as data, drawn as one of 21 sidebars: pass the\nscreens once and pick a variant. Put it in AppShell's sidebar. For a\nsidebar built by hand, use Sidebar, NavSection and NavItem instead.",
+      "components": [
+        "SideNav"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "display",
+        "icons",
+        "menu",
+        "shell"
+      ]
+    },
+    {
+      "name": "site-header",
+      "title": "SiteHeader",
+      "description": "A website's top bar: the brand, the main links and one call to action. On a phone, the links fold into a menu.",
+      "components": [
+        "SiteHeader"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons"
+      ]
+    },
+    {
+      "name": "site",
+      "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter",
+      "description": "A band of a landing page: a heading and what's under it, at the page's width.",
+      "components": [
+        "Section",
+        "FeatureGrid",
+        "LogoCloud",
+        "Testimonials",
+        "Faq",
+        "CallToAction",
+        "SiteFooter"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "site-header"
+      ]
+    },
+    {
+      "name": "spinner",
+      "title": "Spinner",
+      "description": "Something is loading. Inside a button, the button's own loading prop draws it.",
+      "components": [
+        "Spinner"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "table-tools",
+      "title": "BulkActionBar, ColumnSettings, SavedViews, TransferList, TreeView",
+      "description": "When rows are selected, what can be done to all of them at once, with how many and a way out.",
+      "components": [
+        "BulkActionBar",
+        "ColumnSettings",
+        "SavedViews",
+        "TransferList",
+        "TreeView"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "button",
+        "icons",
+        "menu",
+        "popover"
+      ]
+    },
+    {
+      "name": "table",
+      "title": "Table",
+      "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.",
+      "components": [
+        "Table"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "display",
+        "icons"
+      ]
+    },
+    {
+      "name": "tabs",
+      "title": "Tabs",
+      "description": "Switches between views of the same thing, in seven looks. A marker slides\nto the open tab and the content fades in; arrow keys move between tabs.",
+      "components": [
+        "Tabs"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "toast",
+      "title": "Toaster",
+      "description": "Where toasts appear: put one in the app's root layout. They stack, newest last, and pause while hovered.",
+      "components": [
+        "Toaster"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons"
+      ]
+    },
+    {
+      "name": "trace",
+      "title": "Trace, TraceStep, Plan, TaskList, ToolCall, Reasoning, Subagent, Sources, InlineCitation, Checkpoint",
+      "description": "A list of steps, joined by a thin line down the icons.",
+      "components": [
+        "Trace",
+        "TraceStep",
+        "Plan",
+        "TaskList",
+        "ToolCall",
+        "Reasoning",
+        "Subagent",
+        "Sources",
+        "InlineCitation",
+        "Checkpoint"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "icons",
+        "spinner"
+      ]
+    },
+    {
+      "name": "upload",
+      "title": "FileUpload, UploadItem, ImageUpload, AvatarUpload, FileGlyph",
+      "description": "Drop files or pick them, in three sizes: a drop area, a one-line bar, or a button. Lists what was chosen.",
+      "components": [
+        "FileUpload",
+        "UploadItem",
+        "ImageUpload",
+        "AvatarUpload",
+        "FileGlyph"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "display",
+        "icons"
+      ]
+    },
+    {
+      "name": "workspace",
+      "title": "NotificationCenter, AuditLog, PermissionMatrix, InviteMembers, UsageMeter, PlanSummary, SetupChecklist, SaveBar, ConfirmByTyping, ApprovalCard",
+      "description": "The bell: how many are unread, and a list of what happened, grouped by Today and Earlier, with Mark all as read.",
+      "components": [
+        "NotificationCenter",
+        "AuditLog",
+        "PermissionMatrix",
+        "InviteMembers",
+        "UsageMeter",
+        "PlanSummary",
+        "SetupChecklist",
+        "SaveBar",
+        "ConfirmByTyping",
+        "ApprovalCard"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "basics",
+        "button",
+        "display",
+        "fields-more",
+        "icons",
+        "inputs",
+        "overlays",
+        "popover"
+      ]
+    }
+  ]
+}

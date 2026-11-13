@@ -1,0 +1,36 @@
+<!-- @dsCard group="Data" height=400 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Table</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+var money = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" });
+var rows = [
+  { id: "INV-2041", customer: "Amara Okafor", country: "Nigeria", total: 1240, status: "paid" },
+  { id: "INV-2040", customer: "Lumen Studio", country: "Germany", total: 860.5, status: "due" },
+  { id: "INV-2039", customer: "Kenji Watanabe", country: "Japan", total: 3200, status: "overdue" },
+  { id: "INV-2038", customer: "Casa Verde", country: "Brazil", total: 415, status: "paid" },
+  { id: "INV-2037", customer: "Priya Raman", country: "India", total: 98.2, status: "draft" }
+];
+var tones = { paid: "success", due: "warning", overdue: "danger", draft: "neutral" };
+var labels = { paid: "Paid", due: "Due", overdue: "Overdue", draft: "Draft" };
+function Preview() {
+  var [open, setOpen] = useState("INV-2039");
+  return h(S.Table, {
+    caption: "Invoices", rowKey: function (r) { return r.id; }, rows: rows, selected: [open],
+    onRowClick: function (r) { setOpen(r.id); },
+    columns: [
+      { key: "customer", header: "Customer", sort: function (a, b) { return a.customer.localeCompare(b.customer); } },
+      { key: "id", header: "Invoice", render: function (r) { return h("span", { className: "font-mono text-[13px]" }, r.id); } },
+      { key: "country", header: "Country" },
+      { key: "status", header: "Status", render: function (r) { return h(S.Badge, { tone: tones[r.status], dot: true }, labels[r.status]); } },
+      { key: "total", header: "Total", align: "end", sort: function (a, b) { return a.total - b.total; }, render: function (r) { return money.format(r.total); } }
+    ]
+  });
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>

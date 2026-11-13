@@ -1,0 +1,31 @@
+# Every push and pull request: the packages type-check, the generated files
+# (catalogue, registry) are current, and the CLI and MCP server start.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Generated files are up to date
+        run: |
+          npm run registry
+          git diff --exit-code -- packages/ui/catalogue.json packages/ui/registry || {
+            echo "::error::The catalogue or registry is out of date. Run 'npm run registry' and commit the result."
+            exit 1
+          }
+      - name: The CLI and the MCP server start
+        run: |
+          node packages/cli/bin/syvna-ui.mjs version
+          node packages/mcp/server.mjs call list_components '{"kit":"agent"}' | head -3

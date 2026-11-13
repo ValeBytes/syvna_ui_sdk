@@ -1,0 +1,39 @@
+# A tag vX.Y.Z (pushed by `npm run release` + `git push --follow-tags`)
+# becomes a GitHub Release: its notes are the CHANGELOG section, and the
+# registry is attached. Apps read the registry at the tag through raw URLs,
+# so the release is usable the moment the tag is pushed.
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - name: The tag matches the version
+        run: |
+          v="v$(node -p "require('./package.json').version")"
+          [ "$v" = "$GITHUB_REF_NAME" ] || { echo "::error::Tag $GITHUB_REF_NAME but package.json says $v"; exit 1; }
+          [ "$(node -p "require('./packages/ui/registry/index.json').version")" = "${v#v}" ] || { echo "::error::The registry wasn't rebuilt for $v"; exit 1; }
+      - name: Notes from the changelog
+        run: |
+          awk -v tag="## $GITHUB_REF_NAME " 'index($0, tag) == 1 {on=1; next} /^## / {on=0} on' CHANGELOG.md > notes.md
+          printf '\n---\n\nUse it in an app:\n\n```\nnpx github:%s#%s init\nnpx github:%s#%s add Button Input\n```\n\nUpgrade an app: `npx syvna-ui upgrade %s`\n' "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" "${GITHUB_REF_NAME#v}" >> notes.md
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tar -czf "syvna-ui-registry-$GITHUB_REF_NAME.tgz" -C packages/ui registry
+          gh release create "$GITHUB_REF_NAME" --title "Syvna UI $GITHUB_REF_NAME" --notes-file notes.md "syvna-ui-registry-$GITHUB_REF_NAME.tgz"

@@ -1,0 +1,21 @@
+<!-- @dsCard group="App shell" height=460 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SidePanel</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+function Preview() {
+  var [open, setOpen] = useState(true);
+  return h(F, null,
+    h(S.Button, { onClick: function () { setOpen(true); } }, "Open customer"),
+    h(S.SidePanel, { open: open, onClose: function () { setOpen(false); }, title: "Kenji Watanabe", width: 400,
+      description: h(F, null, h(S.Badge, { tone: "success" }, "Active"), "Customer since 2022"),
+      footer: h(F, null, h(S.Button, { onClick: function () { setOpen(false); } }, "Close"), h(S.Button, { variant: "primary" }, "New order")) },
+      h(S.DetailList, { items: [{ label: "Email", value: "kenji@example.com" }, { label: "City", value: "Osaka, Japan" }, { label: "Orders", value: "14" }, { label: "Spent", value: "$1,912.40" }] })));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>

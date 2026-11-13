@@ -1,0 +1,56 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Syvna UI</title>
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--font-display); overflow: hidden; }
+  .cover { position: relative; height: 288px; overflow: hidden; }
+  .art { position: absolute; top: 0; left: 480px; width: 480px; height: 288px; overflow: hidden; }
+  .art svg { display: block; width: 480px; height: 288px; }
+  .brand { fill: var(--brand); }
+  .soft { fill: var(--brand-soft); }
+  .sunk { fill: var(--surface-2); }
+  .ok { fill: var(--success); }
+  .news { fill: var(--info); }
+  .lg { rx: var(--radius-lg); }
+  .md { rx: var(--radius-md); }
+  .sm { rx: var(--radius-sm); }
+  .words { position: absolute; left: 24px; bottom: 24px; max-width: 440px; }
+  .name { margin: 0; font-size: 104px; line-height: 0.92; font-weight: 600; letter-spacing: -0.04em; }
+  .tag { margin: 8px 0 0 4px; font-size: 14px; line-height: 20px; color: var(--ink-3); font-family: var(--font-body); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      brand 168x200 slab bled off the top (the one main action) · brand-soft 136x120 · surface-2 two-wide 288x56 · success 64x24 and info 40x24 (statuses, small) — about a third of 960x288
+  arrangement one tall brand slab with modular tiles beside and under it, bottoms on one line 24px above the edge, 16px gutters
+  pattern     tiles cut by the radius scale, from "dense but calm app screens": a 3x2 grid of control-sized tiles (40x24, radius-sm) over the soft block, two merged two-wide like a button
+  scales      sides in 8px steps; gutters space-4 (16); tile pitch 48 x 32; corners radius-lg on panels, radius-md on the long tile, radius-sm on tiles and statuses
+-->
+<rect class="brand lg" x="16" y="-24" width="168" height="200" rx="12"/>
+<rect class="soft lg" x="200" y="56" width="136" height="120" rx="12"/>
+<rect class="sunk md" x="16" y="192" width="288" height="56" rx="8"/>
+<rect class="brand lg" x="352" y="24" width="152" height="152" rx="12"/>
+<rect class="ok sm" x="320" y="208" width="64" height="24" rx="6"/>
+<rect class="news sm" x="400" y="208" width="40" height="24" rx="6"/>
+<rect class="sunk sm" x="216" y="72" width="88" height="24" rx="6"/>
+<rect class="sunk sm" x="216" y="104" width="40" height="24" rx="6"/>
+<rect class="sunk sm" x="264" y="104" width="40" height="24" rx="6"/>
+<rect class="sunk sm" x="216" y="136" width="88" height="24" rx="6"/>
+<rect class="soft sm" x="32" y="208" width="96" height="24" rx="6"/>
+<rect class="soft sm" x="144" y="208" width="40" height="24" rx="6"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Syvna UI</h1>
+<p class="tag">The components every Syvna app is built from.</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+node_modules
+dist
+.canvas
+.next
+next-env.d.ts
+*.tsbuildinfo
+# Copied from packages/ui/registry by the registry build; the docs serve it.
+apps/docs/public/r

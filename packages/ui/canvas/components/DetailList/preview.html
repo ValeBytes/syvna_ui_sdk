@@ -1,0 +1,17 @@
+<!-- @dsCard group="App shell" height=190 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DetailList</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+function Preview() {
+  return h("div", { className: "max-w-[420px]" }, h(S.DetailList, { items: [
+    { label: "Guest", value: "Ana Souza" }, { label: "Date", value: new Intl.DateTimeFormat(undefined, { dateStyle: "full" }).format(new Date(2026, 11, 4)) },
+    { label: "Party", value: "4 people" }, { label: "Table", value: "Terrace, by the window" }, { label: "Deposit", value: h(S.Badge, { tone: "success" }, "Paid") }] }));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "focus",
+  "version": "0.1.0",
+  "type": "registry:lib",
+  "title": "focus",
+  "description": "Shared code the components use (focus.ts).",
+  "dependencies": [],
+  "registryDependencies": [
+    "core"
+  ],
+  "components": [],
+  "files": [
+    {
+      "path": "components/focus.ts",
+      "type": "registry:lib",
+      "content": "\"use client\";\n\nimport { useEffect, useRef } from \"react\";\n\nconst FOCUSABLE =\n  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])';\n\n/** The elements Tab can reach inside el, in order. */\nexport function focusables(el: HTMLElement): HTMLElement[] {\n  return [...el.querySelectorAll<HTMLElement>(FOCUSABLE)];\n}\n\n/**\n * While open: focus moves into the panel (its [autofocus] or first control),\n * Tab cycles inside it, Escape calls onClose unless busy, the page behind\n * doesn't scroll, and focus goes back where it was on close. Dialogs and\n * side panels share it.\n */\nexport function useFocusTrap(open: boolean, onClose: () => void, busy?: boolean) {\n  const panel = useRef<HTMLDivElement>(null);\n  const latest = useRef({ onClose, busy });\n  latest.current = { onClose, busy };\n\n  useEffect(() => {\n    if (!open) return;\n    const before = document.activeElement as HTMLElement | null;\n    const overflow = document.body.style.overflow;\n    document.body.style.overflow = \"hidden\";\n    const el = panel.current;\n    const first = el?.querySelector<HTMLElement>(\"[autofocus]\") ?? (el ? focusables(el)[0] : undefined);\n    (first ?? el)?.focus({ preventScroll: true });\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key === \"Escape\" && !latest.current.busy) {\n        e.preventDefault();\n        latest.current.onClose();\n      }\n      if (e.key !== \"Tab\" || !panel.current) return;\n      const all = focusables(panel.current);\n      const a = all[0];\n      const z = all[all.length - 1];\n      if (!a || !z) return;\n      if (e.shiftKey && document.activeElement === a) {\n        e.preventDefault();\n        z.focus();\n      } else if (!e.shiftKey && document.activeElement === z) {\n        e.preventDefault();\n        a.focus();\n      }\n    };\n    document.addEventListener(\"keydown\", onKey);\n    return () => {\n      document.removeEventListener(\"keydown\", onKey);\n      document.body.style.overflow = overflow;\n      before?.focus?.({ preventScroll: true });\n    };\n  }, [open]);\n\n  return panel;\n}\n"
+    }
+  ]
+}

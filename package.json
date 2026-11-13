@@ -1,0 +1,28 @@
+{
+  "name": "syvna-ui-sdk",
+  "version": "0.1.0",
+  "description": "Syvna UI: the component library, its copy-in registry and CLI, and the MCP server for agents.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ValeBytes/syvna_ui_sdk.git"
+  },
+  "bin": {
+    "syvna-ui": "packages/cli/bin/syvna-ui.mjs"
+  },
+  "files": [
+    "packages/cli/bin"
+  ],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run build -w @syvna/ui && npm run dev -w docs",
+    "build": "npm run build -w @syvna/ui && node packages/ui/scripts/registry.mjs && npm run build -w docs",
+    "typecheck": "npm run typecheck -w @syvna/ui && npm run typecheck -w docs",
+    "canvas": "npm run canvas -w @syvna/ui",
+    "registry": "node packages/ui/scripts/catalogue.mjs && node packages/ui/scripts/registry.mjs",
+    "release": "node scripts/release.mjs"
+  }
+}

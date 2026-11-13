@@ -1,0 +1,18 @@
+<!-- @dsCard group="Layout" height=190 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Tabs</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+function Preview() {
+  return h("div", { className: "flex flex-col gap-6" },
+    h(S.Tabs, { label: "Customer", items: [{ value: "overview", label: "Overview" }, { value: "orders", label: "Orders", count: 12 }, { value: "notes", label: "Notes" }] },
+      function (v) { return h("p", { className: "m-0 text-sm text-ink-3" }, v === "orders" ? "12 orders since March." : v === "notes" ? "No notes yet." : "Last order 3 days ago."); }),
+    h(S.Tabs, { variant: "pills", label: "Filter orders", items: [{ value: "all", label: "All" }, { value: "open", label: "Open", count: 4 }, { value: "done", label: "Completed" }] }));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>

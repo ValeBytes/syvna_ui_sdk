@@ -1,0 +1,22 @@
+<!-- @dsCard group="Layout" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Card</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+var money = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" });
+function Preview() {
+  return h("div", { className: "grid grid-cols-2 gap-4" },
+    h(S.Card, { title: "Payout", description: "Sent to your bank every Friday.", actions: h(S.Button, { size: "sm", variant: "ghost" }, "Details"), footer: h(F, null, h("span", null, "Next payout"), h("span", { className: "font-medium text-ink" }, "Friday")) },
+      h("p", { className: "m-0 font-display text-[30px]/9 font-semibold tracking-tight text-ink tabular-nums" }, money.format(4380.25)),
+      h("p", { className: "m-0 mt-1 text-sm text-ink-3" }, "From 46 orders")),
+    h(S.Card, { title: "Top products", padded: false },
+      h(S.Table, { flush: true, dense: true, rowKey: function (r) { return r.n; }, rows: [{ n: "Ceramic mug", s: 128 }, { n: "Linen apron", s: 74 }, { n: "Olive wood board", s: 51 }],
+        columns: [{ key: "n", header: "Product" }, { key: "s", header: "Sold", align: "end" }] })));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>

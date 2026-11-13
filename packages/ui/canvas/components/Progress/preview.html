@@ -1,0 +1,18 @@
+<!-- @dsCard group="Data" height=130 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Progress</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+function Preview() {
+  return h("div", { className: "flex max-w-[480px] flex-col gap-4" },
+    h(S.Progress, { label: "Monthly sales goal", value: 62, showValue: true }),
+    h(S.Progress, { label: "Storage used", value: 88, tone: "warning", showValue: true }),
+    h(S.Progress, { label: "Upload", value: 100, tone: "success", showValue: true }));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>

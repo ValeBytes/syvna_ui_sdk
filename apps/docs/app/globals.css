@@ -1,0 +1,19 @@
+@import "tailwindcss";
+/* The library's theme (its tokens as Tailwind values, and its components' classes) and the token values. */
+@import "@syvna/ui/theme.css";
+@import "@syvna/ui/tokens.css";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: color-mix(in oklch, var(--focus) 25%, transparent);
+}

@@ -1,0 +1,25 @@
+{
+  "name": "panel",
+  "version": "0.1.0",
+  "type": "registry:ui",
+  "title": "SidePanel, DetailList",
+  "description": "One row's details, opened beside its list so people keep their place:\nan order from the orders table, a customer from customers. Focus stays\ninside until it closes.",
+  "dependencies": [],
+  "registryDependencies": [
+    "core",
+    "focus",
+    "icons",
+    "overlays"
+  ],
+  "components": [
+    "SidePanel",
+    "DetailList"
+  ],
+  "files": [
+    {
+      "path": "components/panel.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nimport { useId } from \"react\";\n\nimport { cn } from \"../cx\";\nimport { useFocusTrap } from \"./focus\";\nimport { CloseGlyph } from \"./icons\";\nimport { closeButton } from \"./overlays\";\n\nexport interface SidePanelProps {\n  /** Shown or not; you keep it. */\n  open: boolean;\n  /** Escape, the close button and a click beside it call it; ignored while busy. */\n  onClose: () => void;\n  /** The thing on show: \"Order #1042\", a customer's name. */\n  title: React.ReactNode;\n  /** Under the title: a status Badge, a date. */\n  description?: React.ReactNode;\n  /** Its details: a DetailList, notes, a short form. */\n  children: React.ReactNode;\n  /** Pinned at the bottom: the panel's actions. */\n  footer?: React.ReactNode;\n  /** Pixels on wide screens; it's full width on phones. */\n  width?: number;\n  /** While true it can't be closed: a save is in flight. */\n  busy?: boolean;\n  className?: string;\n}\n\n/**\n * One row's details, opened beside its list so people keep their place:\n * an order from the orders table, a customer from customers. Focus stays\n * inside until it closes.\n */\nexport function SidePanel({ open, onClose, title, description, children, footer, width = 440, busy, className }: SidePanelProps) {\n  const panel = useFocusTrap(open, onClose, busy);\n  const titleId = useId();\n  if (!open) return null;\n  return (\n    <div className=\"fixed inset-0 z-50\" onMouseDown={(e) => e.target === e.currentTarget && !busy && onClose()}>\n      <div className=\"pointer-events-none absolute inset-0 bg-overlay animate-fade-in motion-reduce:animate-none\" />\n      <div\n        ref={panel}\n        role=\"dialog\"\n        aria-modal=\"true\"\n        aria-labelledby={titleId}\n        tabIndex={-1}\n        style={{ maxWidth: width }}\n        className={cn(\n          \"absolute inset-y-0 right-0 flex w-full flex-col border-l border-line bg-surface text-ink shadow-3 outline-none\",\n          \"animate-slide-in motion-reduce:animate-none\",\n          className,\n        )}\n      >\n        <header className=\"flex flex-none items-start justify-between gap-4 border-b border-line px-5 py-4\">\n          <div className=\"min-w-0\">\n            <h2 id={titleId} className=\"m-0 truncate font-display text-title font-semibold\">\n              {title}\n            </h2>\n            {description ? <div className=\"mt-1 flex flex-wrap items-center gap-2 text-label text-ink-3\">{description}</div> : null}\n          </div>\n          <button type=\"button\" className={cn(closeButton, \"-mr-1.5 -mt-0.5 p-1.5\")} onClick={onClose} disabled={busy} aria-label=\"Close\">\n            <CloseGlyph size={18} />\n          </button>\n        </header>\n        <div className=\"min-h-0 flex-1 overflow-y-auto px-5 py-4 text-body text-ink-2\">{children}</div>\n        {footer ? <footer className=\"flex flex-none justify-end gap-2 border-t border-line px-5 py-3\">{footer}</footer> : null}\n      </div>\n    </div>\n  );\n}\n\nexport interface DetailListProps {\n  /** Label and value pairs: \"Email\" and the address. */\n  items: { label: React.ReactNode; value: React.ReactNode }[];\n  className?: string;\n}\n\n/** Facts about one thing, label beside value: inside a SidePanel or a Card. */\nexport function DetailList({ items, className }: DetailListProps) {\n  return (\n    <dl className={cn(\"m-0 grid grid-cols-[minmax(96px,auto)_1fr] gap-x-6 gap-y-2.5 text-body\", className)}>\n      {items.map((it, i) => (\n        <div key={i} className=\"contents\">\n          <dt className=\"text-ink-3\">{it.label}</dt>\n          <dd className=\"m-0 min-w-0 break-words text-ink\">{it.value}</dd>\n        </div>\n      ))}\n    </dl>\n  );\n}\n"
+    }
+  ]
+}

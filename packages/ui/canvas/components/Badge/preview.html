@@ -1,0 +1,20 @@
+<!-- @dsCard group="Data" height=110 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Badge</title></head>
+<body>
+<div id="root" class="p-6"></div>
+<script>
+var S = window.Syvna, h = React.createElement, F = React.Fragment, useState = React.useState;
+function Preview() {
+  return h("div", { className: "flex flex-col gap-3" },
+    h("div", { className: "flex flex-wrap gap-2" },
+      h(S.Badge, { tone: "success" }, "Paid"), h(S.Badge, { tone: "warning" }, "Due"), h(S.Badge, { tone: "danger" }, "Overdue"),
+      h(S.Badge, { tone: "info" }, "Scheduled"), h(S.Badge, null, "Draft"), h(S.Badge, { tone: "brand" }, "Featured")),
+    h("div", { className: "flex flex-wrap gap-2" },
+      h(S.Badge, { tone: "success", dot: true }, "Live"), h(S.Badge, { tone: "warning", dot: true }, "Low stock"), h(S.Badge, { tone: "danger", dot: true }, "Failed")));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Preview));
+</script>
+</body>
+</html>
