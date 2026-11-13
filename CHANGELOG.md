@@ -10,6 +10,23 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- **Palettes beyond light and dark.** `createPalette({ brand, accent, chrome, neutral })` makes every colour token, light and dark, in OKLCH, contrast-checked; 12 ready-made palettes (`palettePresets`: Neutral, Admin navy, Ocean, Forest, Plum, Midnight, Sand, Coral, Slate and lime, Rose, Emerald, Amber); `PaletteStyle` applies one; `paletteCss` and `paletteVars` for other setups.
+- **Colour roles**: `accent` (what's selected or in progress), `ink-heading` (titles and big numbers), `chrome-*` (the sidebar), `bar` (the top bar) and `chart-1…6` (data). Sidebars take the chrome through the `chrome-scope` class, so all 21 SideNav variants follow a palette.
+- **MCP**: `list_palettes` and `make_palette`, and a colour guide (PaletteStyle) on mixing colours well.
+- **Docs**: a palette picker in the testing bar (ready-made or your own from seed colours); `?palette=…&theme=…&sidebar=…` and `?embed` in the address.
+- README with screenshots.
+
+### Changed
+
+- Switches, checkboxes, radios, sliders, the tab underline, steps and picked dates use the `accent` (the same as the brand in the Neutral palette, so nothing changes until a palette is chosen). Card titles and stat numbers use `ink-heading`. Bar and line charts use `chart-1`.
+
+### Fixed
+
+- LineChart's line could show gaps on wide charts in Chrome; it now draws in with a clip instead of dashes.
+- CI: the lockfile now includes the CLI and MCP packages, so `npm ci` installs.
+
 ## v0.1.0 (2026-11-13)
 
 ### Added

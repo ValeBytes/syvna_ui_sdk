@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ChevronDown, Laptop, Maximize2, SlidersHorizontal, Smartphone, Tablet } from "lucide-react";
-import { Button, Select, Switch, Tabs, cn } from "@syvna/ui";
+import { Button, Popover, Select, Switch, Tabs, cn, createPalette, palettePresets, paletteVars, type PaletteSeed } from "@syvna/ui";
 import tokens from "@syvna/ui/tokens.json";
 
 // The look a preview is drawn in: what a room's design changes. Every option
@@ -17,6 +17,10 @@ export type Look = {
   theme: "page" | "light" | "dark" | "both";
   radius: keyof typeof radii;
   brand: string | null;
+  /** A ready-made palette (palettePresets), or "custom" for the seeds below. */
+  palette: string;
+  /** The seeds for palette "custom". */
+  seed: PaletteSeed;
   font: keyof typeof fonts;
   size: keyof typeof sizes;
   leading: keyof typeof leadings;
@@ -24,7 +28,7 @@ export type Look = {
   density: keyof typeof densities;
 };
 
-export const defaultLook: Look = { tune: true, device: "fit", theme: "page", radius: "default", brand: null, font: "wix", size: "m", leading: "normal", ink: "stone", density: "default" };
+export const defaultLook: Look = { tune: true, device: "fit", theme: "page", radius: "default", brand: null, palette: "neutral", seed: { brand: "#2a3f54", accent: "#1abb9c", chrome: "brand", neutral: "brand" }, font: "wix", size: "m", leading: "normal", ink: "stone", density: "default" };
 
 const radii = {
   default: null,
@@ -69,6 +73,106 @@ const inks = {
   contrast: { light: ["#000000", "#1f1f1f", "#454545"], dark: ["#ffffff", "#ededed", "#c4c4c4"] },
 };
 
+/** A palette as a strip: its sidebar, brand, accent and data colours. */
+function Swatch({ seed, mode = "light", className }: { seed: PaletteSeed; mode?: "light" | "dark"; className?: string }) {
+  const p = createPalette(seed)[mode];
+  return (
+    <span aria-hidden="true" className={cn("flex h-5 w-14 flex-none overflow-hidden rounded-sm ring-1 ring-line-strong", className)}>
+      <span className="w-3" style={{ background: p.chrome }} />
+      <span className="flex-1" style={{ background: p.ground }}>
+        <span className="flex h-full items-center justify-center gap-0.5">
+          <span className="size-2 rounded-full" style={{ background: p.brand }} />
+          <span className="size-2 rounded-full" style={{ background: p.accent }} />
+          <span className="size-2 rounded-full" style={{ background: p["chart-3"] }} />
+        </span>
+      </span>
+    </span>
+  );
+}
+
+/** Picks the preview's palette: the ready-made ones, or one made from seeds. */
+function PalettePicker({ look, setLook }: { look: Look; setLook: SetLook }) {
+  const current = look.palette === "custom" ? { name: "Your own", seed: look.seed } : (palettePresets[look.palette] ?? palettePresets.neutral!);
+  const setSeed = (k: keyof PaletteSeed, v: string) => setLook((l) => ({ ...l, palette: "custom", seed: { ...l.seed, [k]: v } }));
+  const field = "h-7 rounded-md border border-line-strong bg-surface px-2 text-small text-ink";
+  return (
+    <Popover
+      label="Palette"
+      panelClassName="w-[min(520px,calc(100vw-2rem))] p-0"
+      trigger={
+        <Button size="sm" iconRight={<ChevronDown size={13} className="text-ink-3" />}>
+          <span className="flex items-center gap-2">
+            <Swatch seed={current.seed} />
+            <span>{current.name}</span>
+          </span>
+        </Button>
+      }
+    >
+      {(close) => (
+        <div className="flex max-h-[min(560px,70vh)] flex-col">
+          <div className="grid gap-1.5 overflow-y-auto p-2 sm:grid-cols-2">
+            {Object.entries(palettePresets).map(([id, pr]) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={look.palette === id}
+                onClick={() => {
+                  setLook((l) => ({ ...l, palette: id, brand: null }));
+                  close();
+                }}
+                className={cn("flex cursor-pointer items-start gap-2.5 rounded-md p-2 text-left focus-visible:outline-2 focus-visible:outline-focus", look.palette === id ? "bg-brand-soft ring-1 ring-line-strong" : "hover:bg-surface-2")}
+              >
+                <span className="flex flex-col gap-1">
+                  <Swatch seed={pr.seed} />
+                  <Swatch seed={pr.seed} mode="dark" />
+                </span>
+                <span className="flex min-w-0 flex-col">
+                  <span className="text-label font-medium text-ink">{pr.name}</span>
+                  <span className="text-caption text-ink-3">{pr.note}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2.5 border-t border-line p-3">
+            <span className="text-caption font-semibold uppercase tracking-[0.06em] text-ink-3">Your own, from a few colours</span>
+            <div className="flex flex-wrap items-end gap-3">
+              <label className="flex flex-col gap-1 text-caption text-ink-3">
+                Brand
+                <input type="color" value={look.seed.brand} onChange={(e) => setSeed("brand", e.target.value)} className="h-7 w-12 cursor-pointer rounded-md border border-line-strong bg-surface p-0.5" />
+              </label>
+              <label className="flex flex-col gap-1 text-caption text-ink-3">
+                Accent
+                <input type="color" value={look.seed.accent ?? "#1abb9c"} onChange={(e) => setSeed("accent", e.target.value)} className="h-7 w-12 cursor-pointer rounded-md border border-line-strong bg-surface p-0.5" />
+              </label>
+              <label className="flex flex-col gap-1 text-caption text-ink-3">
+                Sidebar
+                <select value={String(look.seed.chrome ?? "brand")} onChange={(e) => setSeed("chrome", e.target.value)} className={field}>
+                  <option value="surface">Like the cards</option>
+                  <option value="brand">Brand colour</option>
+                  <option value="dark">Near-black</option>
+                  <option value="tinted">Tinted</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1 text-caption text-ink-3">
+                Greys
+                <select value={String(look.seed.neutral ?? "brand")} onChange={(e) => setSeed("neutral", e.target.value)} className={field}>
+                  <option value="brand">Toward the brand</option>
+                  <option value="cool">Cool</option>
+                  <option value="warm">Warm</option>
+                  <option value="none">Pure grey</option>
+                </select>
+              </label>
+              <Button size="sm" variant={look.palette === "custom" ? "primary" : "secondary"} onClick={() => setLook((l) => ({ ...l, palette: "custom", brand: null }))}>
+                Use it
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </Popover>
+  );
+}
+
 export const brands: { name: string; value: string | null }[] = [
   { name: "Ink", value: null },
   { name: "Blue", value: "#2563eb" },
@@ -105,6 +209,10 @@ export function usePageTheme(): "light" | "dark" {
 /** The variables that draw a look, for a preview in theme t. */
 export function lookStyle(look: Look, t: "light" | "dark"): React.CSSProperties {
   const v: Record<string, string> = { ...(radii[look.radius] ?? {}) };
+  if (look.palette !== "neutral") {
+    const seed = look.palette === "custom" ? look.seed : palettePresets[look.palette]?.seed;
+    if (seed) Object.assign(v, paletteVars(createPalette(seed), t));
+  }
   if (look.brand) {
     v["--brand"] = look.brand;
     v["--brand-hover"] = `color-mix(in oklch, ${look.brand} 86%, black)`;
@@ -140,8 +248,29 @@ type SetLook = React.Dispatch<React.SetStateAction<Look>>;
 const LookContext = createContext<{ look: Look; setLook: SetLook } | null>(null);
 
 /** Keeps one look across pages (the templates share theirs). */
+/** ?embed: the page shows only what it previews, full window (for screenshots and iframes). Read after mounting. */
+export function useEmbed() {
+  const [embed, setEmbed] = useState(false);
+  useEffect(() => setEmbed(new URLSearchParams(location.search).has("embed")), []);
+  return embed;
+}
+
+/** A look from the address: ?palette=navy&theme=light&device=laptop, so a preview can be linked to. */
+function lookFromUrl(): Partial<Look> {
+  const q = new URLSearchParams(location.search);
+  const out: Partial<Look> = {};
+  const palette = q.get("palette");
+  if (palette && (palette === "custom" || palettePresets[palette])) out.palette = palette;
+  const theme = q.get("theme");
+  if (theme === "light" || theme === "dark" || theme === "both" || theme === "page") out.theme = theme;
+  const device = q.get("device");
+  if (device === "fit" || device === "phone" || device === "tablet" || device === "laptop") out.device = device;
+  return out;
+}
+
 export function LookProvider({ children }: { children: React.ReactNode }) {
   const [look, setLook] = useState(defaultLook);
+  useEffect(() => setLook((l) => ({ ...l, ...lookFromUrl() })), []);
   return <LookContext.Provider value={{ look, setLook }}>{children}</LookContext.Provider>;
 }
 
@@ -223,24 +352,7 @@ export function LookControls({
           onValueChange={(v) => set("theme", v as Look["theme"])}
           items={(both ? ["page", "light", "dark", "both"] : ["page", "light", "dark"]).map((t) => ({ value: t, label: cap(t) }))}
         />
-        <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Brand colour">
-          {brands.map((b) => (
-            <button
-              key={b.name}
-              type="button"
-              role="radio"
-              aria-checked={look.brand === b.value}
-              aria-label={b.name}
-              title={b.name}
-              onClick={() => set("brand", b.value)}
-              className={cn(
-                "size-6 cursor-pointer rounded-full ring-offset-2 ring-offset-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-                look.brand === b.value ? "ring-2 ring-ink" : "ring-1 ring-line-strong",
-              )}
-              style={{ background: b.value ?? "var(--ink)" }}
-            />
-          ))}
-        </div>
+        <PalettePicker look={look} setLook={setLook} />
         <Button
           variant="ghost"
           size="sm"

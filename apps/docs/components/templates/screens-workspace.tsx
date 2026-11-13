@@ -63,7 +63,8 @@ function revenue(r: DateRange) {
     const d = new Date(r.from.getFullYear(), r.from.getMonth(), r.from.getDate() + i);
     const seed = d.getDate() * 37 + d.getMonth() * 101;
     const trend = 2300 + i * 14;
-    return { label: fmt.format(d), value: Math.round(trend + ((seed * 7) % 420) + (d.getDay() === 6 ? 520 : d.getDay() === 5 ? 300 : 0)) };
+    const wave = Math.sin(i / 4.5) * 260 + Math.sin(i / 1.7) * 90;
+    return { label: fmt.format(d), value: Math.round(trend + wave + ((seed * 7) % 120) + (d.getDay() === 6 ? 180 : 0)) };
   });
 }
 

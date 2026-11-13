@@ -49,7 +49,7 @@ export function RadioGroup({ options, value, defaultValue, onValueChange, name, 
             className={cn(
               "flex cursor-pointer items-start gap-2.5",
               cards && "rounded-lg border p-3 transition-colors",
-              cards && (on ? "border-brand bg-brand-soft" : "border-line hover:border-line-strong hover:bg-surface-2"),
+              cards && (on ? "border-accent bg-accent-soft" : "border-line hover:border-line-strong hover:bg-surface-2"),
               o.disabled && "cursor-not-allowed opacity-55",
             )}
           >
@@ -65,7 +65,7 @@ export function RadioGroup({ options, value, defaultValue, onValueChange, name, 
               }}
               className={cn(
                 "mt-px size-4 flex-none cursor-[inherit] appearance-none rounded-full border border-line-strong bg-surface transition-[border-width,border-color] duration-150",
-                "checked:border-[5px] checked:border-brand hover:enabled:border-ink-3 checked:hover:enabled:border-brand",
+                "checked:border-[5px] checked:border-accent hover:enabled:border-ink-3 checked:hover:enabled:border-accent",
                 focusRing,
               )}
             />

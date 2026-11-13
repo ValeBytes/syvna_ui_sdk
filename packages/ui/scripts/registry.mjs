@@ -34,7 +34,7 @@ function needs(code, from) {
     const spec = m[1];
     if (spec.startsWith(".")) {
       const target = join(from, spec).replace(/\\/g, "/").replace(/^\.?\/?/, "");
-      if (target === "cx" || target.endsWith("/cx")) continue; // in core
+      if (/(^|\/)(cx|palette)$/.test(target)) continue; // in core
       items.add(target.split("/").pop());
     } else if (spec !== "react" && !spec.startsWith("react/")) {
       const name = spec.startsWith("@") ? spec.split("/").slice(0, 2).join("/") : spec.split("/")[0];
@@ -56,12 +56,13 @@ const core = {
   version: release,
   type: "registry:lib",
   title: "Core",
-  description: "cn(), the tone classes, theme.css (Tailwind theme) and tokens.css (the design's values). Every item needs it.",
+  description: "cn(), the tone classes, the palette generator, theme.css (Tailwind theme) and tokens.css (the design's values). Every item needs it.",
   dependencies: needs(coreCode, "").deps,
   registryDependencies: [],
   components: [],
   files: [
     { path: "cx.ts", type: "registry:lib", content: coreCode },
+    { path: "palette.ts", type: "registry:lib", content: read("palette.ts") },
     { path: "theme.css", type: "registry:style", content: read("theme.css") },
     { path: "tokens.css", type: "registry:style", content: read("tokens.css") },
   ],

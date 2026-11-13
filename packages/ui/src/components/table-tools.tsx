@@ -438,7 +438,7 @@ export function TreeView({ nodes, selected, onSelect, checkable, checked = [], o
               <span
                 role="presentation"
                 onClick={(e) => (e.stopPropagation(), !n.disabled && toggleCheck(n))}
-                className={cn("grid size-4 flex-none place-items-center rounded-[4px] border", st ? "border-brand bg-brand text-brand-ink" : "border-line-strong bg-surface")}
+                className={cn("grid size-4 flex-none place-items-center rounded-[4px] border", st ? "border-accent bg-accent text-accent-ink" : "border-line-strong bg-surface")}
               >
                 {st === true ? <CheckGlyph size={11} /> : st === "mixed" ? <span className="h-0.5 w-2 rounded-full bg-current" /> : null}
               </span>

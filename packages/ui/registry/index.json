@@ -6,7 +6,7 @@
     {
       "name": "core",
       "title": "Core",
-      "description": "cn(), the tone classes, theme.css (Tailwind theme) and tokens.css (the design's values). Every item needs it.",
+      "description": "cn(), the tone classes, the palette generator, theme.css (Tailwind theme) and tokens.css (the design's values). Every item needs it.",
       "components": [],
       "dependencies": [
         "tailwind-merge@3.3.1"
@@ -320,6 +320,18 @@
         "core",
         "focus",
         "icons"
+      ]
+    },
+    {
+      "name": "palette-style",
+      "title": "PaletteStyle",
+      "description": "Applies a palette, light and dark, as a <style> tag: put it in the root\nlayout. One of preset, seed or palette; the neutral palette if none.",
+      "components": [
+        "PaletteStyle"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
       ]
     },
     {

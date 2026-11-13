@@ -278,7 +278,7 @@ export function BarChart({ data, format = (v) => new Intl.NumberFormat().format(
                 <span className="absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink px-1.5 py-0.5 text-caption tabular-nums text-ground">{format(d.value)}</span>
               ) : null}
               <div
-                className={cn("w-full origin-bottom rounded-t-sm bg-brand transition-[opacity,height] duration-500 ease-[cubic-bezier(.16,1,.3,1)] animate-grow motion-reduce:animate-none", hover === i ? "opacity-100" : strong ? "opacity-90" : "opacity-40")}
+                className={cn("w-full origin-bottom rounded-t-sm bg-chart-1 transition-[opacity,height] duration-500 ease-[cubic-bezier(.16,1,.3,1)] animate-grow motion-reduce:animate-none", hover === i ? "opacity-100" : strong ? "opacity-90" : "opacity-40")}
                 style={{ height: `${Math.max(2, (d.value / top) * 100)}%`, animationDelay: `${i * 40}ms` }}
               />
             </div>
@@ -323,13 +323,14 @@ export function LineChart({ data, format = (v) => new Intl.NumberFormat().format
   const pts = data.map((d, i) => [data.length === 1 ? w / 2 : (i / (data.length - 1)) * w, h - ((d.value - min) / span) * (h - 8) - 4] as const);
   const line = pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
   const area = `${line} L${w},${h} L0,${h} Z`;
-  const stroke = tone === "brand" ? "text-brand" : toneText[tone];
+  const stroke = tone === "brand" ? "text-chart-1" : toneText[tone];
   return (
     <div role="img" aria-label={label} className={cn("relative flex flex-col gap-2", className)}>
       <div className="relative" style={{ height }} onMouseLeave={() => setHover(null)}>
-        <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className={cn("absolute inset-0 size-full overflow-visible", stroke)} aria-hidden="true">
+        {/* Drawn in left to right with a clip: dashes (pathLength) break on a stretched, non-scaling stroke in Chrome. */}
+        <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className={cn("absolute inset-0 size-full animate-reveal overflow-visible motion-reduce:animate-none", stroke)} aria-hidden="true">
           <path d={area} fill="currentColor" opacity="0.08" />
-          <path d={line} fill="none" stroke="currentColor" strokeWidth={bare ? 1.75 : 2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="animate-draw motion-reduce:animate-none" style={{ strokeDasharray: 1 }} />
+          <path d={line} fill="none" stroke="currentColor" strokeWidth={bare ? 1.75 : 2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
         </svg>
         {!bare
           ? data.map((d, i) => (

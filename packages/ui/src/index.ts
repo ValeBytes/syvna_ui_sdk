@@ -297,3 +297,21 @@ export {
   type ApprovalCardProps,
   type Approver,
 } from "./components/workspace";
+
+// Palettes: every colour token from a few seeds; ready-made ones; applying them.
+export {
+  createPalette,
+  palettePresets,
+  paletteCss,
+  paletteVars,
+  oklch,
+  toOklch,
+  contrast,
+  readable,
+  inkOn,
+  type Palette,
+  type PaletteSeed,
+  type PalettePreset,
+  type Mode as PaletteMode,
+} from "./palette";
+export { PaletteStyle, type PaletteStyleProps } from "./components/palette-style";

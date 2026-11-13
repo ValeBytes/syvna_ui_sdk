@@ -136,7 +136,7 @@ const looks: Partial<Record<SideNavVariant, { item: string; on: string; off: str
   pills: { item: "h-8 rounded-full px-3", on: "bg-brand text-brand-ink [&_svg]:!text-brand-ink", off: "text-ink-2 hover:bg-surface-2 hover:text-ink" },
   bar: {
     item: "h-8 rounded-r-md px-3 relative before:absolute before:inset-y-1.5 before:left-0 before:w-[3px] before:rounded-full",
-    on: "bg-surface-2 text-ink before:bg-brand",
+    on: "bg-surface-2 text-ink before:bg-accent",
     off: "text-ink-2 hover:text-ink before:bg-transparent",
   },
   compact: { item: "h-[26px] rounded-sm px-2 text-small [&_svg]:size-3.5", on: "bg-brand-soft text-ink", off: "text-ink-2 hover:bg-surface-2 hover:text-ink" },
@@ -261,7 +261,7 @@ function RailLink({ link, current, as: Link, onPick, active }: { link: NavLink; 
   );
 }
 
-const shell = "flex h-full flex-col border-r border-line bg-surface text-ink";
+const shell = "chrome-scope flex h-full flex-col border-r border-line bg-surface text-ink";
 
 /**
  * The app's navigation as data, drawn as one of 21 sidebars: pass the
@@ -374,7 +374,7 @@ export function SideNav({
     case "rail-panel": {
       const g = groups[panel] ?? groups[0];
       return (
-        <aside className={cn("flex h-full border-r border-line bg-surface text-ink", className)}>
+        <aside className={cn("chrome-scope flex h-full border-r border-line bg-surface text-ink", className)}>
           <div className="flex w-16 flex-none flex-col items-center border-r border-line bg-surface-2">
             <div className="flex h-12 items-center">{mark}</div>
             <nav className="flex flex-1 flex-col items-center gap-1 py-2" aria-label="Sections">
@@ -525,7 +525,7 @@ export function SideNav({
     case "floating":
       return (
         <div className={cn("h-full w-[264px] p-3 pr-0", className)}>
-          <aside className="flex h-full flex-col rounded-xl border border-line bg-surface text-ink shadow-2">
+          <aside className="chrome-scope flex h-full flex-col rounded-xl border border-line bg-surface text-ink shadow-2">
             <Head brand={brand} />
             {nav(<List groups={groups} current={current} look={classic} as={as} />)}
             {foot}

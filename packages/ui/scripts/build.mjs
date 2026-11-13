@@ -78,6 +78,7 @@ theme += `
   --animate-toast-in: sy-toast 320ms cubic-bezier(0.16, 1, 0.3, 1);
   --animate-grow: sy-grow 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-draw: sy-draw 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-reveal: sy-reveal 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-text-shimmer: sy-shimmer 2s linear infinite;
   --animate-blink: sy-blink 1.1s steps(2, start) infinite;
   --animate-pulse-dot: sy-pulse-dot 1.2s ease-in-out infinite;
@@ -90,6 +91,7 @@ theme += `
   @keyframes sy-toast { from { opacity: 0; transform: translateY(12px) scale(0.97); } }
   @keyframes sy-grow { from { transform: scaleY(0); } }
   @keyframes sy-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes sy-reveal { from { clip-path: inset(-10% 100% -10% 0); } to { clip-path: inset(-10% -1% -10% 0); } }
   @keyframes sy-blink { to { visibility: hidden; } }
   @keyframes sy-pulse-dot { 0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
   @keyframes sy-indeterminate { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
@@ -106,6 +108,30 @@ theme += `
     font-size-adjust: var(--font-size-adjust);
     -webkit-font-smoothing: antialiased;
   }
+}
+
+/*
+ * chrome-scope: inside it, the page's colours become the sidebar's (chrome-*),
+ * so a sidebar built from ordinary token classes (bg-surface, text-ink-2,
+ * bg-brand-soft) takes a navy, near-black or tinted chrome with no change to
+ * its classes. Its badges and primary buttons take the accent.
+ */
+@utility chrome-scope {
+  --surface: var(--chrome);
+  --surface-2: var(--chrome-2);
+  --line: var(--chrome-line);
+  --line-strong: var(--chrome-line);
+  --ink: var(--chrome-ink);
+  --ink-2: var(--chrome-ink-2);
+  --ink-3: var(--chrome-ink-3);
+  --ink-4: var(--chrome-ink-3);
+  --brand-soft: var(--chrome-active);
+  --brand: var(--accent);
+  --brand-hover: var(--accent);
+  --brand-ink: var(--accent-ink);
+  --ink-heading: var(--chrome-ink);
+  background-color: var(--chrome);
+  color: var(--chrome-ink);
 }
 `;
 writeFileSync(join(root, "src/theme.css"), theme);

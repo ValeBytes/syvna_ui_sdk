@@ -82,7 +82,7 @@ export function Calendar({ value, onChange, min, max, locale, weekStartsOn = 1, 
               className={cn(
                 "grid h-8 cursor-pointer place-items-center rounded-md text-label tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-35",
                 focusRing,
-                picked ? "bg-brand font-medium text-brand-ink" : out ? "text-ink-4 hover:bg-surface-2" : "text-ink hover:bg-surface-2",
+                picked ? "bg-accent font-medium text-accent-ink" : out ? "text-ink-4 hover:bg-surface-2" : "text-ink hover:bg-surface-2",
                 !picked && same(today, d) && "font-semibold underline decoration-2 underline-offset-4",
               )}
             >

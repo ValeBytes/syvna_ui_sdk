@@ -53,7 +53,7 @@ const looks: Record<TabsVariant, { list: string; tab: string; on: string; off: s
     on: "text-ink",
     off: "text-ink-3",
     marker: "underline",
-    mark: "h-0.5 rounded-full bg-brand",
+    mark: "h-0.5 rounded-full bg-accent",
     self: "shadow-[inset_0_-2px_0_var(--color-brand)]",
   },
   pills: {

@@ -1,0 +1,21 @@
+{
+  "name": "palette-style",
+  "version": "0.1.0",
+  "type": "registry:ui",
+  "title": "PaletteStyle",
+  "description": "Applies a palette, light and dark, as a <style> tag: put it in the root\nlayout. One of preset, seed or palette; the neutral palette if none.",
+  "dependencies": [],
+  "registryDependencies": [
+    "core"
+  ],
+  "components": [
+    "PaletteStyle"
+  ],
+  "files": [
+    {
+      "path": "components/palette-style.tsx",
+      "type": "registry:ui",
+      "content": "import { createPalette, paletteCss, palettePresets, type Palette, type PaletteSeed } from \"../palette\";\n\nexport interface PaletteStyleProps {\n  /** A ready-made palette by name: \"navy\", \"forest\", \"midnight\"… (palettePresets). */\n  preset?: keyof typeof palettePresets | (string & {});\n  /** Or seeds to make one from: { brand, accent, chrome, neutral }. */\n  seed?: PaletteSeed;\n  /** Or a palette already made with createPalette. */\n  palette?: Palette;\n  /** Where it applies: the whole app (\":root\") or a part of it (\"[data-palette=ocean]\"). */\n  selector?: string;\n}\n\n/**\n * Applies a palette, light and dark, as a <style> tag: put it in the root\n * layout. One of preset, seed or palette; the neutral palette if none.\n */\nexport function PaletteStyle({ preset, seed, palette, selector = \":root\" }: PaletteStyleProps) {\n  const p = palette ?? createPalette(seed ?? palettePresets[preset ?? \"neutral\"]?.seed ?? palettePresets.neutral!.seed);\n  return <style data-syvna-palette=\"\" dangerouslySetInnerHTML={{ __html: paletteCss(p, selector) }} />;\n}\n"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       // tokens:colors
-      color: ["ground","surface","surface-2","line","line-strong","ink","ink-2","ink-3","ink-4","brand","brand-hover","brand-ink","brand-soft","focus","success","success-soft","warning","warning-soft","danger","danger-soft","danger-ink","info","info-soft","overlay"],
+      color: ["ground","surface","surface-2","line","line-strong","ink","ink-2","ink-3","ink-4","brand","brand-hover","brand-ink","brand-soft","accent","accent-ink","accent-soft","ink-heading","focus","chrome","chrome-2","chrome-active","chrome-line","chrome-ink","chrome-ink-2","chrome-ink-3","bar","success","success-soft","warning","warning-soft","danger","danger-soft","danger-ink","info","info-soft","chart-1","chart-2","chart-3","chart-4","chart-5","chart-6","overlay"],
       // tokens:text
       text: ["display-xl","display","heading","stat","title","subtitle","body-lg","body","label","small","caption","code"],
       shadow: ["1", "2", "3"],

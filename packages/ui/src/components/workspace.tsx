@@ -245,7 +245,7 @@ function TriBox({ state, onClick, disabled, label }: { state: boolean | "mixed";
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className={cn("grid size-[18px] cursor-pointer place-items-center rounded-[4px] border transition-colors disabled:cursor-not-allowed disabled:opacity-50", state ? "border-brand bg-brand text-brand-ink" : "border-line-strong bg-surface hover:border-ink-4", focusRing)}
+      className={cn("grid size-[18px] cursor-pointer place-items-center rounded-[4px] border transition-colors disabled:cursor-not-allowed disabled:opacity-50", state ? "border-accent bg-accent text-accent-ink" : "border-line-strong bg-surface hover:border-ink-4", focusRing)}
     >
       {state === true ? <CheckGlyph size={12} /> : state === "mixed" ? <span className="h-0.5 w-2 rounded-full bg-current" /> : null}
     </button>

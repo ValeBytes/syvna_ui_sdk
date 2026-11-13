@@ -8,11 +8,13 @@ import { AppShell, Breadcrumbs, NavItem, NavSection, SegmentedControl, Sidebar, 
 
 import { all, groups, kits, type Kit } from "@/registry/meta";
 
+import { useEmbed } from "./look";
 import { ThemeToggle } from "./theme-toggle";
 
 /** The docs site's frame, built from the library itself. */
 export function DocsShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
+  const embed = useEmbed();
   const current = all.find((c) => path === `/components/${c.slug}`);
   // Two kits: the dashboard's components and the website's. A component's page opens its own kit.
   const onSites = path.startsWith("/sites");
@@ -23,6 +25,14 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
     else if (path.startsWith("/templates")) setKit("dashboard");
   }, [current, onSites, path]);
   const page = current ? current.name : path === "/tokens" ? "Tokens" : path === "/agents" ? "For agents" : path.startsWith("/templates") || onSites ? "Templates" : "Overview";
+  if (embed)
+    return (
+      <div className="h-dvh overflow-hidden">
+        {/* The dev tools' badge stays out of screenshots. */}
+        <style>{"nextjs-portal{display:none!important}*,*::before,*::after{animation-duration:1ms!important;animation-delay:0s!important;transition-duration:0s!important}"}</style>
+        {children}
+      </div>
+    );
   return (
     <AppShell
       width="full"

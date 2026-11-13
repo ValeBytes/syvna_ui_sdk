@@ -706,7 +706,7 @@ export function Slider({ value, defaultValue, onChange, min = 0, max = 100, step
         }}
       >
         <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-surface-2 ring-1 ring-inset ring-line" />
-        <span className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-brand" style={{ left: `${lo}%`, width: `${hi - lo}%` }} />
+        <span className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-accent" style={{ left: `${lo}%`, width: `${hi - lo}%` }} />
         {vals.map((n, i) => (
           <span
             key={i}
@@ -728,7 +728,7 @@ export function Slider({ value, defaultValue, onChange, min = 0, max = 100, step
               else if (e.key === "End") (e.preventDefault(), set(i, max));
               else if (d) (e.preventDefault(), set(i, n + d));
             }}
-            className={cn("group absolute top-1/2 size-[18px] -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-brand bg-surface shadow-2 active:cursor-grabbing", focusRing)}
+            className={cn("group absolute top-1/2 size-[18px] -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-accent bg-surface shadow-2 active:cursor-grabbing", focusRing)}
             style={{ left: `${pct(n)}%` }}
           >
             <span className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm bg-ink px-1.5 py-0.5 text-caption tabular-nums text-ground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100">{format(n)}</span>

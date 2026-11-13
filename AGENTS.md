@@ -68,6 +68,14 @@ The docs sidebar has three tabs; `registry/meta.ts` says which kit each group is
 
 **VariantChooser** is how an agent answers "I don't like this field": live previews of other looks in the chat, a dialog to compare them all, and the pick sent back. Build its options from the component's variants (`get_variants` in the MCP server).
 
+## Palettes
+
+Colour comes from roles, not colours, so an app can be any palette, not just light or dark: `brand` (the main action), `accent` (what's selected or in progress), `ink-heading` (titles, big numbers), `chrome-*` (the sidebar), `bar` (the top bar), greys, and `chart-1…6`. `src/palette.ts` makes all of them, light and dark, from a few seeds (`createPalette`), with 12 ready-made palettes (`palettePresets`); `PaletteStyle` applies one. A sidebar gets the chrome through `chrome-scope`, which re-points the ordinary token classes inside it.
+
+- Use the roles in components: `bg-accent` for a selected state, `text-ink-heading` for a title. A missing role is a missing token, not a hex colour.
+- `tokens.json`'s values are the Neutral palette; change the generator, not the tokens, to change how palettes are made, and keep its contrast checks passing (all presets, both modes).
+- The colour guide for people and agents is `docs/PaletteStyle.md`.
+
 ## Copying components into an app
 
 Apps can take only what they use instead of the whole package:

@@ -238,7 +238,7 @@ export function Stepper({ steps, current, onStep, orientation = "horizontal", cl
           <span
             className={cn(
               "grid size-7 flex-none place-items-center rounded-full border text-label font-semibold tabular-nums transition-colors",
-              s.error ? "border-danger bg-danger-soft text-danger" : done ? "border-brand bg-brand text-brand-ink" : now ? "border-brand bg-surface text-ink ring-4 ring-brand-soft" : "border-line-strong bg-surface text-ink-3",
+              s.error ? "border-danger bg-danger-soft text-danger" : done ? "border-accent bg-accent text-accent-ink" : now ? "border-accent bg-surface text-ink ring-4 ring-accent-soft" : "border-line-strong bg-surface text-ink-3",
             )}
           >
             {s.error ? "!" : done ? <CheckGlyph size={14} /> : i + 1}
@@ -269,10 +269,10 @@ export function Stepper({ steps, current, onStep, orientation = "horizontal", cl
         return (
           <li key={i} aria-current={now ? "step" : undefined} className={cn("relative flex", vertical ? "flex-col pb-6 last:pb-0" : "min-w-0 flex-1 flex-col items-center")}>
             {vertical && i < steps.length - 1 ? (
-              <span aria-hidden="true" className={cn("absolute bottom-1 left-[13px] top-8 w-0.5 rounded-full", done ? "bg-brand" : "bg-line")} />
+              <span aria-hidden="true" className={cn("absolute bottom-1 left-[13px] top-8 w-0.5 rounded-full", done ? "bg-accent" : "bg-line")} />
             ) : null}
             {!vertical && i > 0 ? (
-              <span aria-hidden="true" className={cn("absolute right-[calc(50%+18px)] top-[13px] h-0.5 w-[calc(100%-36px)] rounded-full", done || now ? "bg-brand" : "bg-line")} />
+              <span aria-hidden="true" className={cn("absolute right-[calc(50%+18px)] top-[13px] h-0.5 w-[calc(100%-36px)] rounded-full", done || now ? "bg-accent" : "bg-line")} />
             ) : null}
             {can ? (
               <button type="button" onClick={() => onStep!(i)} className={cn("cursor-pointer rounded-md", focusRing)}>

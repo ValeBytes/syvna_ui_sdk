@@ -6551,6 +6551,38 @@
           "description": "More classes; one here wins over the component's own of the same kind."
         }
       ]
+    },
+    {
+      "name": "PaletteStyle",
+      "summary": "Applies a palette, light and dark, as a <style> tag: put it in the root\nlayout. One of preset, seed or palette; the neutral palette if none.",
+      "file": "src/components/palette-style.tsx",
+      "props": [
+        {
+          "name": "preset",
+          "type": "keyof typeof palettePresets | (string & {})",
+          "required": false,
+          "description": "A ready-made palette by name: \"navy\", \"forest\", \"midnight\"… (palettePresets)."
+        },
+        {
+          "name": "seed",
+          "type": "PaletteSeed",
+          "required": false,
+          "description": "Or seeds to make one from: { brand, accent, chrome, neutral }."
+        },
+        {
+          "name": "palette",
+          "type": "Palette",
+          "required": false,
+          "description": "Or a palette already made with createPalette."
+        },
+        {
+          "name": "selector",
+          "type": "string",
+          "required": false,
+          "default": "\":root\"",
+          "description": "Where it applies: the whole app (\":root\") or a part of it (\"[data-palette=ocean]\")."
+        }
+      ]
     }
   ]
 }

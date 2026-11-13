@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, Inbox as InboxIcon, LayoutGrid, LogOut, Package, Plus, Search, Settings, ShoppingBag, User, Users } from "lucide-react";
 import { AppShell, Avatar, Breadcrumbs, Button, CommandPalette, Menu, NotificationCenter, SideNav, Toaster, Topbar, toast, useCommandKey, type SideNavVariant } from "@syvna/ui";
 
-import { LookControls, LookProvider, Stage, useLook } from "../look";
+import { LookControls, LookProvider, Stage, useEmbed, useLook } from "../look";
 import { SidebarPicker } from "./sidebar-picker";
 import { base, customerSlug, customers, nav } from "./data";
 
@@ -87,16 +87,21 @@ function Frame({ children }: { children: React.ReactNode }) {
   useCommandKey(() => setPalette(true));
   const go = (to: string) => () => router.push(`${base}/${to}`);
   const narrow = variant === "rail" || variant === "rail-panel";
+  const embed = useEmbed();
+  useEffect(() => {
+    const v = new URLSearchParams(location.search).get("sidebar") as SideNavVariant | null;
+    if (v) setVariant(v);
+  }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={embed ? "h-dvh [&>*:first-child]:hidden" : "flex flex-col gap-4"}>
       {/* Sticks under the top bar while the screen below scrolls. */}
       <div className="sticky top-12 z-20 -mx-(--page-x) border-y border-line bg-ground/90 backdrop-blur-md">
       <LookControls look={look} setLook={setLook} both={false} flat>
         <SidebarPicker value={variant} onChange={setVariant} />
       </LookControls>
       </div>
-      <Stage look={look} wide className="block h-[calc(100dvh-5rem)] min-h-[520px] p-0 lg:h-[760px]">
+      <Stage look={look} wide className={embed ? "block h-dvh rounded-none border-0 p-0" : "block h-[calc(100dvh-5rem)] min-h-[520px] p-0 lg:h-[760px]"}>
         {() => (
           <>
           {bare ? (

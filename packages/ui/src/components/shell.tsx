@@ -92,7 +92,7 @@ export interface SidebarProps {
 export function Sidebar({ brand, children, footer, className }: SidebarProps) {
   const { navOpen, setNavOpen } = useContext(ShellContext);
   return (
-    <aside className={cn("flex h-full w-[240px] flex-col border-r border-line bg-surface", className)}>
+    <aside className={cn("chrome-scope flex h-full w-[240px] flex-col border-r border-line bg-surface", className)}>
       <div className="flex h-12 flex-none items-center justify-between gap-2 px-4">
         <div className="flex min-w-0 items-center gap-2.5 font-display text-body font-semibold tracking-[-0.01em]">{brand}</div>
         {navOpen ? (
@@ -186,7 +186,7 @@ export function Topbar({ children, actions, className }: TopbarProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-12 flex-none items-center gap-3 border-b border-line bg-ground/85 px-4 backdrop-blur-md @3xl:px-6",
+        "sticky top-0 z-30 flex h-12 flex-none items-center gap-3 border-b border-line bg-bar/90 px-4 backdrop-blur-md @3xl:px-6",
         className,
       )}
     >

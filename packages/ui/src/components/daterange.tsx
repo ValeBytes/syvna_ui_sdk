@@ -115,7 +115,7 @@ export function RangeCalendar({ value, onChange, months = 2, min, max, locale, w
             const inside = from && to && d > from && d < to;
             const disabled = off(d);
             return (
-              <div key={d.toISOString()} className={cn("relative h-8", inside && "bg-brand-soft", isFrom && to && !same(from, to) && "rounded-l-md bg-brand-soft", isTo && from && !same(from, to) && "rounded-r-md bg-brand-soft")}>
+              <div key={d.toISOString()} className={cn("relative h-8", inside && "bg-accent-soft", isFrom && to && !same(from, to) && "rounded-l-md bg-accent-soft", isTo && from && !same(from, to) && "rounded-r-md bg-accent-soft")}>
                 <button
                   type="button"
                   role="gridcell"
@@ -127,7 +127,7 @@ export function RangeCalendar({ value, onChange, months = 2, min, max, locale, w
                   className={cn(
                     "grid size-full cursor-pointer place-items-center rounded-md text-label tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-35",
                     focusRing,
-                    isFrom || isTo ? "bg-brand font-medium text-brand-ink" : inside ? "text-ink hover:bg-surface-2" : "text-ink hover:bg-surface-2",
+                    isFrom || isTo ? "bg-accent font-medium text-accent-ink" : inside ? "text-ink hover:bg-surface-2" : "text-ink hover:bg-surface-2",
                     !isFrom && !isTo && same(today, d) && "font-semibold underline decoration-2 underline-offset-4",
                   )}
                 >

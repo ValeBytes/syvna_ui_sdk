@@ -41,14 +41,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
           type="checkbox"
           className={cn(
             "peer absolute inset-0 m-0 cursor-[inherit] appearance-none rounded-[4px] border border-line-strong bg-surface transition-colors",
-            "hover:enabled:border-ink-3 checked:border-brand checked:bg-brand",
+            "hover:enabled:border-ink-3 checked:border-accent checked:bg-accent",
             focusRing,
           )}
           {...rest}
         />
         <CheckGlyph
           size={12}
-          className="pointer-events-none absolute inset-0.5 scale-60 text-brand-ink opacity-0 transition duration-150 peer-checked:scale-100 peer-checked:opacity-100 motion-reduce:transition-none"
+          className="pointer-events-none absolute inset-0.5 scale-60 text-accent-ink opacity-0 transition duration-150 peer-checked:scale-100 peer-checked:opacity-100 motion-reduce:transition-none"
         />
       </span>
       <Text label={label} description={description} />
@@ -97,7 +97,7 @@ export function Switch({ checked, defaultChecked = false, onCheckedChange, label
         disabled={disabled}
         onClick={toggle}
         className={cn(
-          "group relative mt-px h-[18px] w-8 flex-none cursor-pointer rounded-full bg-line-strong transition-colors duration-200 aria-checked:bg-brand disabled:cursor-not-allowed motion-reduce:transition-none",
+          "group relative mt-px h-[18px] w-8 flex-none cursor-pointer rounded-full bg-line-strong transition-colors duration-200 aria-checked:bg-accent disabled:cursor-not-allowed motion-reduce:transition-none",
           focusRing,
         )}
       >

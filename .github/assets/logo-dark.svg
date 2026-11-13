@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="64" viewBox="0 0 300 64" role="img" aria-label="Syvna UI">
+  <g fill="#fafafa" transform="translate(4 8) scale(1.5)">
+    <path d="M9.5 10.5C11.2 5.9 15.6 2.8 20.6 2.8C24.8 2.8 28.3 5.5 29.6 9.3C29.9 10 29.3 10.5 28.5 10.5H9.5Z"/>
+    <rect x="2.5" y="12.8" width="27" height="6.4" rx="3.2"/>
+    <path d="M22.5 21.5C20.8 26.1 16.4 29.2 11.4 29.2C7.2 29.2 3.7 26.5 2.4 22.7C2.1 22 2.7 21.5 3.5 21.5H22.5Z"/>
+  </g>
+  <text x="66" y="44" font-family="Georgia, 'Times New Roman', serif" font-size="40" letter-spacing="-0.8" fill="#fafafa">syvna</text>
+  <text x="190" y="44" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="30" font-weight="600" fill="#a3a3a3">UI</text>
+</svg>

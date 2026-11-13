@@ -87,7 +87,7 @@ export function Card({ title, description, actions, footer, padded = true, class
       {head ? (
         <header className="flex items-start justify-between gap-3 px-4 pt-3.5">
           <div className="min-w-0">
-            {title ? <h3 className="m-0 font-display text-subtitle font-semibold">{title}</h3> : null}
+            {title ? <h3 className="m-0 font-display text-subtitle font-semibold text-ink-heading">{title}</h3> : null}
             {description ? <p className="m-0 mt-0.5 text-label text-ink-3">{description}</p> : null}
           </div>
           {actions ? <div className="flex flex-none gap-2">{actions}</div> : null}
@@ -122,7 +122,7 @@ export function StatCard({ label, value, change, hint, className }: StatCardProp
   return (
     <div className={cn("flex min-w-0 flex-col gap-1 p-4", surface, className)}>
       <p className="m-0 text-small font-medium text-ink-3">{label}</p>
-      <p className="m-0 font-display text-stat font-semibold text-ink tabular-nums">{value}</p>
+      <p className="m-0 font-display text-stat font-semibold text-ink-heading tabular-nums">{value}</p>
       {change || hint ? (
         <p className="m-0 flex flex-wrap items-center gap-2 text-small">
           {change ? (

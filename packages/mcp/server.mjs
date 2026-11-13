@@ -12,7 +12,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ui = join(dirname(fileURLToPath(import.meta.url)), "..", "ui");
 const load = (p) => JSON.parse(readFileSync(join(ui, p), "utf8"));
@@ -53,6 +53,10 @@ function find(name) {
 function variantsOf(c) {
   return c.props.filter((p) => p.values?.length).map((p) => ({ prop: p.name, values: p.values, default: p.default, doc: p.description }));
 }
+
+// The palette generator is the library's own (src/palette.ts), run as is: Node strips its types.
+let paletteLib;
+const palettes = async () => (paletteLib ??= await import(pathToFileURL(join(ui, "src", "palette.ts")).href));
 
 // ---------- tools ----------
 
@@ -169,6 +173,61 @@ const tools = {
       return [`## Colours (bg-*, text-*, border-*)`, colors, "", "## Type (text-*; headings add font-display)", type, "", "## Radius", radius, "", "## Shadows", shadow, "", "Dark mode comes from the tokens: never write dark: classes."].join("\n");
     },
   },
+  list_palettes: {
+    description:
+      "The ready-made colour palettes (beyond plain light and dark): each one's name, mood and where it suits, with its key colours. Pick one for an app, or start make_palette from one.",
+    inputSchema: { type: "object", properties: {} },
+    async run() {
+      const { palettePresets, createPalette } = await palettes();
+      return Object.entries(palettePresets)
+        .map(([id, p]) => {
+          const t = createPalette(p.seed).light;
+          return `${id}: ${p.name}. ${p.note}\n  brand ${t.brand} · accent ${t.accent} · sidebar ${t.chrome} · page ${t.ground}\n  seed ${JSON.stringify(p.seed)}`;
+        })
+        .join("\n");
+    },
+  },
+  make_palette: {
+    description:
+      "Make a full palette (every colour token, light and dark, contrast-checked) from a few seed colours: a brand, an accent, how the sidebar looks (surface, brand, dark, tinted) and how the greys lean (brand, cool, warm, none). Returns how to apply it, the key colours and a contrast report. Use it when an app needs its own colours; use list_palettes for ready-made ones.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        preset: { type: "string", description: "Start from a ready-made palette (list_palettes); seeds given override it." },
+        brand: { type: "string", description: "Hex: buttons, headings, the identity." },
+        accent: { type: "string", description: "Hex: what's selected or in progress. Derived when left out." },
+        chrome: { type: "string", description: "The sidebar: surface, brand, dark, tinted, or a hex colour." },
+        neutral: { type: "string", description: "The greys: brand, cool, warm or none." },
+      },
+    },
+    async run({ preset, brand, accent, chrome, neutral }) {
+      const { palettePresets, createPalette, contrast } = await palettes();
+      const base = preset ? palettePresets[preset]?.seed : undefined;
+      if (preset && !base) return { error: `No palette called ${preset}; list_palettes has them.` };
+      const seed = { ...(base ?? {}), ...(brand ? { brand } : {}), ...(accent ? { accent } : {}), ...(chrome ? { chrome } : {}), ...(neutral ? { neutral } : {}) };
+      if (!seed.brand) return { error: "Give a brand colour (hex) or a preset." };
+      const p = createPalette(seed);
+      const pairs = [["ink", "ground", 7], ["ink-3", "surface", 4.5], ["brand-ink", "brand", 4.5], ["accent-ink", "accent", 4.5], ["chrome-ink", "chrome", 7], ["chrome-ink-2", "chrome", 4.5], ["accent", "surface", 3]];
+      const report = ["light", "dark"].map((m) => `${m}: ` + pairs.map(([a, b, min]) => `${a} on ${b} ${contrast(p[m][a], p[m][b]).toFixed(1)}${contrast(p[m][a], p[m][b]) < min ? " (LOW)" : ""}`).join(", ")).join("\n");
+      const keys = ["brand", "accent", "ink-heading", "chrome", "chrome-ink", "ground", "surface", "bar", "chart-1", "chart-2", "chart-3"];
+      return [
+        `Seed: ${JSON.stringify(seed)}`,
+        "",
+        "Apply it in the root layout (light and dark both follow):",
+        `  import { PaletteStyle } from "@syvna/ui";`,
+        `  <PaletteStyle seed={${JSON.stringify(seed)}} />` + (preset && !brand && !accent && !chrome && !neutral ? `   (or <PaletteStyle preset="${preset}" />)` : ""),
+        "Copied components: the same, from the app's own components/syvna.",
+        "",
+        "Key colours (light | dark):",
+        ...keys.map((k) => `  ${k.padEnd(12)} ${p.light[k]} | ${p.dark[k]}`),
+        "",
+        "Contrast:",
+        report,
+        "",
+        "Use the roles, not the hexes: bg-brand for the main action, bg-accent/text-accent for what's selected, text-ink-heading for titles and big numbers, bg-chart-1…6 for data; the sidebar takes the chrome by itself.",
+      ].join("\n");
+    },
+  },
   check_code: {
     description:
       "Check JSX that uses Syvna UI before showing it: components that don't exist, props a component doesn't take, variant values that don't exist, and styling that breaks the design (raw colours, text-sm/text-lg, dark: classes, hex colours, page title headers). Returns problems with fixes, or OK.",
@@ -225,7 +284,7 @@ async function handle(msg) {
         capabilities: { tools: { listChanged: false } },
         serverInfo: { name: "syvna-ui", version: JSON.parse(readFileSync(join(ui, "..", "..", "package.json"), "utf8")).version },
         instructions:
-          "Syvna UI is the component library for Syvna apps (dashboard, website and agent kits). Before writing UI: list_components or search_components, then get_component for each one you use. Style only with the tokens (get_tokens). Run check_code on what you write before showing it. When the user dislikes a part, get_variants and offer them in a VariantChooser.",
+          "Syvna UI is the component library for Syvna apps (dashboard, website and agent kits). Before writing UI: list_components or search_components, then get_component for each one you use. Style only with the tokens (get_tokens). Run check_code on what you write before showing it. Colour: never hard-code hexes; pick a palette with list_palettes or make one with make_palette from the brand the user gives, and apply it with PaletteStyle. When the user dislikes a part, get_variants and offer them in a VariantChooser.",
       });
     case "notifications/initialized":
     case "notifications/cancelled":
