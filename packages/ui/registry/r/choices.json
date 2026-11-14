@@ -1,6 +1,6 @@
 {
   "name": "choices",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "registry:ui",
   "title": "Checkbox, Switch",
   "description": "On or off for one thing, or one of several in a list. Takes effect when the form is saved; for an instant setting use Switch.",

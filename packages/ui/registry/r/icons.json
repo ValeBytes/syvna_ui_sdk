@@ -1,6 +1,6 @@
 {
   "name": "icons",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "registry:lib",
   "title": "icons",
   "description": "Shared code the components use (icons.tsx).",

@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.4.0 (2026-11-14)
+
 ### Fixed
 
 - `Field` wires its label to the control inside it even when that control

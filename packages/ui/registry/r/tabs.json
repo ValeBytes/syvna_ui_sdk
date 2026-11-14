@@ -1,6 +1,6 @@
 {
   "name": "tabs",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "registry:ui",
   "title": "Tabs",
   "description": "Switches between views of the same thing, in seven looks. A marker slides\nto the open tab and the content fades in; arrow keys move between tabs.",

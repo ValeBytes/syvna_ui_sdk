@@ -1,6 +1,6 @@
 {
   "name": "toast",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "registry:ui",
   "title": "Toaster",
   "description": "Where toasts appear: put one in the app's root layout. They stack, newest last, and pause while hovered.",
