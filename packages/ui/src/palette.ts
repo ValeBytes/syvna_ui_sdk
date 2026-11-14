@@ -259,15 +259,16 @@ export function paletteVars(palette: Palette, mode: Mode): Record<string, string
 
 /**
  * A palette as a stylesheet for `selector` (":root" for the whole app), light
- * by default and dark when the system or a data-theme="dark" asks: the same
- * rules as tokens.css. Put it after tokens.css.
+ * by default, dark where data-theme="dark" says so, and the system's choice
+ * only where data-theme="system": the same rules as tokens.css. Put it after
+ * tokens.css.
  */
 export function paletteCss(palette: Palette, selector = ":root"): string {
   const block = (t: Tokens) => Object.entries(t).map(([k, v]) => `  --${k}: ${v};`).join("\n");
   const sel = selector === ":root" ? "" : selector;
   return [
     `${selector} {\n${block(palette.light)}\n}`,
-    `@media (prefers-color-scheme: dark) {\n  ${selector === ":root" ? ':root:not([data-theme="light"])' : `${sel}:not([data-theme="light"])`} {\n${block(palette.dark).replace(/^/gm, "  ")}\n  }\n}`,
+    `@media (prefers-color-scheme: dark) {\n  ${selector === ":root" ? ':root[data-theme="system"]' : `${sel}[data-theme="system"], [data-theme="system"] ${sel}`} {\n${block(palette.dark).replace(/^/gm, "  ")}\n  }\n}`,
     `${selector === ":root" ? "" : `${sel}`}[data-theme="dark"]${selector === ":root" ? "" : `, [data-theme="dark"] ${sel}`} {\n${block(palette.dark)}\n}`,
     `${selector === ":root" ? "" : `${sel}`}[data-theme="light"]${selector === ":root" ? "" : `, [data-theme="light"] ${sel}`} {\n${block(palette.light)}\n}`,
   ].join("\n");

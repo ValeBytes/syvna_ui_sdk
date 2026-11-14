@@ -70,7 +70,7 @@
   --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  [data-theme="system"] {
     color-scheme: dark;
     --ground: #1c1c1c;
     --surface: #222222;

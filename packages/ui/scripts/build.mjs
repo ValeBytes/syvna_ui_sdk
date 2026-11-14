@@ -43,8 +43,11 @@ css += plain.map((t) => `  --${t.name}: ${t.value};`).join("\n") + "\n";
 css += families.map(([k, v]) => `  --font-${k}: ${v};`).join("\n") + "\n}\n";
 for (const theme of others) {
   const block = `  color-scheme: ${theme};\n${themed(theme).join("\n")}\n`;
-  // The system's choice, unless the page names a theme; and a page or part of one that names it.
-  css += `@media (prefers-color-scheme: ${theme}) {\n  :root:not([data-theme="${first}"]) {\n${block.replace(/^/gm, "  ")}  }\n}\n`;
+  // A page (or part of one) that names the theme, and the system's choice only
+  // where it says data-theme="system". Never by default: an app's own light
+  // colours would otherwise get the kit's dark ones mixed in on a dark-mode
+  // device (light text on a light ground).
+  css += `@media (prefers-color-scheme: ${theme}) {\n  [data-theme="system"] {\n${block.replace(/^/gm, "  ")}  }\n}\n`;
   css += `[data-theme="${theme}"] {\n${block}}\n`;
 }
 css += `[data-theme="${first}"] {\n  color-scheme: ${first};\n${themed(first).join("\n")}\n}\n`;

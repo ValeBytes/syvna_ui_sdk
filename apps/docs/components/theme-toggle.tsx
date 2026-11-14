@@ -22,8 +22,8 @@ export function ThemeToggle() {
   const pick = (m: string) => {
     const next = m as Mode;
     setMode(next);
-    if (next === "system") delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = next;
+    // "system" is a theme too: the kit follows the device only where it's named.
+    document.documentElement.dataset.theme = next;
     try {
       if (next === "system") localStorage.removeItem("theme");
       else localStorage.setItem("theme", next);

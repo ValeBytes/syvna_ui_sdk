@@ -3574,7 +3574,7 @@
       "props": [
         {
           "name": "plans",
-          "type": "Plan[]",
+          "type": "PricingPlan[]",
           "required": true,
           "description": ""
         },

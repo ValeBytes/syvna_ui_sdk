@@ -144,7 +144,7 @@ export {
 } from "./components/shop";
 export { Hero, heroVariants, type HeroProps, type HeroVariant } from "./components/hero";
 export { SiteHeader, siteHeaderVariants, type SiteHeaderProps, type SiteHeaderVariant, type SiteLink } from "./components/site-header";
-export { PricingTable, pricingVariants, type PricingTableProps, type PricingVariant, type Plan as PricingPlan } from "./components/pricing";
+export { PricingTable, pricingVariants, type PricingTableProps, type PricingVariant, type PricingPlan } from "./components/pricing";
 export { DateRangePicker, RangeCalendar, rangePresets, previousPeriod, type DateRangePickerProps, type RangeCalendarProps, type DateRange, type RangePreset } from "./components/daterange";
 
 // Agents: what they're doing, and talking with them.

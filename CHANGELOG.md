@@ -10,6 +10,25 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Changed
+
+- **Dark mode no longer follows the device by default.** The default (light)
+  look is unchanged, and so is `data-theme="dark"`. What changed: on a device
+  set to dark mode, the tokens and `PaletteStyle` used to turn dark by
+  themselves, under an app's own light colours, which put light text on a light
+  ground. Now they stay light unless the page says `data-theme="dark"`, and
+  follow the device only where it says `data-theme="system"`. Apps need no
+  change; one that wants to follow the device puts `data-theme="system"` on
+  `<html>`.
+- `pricing.tsx` names its plan type `PricingPlan` inside the file too, as
+  `index.ts` already exported it. Apps that import from `@/components/syvna`
+  see no change.
+
+### Added
+
+- `scripts/app-guide.mjs` writes the guide an app's agents read about the
+  Syvna UI copied into it (Syvna's template keeps it at `docs/ui.md`).
+
 ## v0.2.0 (2026-11-13)
 
 ### Added

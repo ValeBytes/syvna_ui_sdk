@@ -36,7 +36,7 @@ export const pricingVariants = [
 
 export type PricingVariant = (typeof pricingVariants)[number];
 
-export interface Plan {
+export interface PricingPlan {
   name: string;
   /** Price a month, billed monthly; a string for "Custom". */
   monthly: number | string;
@@ -59,7 +59,7 @@ export interface Plan {
 }
 
 export interface PricingTableProps {
-  plans: Plan[];
+  plans: PricingPlan[];
   /**
    * cards: a card each, the featured one raised. compact: smaller cards, no descriptions. minimal: no
    * boxes, fine rules between. joined: one box split in columns. outline: flat, the featured one
@@ -111,10 +111,10 @@ export function PricingTable({
   const radioName = useId();
   const hasYearly = plans.some((p) => p.yearly !== undefined);
 
-  const priceOf = (p: Plan) => (billing === "yearly" && p.yearly !== undefined ? p.yearly : p.monthly);
+  const priceOf = (p: PricingPlan) => (billing === "yearly" && p.yearly !== undefined ? p.yearly : p.monthly);
   const money = (n: number) => `${currency}${Number.isInteger(n) ? n : n.toFixed(2)}`;
 
-  const Price = ({ p, size = "lg", tone = "text-ink" }: { p: Plan; size?: "md" | "lg" | "xl"; tone?: string }) => {
+  const Price = ({ p, size = "lg", tone = "text-ink" }: { p: PricingPlan; size?: "md" | "lg" | "xl"; tone?: string }) => {
     const price = priceOf(p);
     const n = typeof price === "number";
     return (
@@ -127,7 +127,7 @@ export function PricingTable({
     );
   };
 
-  const Cta = ({ p, kind, className: c }: { p: Plan; kind?: "primary" | "secondary" | "ghost"; className?: string }) => {
+  const Cta = ({ p, kind, className: c }: { p: PricingPlan; kind?: "primary" | "secondary" | "ghost"; className?: string }) => {
     const Tag = p.href ? "a" : "button";
     return (
       <Tag {...(p.href ? { href: p.href } : { type: "button" as const })} onClick={() => onSelect?.(p.name)} className={cn(siteAction(kind ?? (p.featured ? "primary" : "secondary")), "w-full", c)}>
@@ -136,7 +136,7 @@ export function PricingTable({
     );
   };
 
-  const Features = ({ p, tone = "text-ink-2", check = "text-success", cols }: { p: Plan; tone?: string; check?: string; cols?: boolean }) => (
+  const Features = ({ p, tone = "text-ink-2", check = "text-success", cols }: { p: PricingPlan; tone?: string; check?: string; cols?: boolean }) => (
     <ul className={cn("m-0 grid list-none gap-2.5 p-0", cols && "@2xl:grid-cols-2 @2xl:gap-x-8")}>
       {p.features.map((f, i) => (
         <li key={i} className={cn("flex items-start gap-2.5 text-body", tone)}>
@@ -175,7 +175,7 @@ export function PricingTable({
   const cols = plans.length >= 4 ? "@3xl:grid-cols-2 @5xl:grid-cols-4" : plans.length === 3 ? "@3xl:grid-cols-3" : "@2xl:grid-cols-2";
 
   /** One plan as a card, styled by variant. */
-  const card = (p: Plan, i: number) => {
+  const card = (p: PricingPlan, i: number) => {
     const dark = v === "dark-featured" && p.featured;
     const brand = v === "brand-featured" && p.featured;
     const loud = dark || brand;
