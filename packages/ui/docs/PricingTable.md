@@ -14,3 +14,5 @@ Which variant:
 - **One plan:** `single`. **Priced per seat:** `calculator` (`unit`).
 - **Guided choice:** `radio` (pick, then one button), `tabs` (one plan at a time).
 - **Beside a heading:** `split` (`intro`). **Many plans on a phone:** `carousel`.
+
+`classNames` adjusts `plan`, `price`, `cta`, `feature` and `popular` with token classes.

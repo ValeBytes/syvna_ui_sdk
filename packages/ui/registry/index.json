@@ -309,6 +309,19 @@
       ]
     },
     {
+      "name": "motion",
+      "title": "Reveal, Stagger",
+      "description": "A container that eases in when it's scrolled to, or as the page opens.\nNothing is hidden without JavaScript or for people who ask for less motion,\nand what is already on screen never jumps.",
+      "components": [
+        "Reveal",
+        "Stagger"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
       "name": "overlays",
       "title": "Dialog, Alert",
       "description": "A task that needs the whole of someone's attention: a short form, or a confirmation. Focus stays inside until it closes.",
@@ -426,7 +439,7 @@
       "registryDependencies": [
         "core",
         "icons",
-        "site"
+        "button"
       ]
     },
     {
@@ -459,6 +472,22 @@
       ]
     },
     {
+      "name": "site-sections",
+      "title": "Bento, FeatureRows, Stats, Steps",
+      "description": "What the product does as a grid of unequal cells, each with its own picture: richer than a row of icons.",
+      "components": [
+        "Bento",
+        "FeatureRows",
+        "Stats",
+        "Steps"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "motion"
+      ]
+    },
+    {
       "name": "site",
       "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter, AuthLayout, AuthDivider",
       "description": "A band of a landing page: a heading and what's under it, at the page's width.",
@@ -476,7 +505,8 @@
       "dependencies": [],
       "registryDependencies": [
         "core",
-        "site-header"
+        "site-header",
+        "motion"
       ]
     },
     {

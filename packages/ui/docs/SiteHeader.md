@@ -15,3 +15,5 @@ Which variant:
 - **Few links:** `minimal` (brand and menu only), `fullscreen` (the menu covers the page in large type).
 - **Marking where they are:** `underline`, `pills`, `boxed`.
 - **Extras:** `announcement` (a strip of news, `announcement`), `search` (a search field, `search`), `tall`, `compact`.
+
+`classNames` adjusts `inner`, `brand`, `link` and `actions` with token classes; `className` is the bar itself.

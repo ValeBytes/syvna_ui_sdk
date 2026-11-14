@@ -10,6 +10,50 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- `AuthLayout` has twelve arrangements, picked with `variant` (the list is
+  `authLayoutVariants`): `split` (as before), `split-reverse`, `inset`,
+  `centered`, `card`, `card-brand`, `compact`, `topbar`, `banner`, `photo`,
+  `showcase` and `frame`. Its guide says which suits staff tools, customer
+  portals and sign-ups.
+- The panel (`aside`) can carry `points` (short reasons), `stats` (real
+  numbers), an `image` (for `photo`) and `media` (a piece of the product, for
+  `showcase`), besides the headline, body and quote. Its type is `AuthAside`.
+- `AuthLayout` takes `legal` (small print under the form) and `help` (a quiet
+  link in the corner).
+
+- Five `Button` looks for a shop's or landing page's main action: `raised`,
+  `shine`, `fill`, `hard` and `underline`. `buttonClass({ variant, size,
+  shape })` gives any button look to a link.
+- `classNames`: a prop that adjusts a component's inner parts when a design
+  needs it. On `Button` (label, badge, shortcut), `ProductCard`, `PriceTag`,
+  `CartSummary`, `Hero`, `SiteHeader`, `PricingTable`, `Section`,
+  `FeatureGrid`, `Testimonials`, `CallToAction`, the new sections, and `Card`,
+  `StatCard`, `EmptyState` and `Field`.
+- `ProductCard` takes `addVariant`, `addLabel`, `addShape` and
+  `addPlacement="overlay"` (the add button slides up over the photo);
+  `CartSummary` takes `checkoutVariant` and `checkoutShape`.
+- `Reveal` and `Stagger`: containers that ease in when scrolled to, or as the
+  page opens. `Section`, `FeatureGrid` and `Testimonials` take `animate`. For public pages.
+- Four landing sections: `Bento` (unequal cells, each with a picture),
+  `FeatureRows` (words beside a large real screen, swapping sides), `Stats`
+  and `Steps`. The Landing template uses them, and the Shop template shows one
+  buying look across its buttons.
+
+### Changed
+
+- Button hover and press classes are `hover:not-disabled:` (were
+  `hover:enabled:`), so they also work on links. Nothing to change unless an
+  app overrides a button's hover with `hover:enabled:`.
+- `ProductCard`'s add button and `CartSummary`'s checkout button are a size
+  larger, and are drawn with `buttonClass`.
+
+### Fixed
+
+- `AuthLayout` with a panel keeps to a height given in `className`; it was
+  always as tall as the window.
+
 ## v0.5.2 (2026-11-14)
 
 ### Fixed

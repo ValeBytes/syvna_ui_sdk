@@ -68,6 +68,12 @@ export interface HeroProps {
   /** For collage: four to six photos. */
   gallery?: string[];
   className?: string;
+  /**
+   * Classes for its parts, when the design needs one adjusted: inner (the width and padding), eyebrow,
+   * title, description, actions (the buttons' row), note, media (the picture's frame).
+   * classNames={{ title: "font-normal tracking-[-0.04em]", inner: "py-24" }}
+   */
+  classNames?: { inner?: string; eyebrow?: string; title?: string; description?: string; actions?: string; note?: string; media?: string };
 }
 
 type On = "default" | "inverse" | "photo" | "brand";
@@ -112,23 +118,24 @@ function Signup({ s, center }: { s: NonNullable<HeroProps["signup"]>; center: bo
 function Copy({ h, on = "default", center, big, className }: { h: HeroProps; on?: On; center?: boolean; big?: boolean; className?: string }) {
   const c = ink[on];
   const v = h.variant;
+  const x = h.classNames;
   return (
     <div className={cn("relative flex flex-col gap-5", center ? "items-center text-center" : "items-start text-left", className)}>
       {h.eyebrow ? (
         v === "announcement" ? (
-          <span className={cn("inline-flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-label font-medium", c.pill)}>
+          <span className={cn("inline-flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-label font-medium", c.pill, x?.eyebrow)}>
             <span className="rounded-full bg-brand px-2 py-0.5 text-caption font-semibold text-brand-ink">New</span>
             {h.eyebrow}
             <Arrow />
           </span>
         ) : v === "minimal" || v === "editorial" ? (
-          <span className={cn("text-label font-semibold uppercase tracking-[0.08em]", c.muted)}>{h.eyebrow}</span>
+          <span className={cn("text-label font-semibold uppercase tracking-[0.08em]", c.muted, x?.eyebrow)}>{h.eyebrow}</span>
         ) : (
-          <span className={cn("inline-flex items-center gap-2 rounded-full border px-3 py-1 text-label font-medium", c.pill)}>{h.eyebrow}</span>
+          <span className={cn("inline-flex items-center gap-2 rounded-full border px-3 py-1 text-label font-medium", c.pill, x?.eyebrow)}>{h.eyebrow}</span>
         )
       ) : null}
-      <h1 className={cn("m-0 text-balance font-display font-semibold tracking-[-0.03em]", big ? "text-display-xl" : "text-display @2xl:text-display-xl", c.title)}>{h.title}</h1>
-      {h.description && v !== "editorial" ? <p className={cn("m-0 max-w-[600px] text-pretty text-body-lg", c.body)}>{h.description}</p> : null}
+      <h1 className={cn("m-0 text-balance font-display font-semibold tracking-[-0.03em]", big ? "text-display-xl" : "text-display @2xl:text-display-xl", c.title, x?.title)}>{h.title}</h1>
+      {h.description && v !== "editorial" ? <p className={cn("m-0 max-w-[600px] text-pretty text-body-lg", c.body, x?.description)}>{h.description}</p> : null}
       {v !== "editorial" ? <Act h={h} on={on} center={center} /> : null}
     </div>
   );
@@ -149,12 +156,13 @@ function Act({ h, on, center }: { h: HeroProps; on: On; center?: boolean }) {
             center && "justify-center",
             // On the brand colour the primary action inverts, so it still stands out.
             on === "brand" && "[&_.bg-brand]:bg-brand-ink [&_.bg-brand]:text-brand",
+            h.classNames?.actions,
           )}
         >
           {h.actions}
         </div>
       ) : null}
-      {h.note ? <p className={cn("m-0 text-small", c.muted)}>{h.note}</p> : null}
+      {h.note ? <p className={cn("m-0 text-small", c.muted, h.classNames?.note)}>{h.note}</p> : null}
     </>
   );
 }
@@ -178,10 +186,11 @@ function Browser({ children }: { children: React.ReactNode }) {
 
 /** The top of a landing page: what it is, why it matters, and the one thing to do next. */
 export function Hero(props: HeroProps) {
-  const { variant = "center", media, image, stats, gallery, className } = props;
+  const { variant = "center", media, image, stats, gallery, className, classNames } = props;
+  const inner = classNames?.inner;
   const h = { ...props, variant };
   const section = (cls: string, children: React.ReactNode) => <section className={cn("@container relative isolate w-full overflow-hidden", cls, className)}>{children}</section>;
-  const Media = media ? <div className="w-full">{media}</div> : null;
+  const Media = media ? <div className={cn("w-full", classNames?.media)}>{media}</div> : null;
 
   switch (variant) {
     case "split":
@@ -189,7 +198,7 @@ export function Hero(props: HeroProps) {
     case "stats":
       return section(
         "",
-        <div className={cn(wrap, pad, "grid items-center gap-10 @4xl:grid-cols-2 @4xl:gap-14")}>
+        <div className={cn(wrap, pad, "grid items-center gap-10 @4xl:grid-cols-2 @4xl:gap-14", inner)}>
           <div className={cn("flex flex-col gap-8", variant === "split-reverse" && "@4xl:order-2")}>
             <Copy h={h} />
             {variant === "stats" && stats?.length ? (
@@ -207,17 +216,17 @@ export function Hero(props: HeroProps) {
         </div>,
       );
     case "left":
-      return section("", <div className={cn(wrap, pad, "flex flex-col gap-12")}><Copy h={h} className="max-w-[760px]" />{Media}</div>);
+      return section("", <div className={cn(wrap, pad, "flex flex-col gap-12", inner)}><Copy h={h} className="max-w-[760px]" />{Media}</div>);
     case "minimal":
-      return section("", <div className={cn(wrap, "py-20 @3xl:py-32")}><Copy h={{ ...h, description: h.description }} center big className="mx-auto max-w-[900px]" /></div>);
+      return section("", <div className={cn(wrap, "py-20 @3xl:py-32", inner)}><Copy h={{ ...h, description: h.description }} center big className="mx-auto max-w-[900px]" /></div>);
     case "editorial":
       return section(
         "",
-        <div className={cn(wrap, pad, "flex flex-col gap-12")}>
+        <div className={cn(wrap, pad, "flex flex-col gap-12", inner)}>
           <div className="grid gap-8 @4xl:grid-cols-[1.4fr_1fr] @4xl:items-end">
             <Copy h={h} big />
             <div className="flex flex-col items-start gap-5 @4xl:pb-2">
-              {h.description ? <p className="m-0 text-pretty text-body-lg text-ink-2">{h.description}</p> : null}
+              {h.description ? <p className={cn("m-0 text-pretty text-body-lg text-ink-2", h.classNames?.description)}>{h.description}</p> : null}
               <Act h={h} on="default" />
             </div>
           </div>
@@ -231,7 +240,7 @@ export function Hero(props: HeroProps) {
         <>
           {image ? <img src={image} alt="" className="absolute inset-0 -z-10 size-full object-cover" /> : null}
           <div className={cn("absolute inset-0 -z-10", variant === "photo" ? "bg-black/55" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent")} />
-          <div className={cn(wrap, "flex py-14", variant === "photo" ? "items-center justify-center" : "items-end")}>
+          <div className={cn(wrap, "flex py-14", variant === "photo" ? "items-center justify-center" : "items-end", inner)}>
             <Copy h={h} on="photo" center={variant === "photo"} className={variant === "photo" ? "max-w-[760px]" : "max-w-[640px]"} />
           </div>
         </>,
@@ -252,9 +261,9 @@ export function Hero(props: HeroProps) {
               className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-line)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-line)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_50%_30%,black_20%,transparent_70%)]"
             />
           ) : null}
-          <div className={cn(wrap, pad, "flex flex-col items-center gap-12")}>
+          <div className={cn(wrap, pad, "flex flex-col items-center gap-12", inner)}>
             <Copy h={h} center className="max-w-[760px]" />
-            {media ? <div className="w-full max-w-[1040px]">{media}</div> : null}
+            {media ? <div className={cn("w-full max-w-[1040px]", classNames?.media)}>{media}</div> : null}
           </div>
         </>,
       );
@@ -262,7 +271,7 @@ export function Hero(props: HeroProps) {
     case "brand":
       return section(
         variant === "inverted" ? "bg-ink" : "bg-brand",
-        <div className={cn(wrap, pad, "grid items-center gap-10", media && "@4xl:grid-cols-2")}>
+        <div className={cn(wrap, pad, "grid items-center gap-10", media && "@4xl:grid-cols-2", inner)}>
           <Copy h={h} on={variant === "inverted" ? "inverse" : "brand"} center={!media} className={media ? "" : "mx-auto max-w-[760px]"} />
           {Media}
         </div>,
@@ -270,7 +279,7 @@ export function Hero(props: HeroProps) {
     case "card":
       return section(
         "",
-        <div className={cn(wrap, "py-8 @3xl:py-12")}>
+        <div className={cn(wrap, "py-8 @3xl:py-12", inner)}>
           <div className={cn("grid items-center gap-10 rounded-xl border border-line bg-surface p-6 shadow-2 @3xl:p-12", media && "@4xl:grid-cols-2")}>
             <Copy h={h} center={!media} className={media ? "" : "mx-auto max-w-[720px]"} />
             {Media}
@@ -280,15 +289,15 @@ export function Hero(props: HeroProps) {
     case "browser":
       return section(
         "",
-        <div className={cn(wrap, pad, "flex flex-col items-center gap-12")}>
+        <div className={cn(wrap, pad, "flex flex-col items-center gap-12", inner)}>
           <Copy h={h} center className="max-w-[760px]" />
-          {media ? <div className="w-full max-w-[1040px]"><Browser>{media}</Browser></div> : null}
+          {media ? <div className={cn("w-full max-w-[1040px]", classNames?.media)}><Browser>{media}</Browser></div> : null}
         </div>,
       );
     case "tilted":
       return section(
         "",
-        <div className={cn(wrap, "flex flex-col items-center gap-14 pt-14 @3xl:pt-24")}>
+        <div className={cn(wrap, "flex flex-col items-center gap-14 pt-14 @3xl:pt-24", inner)}>
           <Copy h={h} center className="max-w-[760px]" />
           {media ? (
             <div className="relative w-full max-w-[1080px] [perspective:2000px] [mask-image:linear-gradient(to_bottom,black_55%,transparent)]">
@@ -300,7 +309,7 @@ export function Hero(props: HeroProps) {
     case "collage":
       return section(
         "",
-        <div className={cn(wrap, pad, "grid items-center gap-10 @4xl:grid-cols-2 @4xl:gap-14")}>
+        <div className={cn(wrap, pad, "grid items-center gap-10 @4xl:grid-cols-2 @4xl:gap-14", inner)}>
           <Copy h={h} />
           {gallery?.length ? (
             <div className="grid grid-cols-3 gap-3">
@@ -316,7 +325,7 @@ export function Hero(props: HeroProps) {
     case "bordered":
       return section(
         "border-y border-line",
-        <div className={cn(wrap, "px-0 @3xl:px-0")}>
+        <div className={cn(wrap, "px-0 @3xl:px-0", inner)}>
           <div className="relative mx-4 border-x border-line @3xl:mx-6">
             {["-left-[5px] -top-[5px]", "-right-[5px] -top-[5px]", "-left-[5px] -bottom-[5px]", "-right-[5px] -bottom-[5px]"].map((pos) => (
               <span key={pos} aria-hidden="true" className={cn("absolute size-[9px] text-ink-3", pos)}>

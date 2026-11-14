@@ -21,6 +21,11 @@ export const buttonVariants = [
   "gradient",
   "success",
   "danger-soft",
+  "raised",
+  "shine",
+  "fill",
+  "hard",
+  "underline",
 ] as const;
 export type ButtonVariant = (typeof buttonVariants)[number];
 export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
@@ -32,6 +37,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * grey fill, for filters. link: text that acts. dashed: "Add another…" at the end of a list.
    * inverse: on the ink colour, for dark bands. gradient: a launch or upgrade moment, once per page.
    * success: approve, confirm. danger-soft: a quieter destructive action (Remove, Revoke).
+   * For a shop's or landing page's main action (Add to cart, Check out, Start free), one look used
+   * everywhere: raised (a solid edge that presses in), shine (a sheen crosses it on hover), fill (an
+   * outline that fills with the brand colour), hard (an outlined button on a hard brand-coloured shadow, for bold brands),
+   * underline (text over a line that draws in, for quiet premium brands). Not for app screens.
    */
   variant?: ButtonVariant;
   /** xs in dense rows, sm in tables and toolbars, md everywhere else, lg and xl for a page's one call to action. */
@@ -50,27 +59,45 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   shortcut?: string;
   /** Full width of its container. */
   block?: boolean;
+  /**
+   * Classes for the button's inner parts, when a design needs one adjusted: label (the words), badge,
+   * shortcut. They win over the button's own. className is the button itself.
+   * classNames={{ label: "uppercase tracking-[0.08em]" }}
+   */
+  classNames?: { label?: string; badge?: string; shortcut?: string };
 }
 
 const base =
   "inline-flex items-center justify-center whitespace-nowrap border border-transparent font-medium tracking-[-0.005em] select-none cursor-pointer no-underline " +
-  "transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-150 ease-[cubic-bezier(.16,1,.3,1)] active:enabled:translate-y-px motion-reduce:transition-none " +
+  "transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-150 ease-[cubic-bezier(.16,1,.3,1)] active:not-disabled:translate-y-px motion-reduce:transition-none " +
   "disabled:cursor-not-allowed disabled:not-aria-busy:opacity-50 aria-busy:cursor-progress aria-busy:opacity-80";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-brand text-brand-ink shadow-1 hover:enabled:bg-brand-hover",
-  secondary: "bg-surface text-ink border-line-strong shadow-1 hover:enabled:bg-surface-2",
-  ghost: "bg-transparent text-ink-2 hover:enabled:bg-surface-2 hover:enabled:text-ink",
-  danger: "bg-danger text-danger-ink shadow-1 hover:enabled:brightness-95",
-  soft: "bg-brand-soft text-ink hover:enabled:bg-[color-mix(in_oklch,var(--color-brand-soft),var(--color-brand)_14%)]",
-  outline: "border-brand bg-transparent text-ink hover:enabled:bg-brand-soft",
-  subtle: "bg-surface-2 text-ink hover:enabled:bg-[color-mix(in_oklch,var(--color-surface-2),var(--color-ink)_6%)]",
-  link: "h-auto! border-0 bg-transparent px-0! text-ink underline decoration-line-strong underline-offset-4 hover:enabled:decoration-current",
-  dashed: "border-dashed border-line-strong bg-transparent text-ink-2 hover:enabled:border-ink-4 hover:enabled:bg-surface-2 hover:enabled:text-ink",
-  inverse: "bg-ink text-ground shadow-1 hover:enabled:opacity-90",
-  gradient: "bg-[linear-gradient(135deg,var(--color-brand),color-mix(in_oklch,var(--color-brand),var(--color-info)_55%))] text-brand-ink shadow-2 hover:enabled:brightness-110",
-  success: "bg-success text-white shadow-1 hover:enabled:brightness-95",
-  "danger-soft": "bg-danger-soft text-danger hover:enabled:bg-[color-mix(in_oklch,var(--color-danger-soft),var(--color-danger)_12%)]",
+  primary: "bg-brand text-brand-ink shadow-1 hover:not-disabled:bg-brand-hover",
+  secondary: "bg-surface text-ink border-line-strong shadow-1 hover:not-disabled:bg-surface-2",
+  ghost: "bg-transparent text-ink-2 hover:not-disabled:bg-surface-2 hover:not-disabled:text-ink",
+  danger: "bg-danger text-danger-ink shadow-1 hover:not-disabled:brightness-95",
+  soft: "bg-brand-soft text-ink hover:not-disabled:bg-[color-mix(in_oklch,var(--color-brand-soft),var(--color-brand)_14%)]",
+  outline: "border-brand bg-transparent text-ink hover:not-disabled:bg-brand-soft",
+  subtle: "bg-surface-2 text-ink hover:not-disabled:bg-[color-mix(in_oklch,var(--color-surface-2),var(--color-ink)_6%)]",
+  link: "h-auto! border-0 bg-transparent px-0! text-ink underline decoration-line-strong underline-offset-4 hover:not-disabled:decoration-current",
+  dashed: "border-dashed border-line-strong bg-transparent text-ink-2 hover:not-disabled:border-ink-4 hover:not-disabled:bg-surface-2 hover:not-disabled:text-ink",
+  inverse: "bg-ink text-ground shadow-1 hover:not-disabled:opacity-90",
+  gradient: "bg-[linear-gradient(135deg,var(--color-brand),color-mix(in_oklch,var(--color-brand),var(--color-info)_55%))] text-brand-ink shadow-2 hover:not-disabled:brightness-110",
+  success: "bg-success text-white shadow-1 hover:not-disabled:brightness-95",
+  // The edge is the brand mixed towards the ink it's read on, so it shows under a black brand too.
+  raised:
+    "bg-brand text-brand-ink shadow-[0_3px_0_color-mix(in_oklch,var(--color-brand)_62%,var(--color-brand-ink))] hover:not-disabled:-translate-y-px hover:not-disabled:shadow-[0_4px_0_color-mix(in_oklch,var(--color-brand)_62%,var(--color-brand-ink))] active:not-disabled:translate-y-[3px] active:not-disabled:shadow-none",
+  shine:
+    "relative overflow-hidden bg-brand text-brand-ink shadow-1 hover:not-disabled:bg-brand-hover before:pointer-events-none before:absolute before:inset-y-0 before:-left-1/2 before:w-1/3 before:-skew-x-12 before:bg-brand-ink/25 before:transition-transform before:duration-700 before:ease-out hover:not-disabled:before:translate-x-[500%] motion-reduce:before:hidden",
+  fill:
+    "border-brand bg-transparent bg-[linear-gradient(var(--color-brand),var(--color-brand))] bg-[length:0%_100%] bg-no-repeat text-ink transition-[background-size,color,transform] duration-300 hover:not-disabled:bg-[length:100%_100%] hover:not-disabled:text-brand-ink",
+  // On the surface colour with an ink edge and shadow, so the offset shows whatever the brand is.
+  hard:
+    "border-2 border-ink bg-surface text-ink shadow-[4px_4px_0_var(--color-brand)] hover:not-disabled:-translate-x-px hover:not-disabled:-translate-y-px hover:not-disabled:shadow-[5px_5px_0_var(--color-brand)] active:not-disabled:translate-x-[3px] active:not-disabled:translate-y-[3px] active:not-disabled:shadow-none",
+  underline:
+    "h-auto! rounded-none! border-x-0 border-t-0 border-b border-line-strong bg-transparent bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1.5px] bg-[position:0_100%] bg-no-repeat px-0! pb-1.5 text-ink transition-[background-size] duration-300 hover:not-disabled:bg-[length:100%_1.5px]",
+  "danger-soft": "bg-danger-soft text-danger hover:not-disabled:bg-[color-mix(in_oklch,var(--color-danger-soft),var(--color-danger)_12%)]",
 };
 
 const sizes: Record<ButtonSize, { text: string; icon: string; radius: string }> = {
@@ -81,13 +108,27 @@ const sizes: Record<ButtonSize, { text: string; icon: string; radius: string }> 
   xl: { text: "h-11 gap-2 px-5 text-body-lg", icon: "w-11 px-0", radius: "rounded-lg" },
 };
 
+/**
+ * A button's classes, for something that isn't a <button> but should look like one: a link to a
+ * page, Next's Link. <Link className={buttonClass({ variant: "shine", size: "xl" })} href="/shop">.
+ */
+export function buttonClass({
+  variant = "secondary",
+  size = "md",
+  shape = "default",
+  block,
+  className,
+}: { variant?: ButtonVariant; size?: ButtonSize; shape?: "default" | "pill" | "square"; block?: boolean; className?: string } = {}) {
+  return cn(base, focusRing, variants[variant], sizes[size].text, shape === "pill" ? "rounded-full" : shape === "square" ? "rounded-none" : sizes[size].radius, block && "flex w-full", className);
+}
+
 /** A button. Verb first, sentence case: "Save changes", "Add customer". */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = "secondary", size = "md", shape = "default", loading = false, icon, iconRight, badge, shortcut, block, className, children, disabled, type = "button", ...rest },
+  { variant = "secondary", size = "md", shape = "default", loading = false, icon, iconRight, badge, shortcut, block, className, classNames, children, disabled, type = "button", ...rest },
   ref,
 ) {
   const iconOnly = children == null || children === false;
-  const loud = variant === "primary" || variant === "danger" || variant === "inverse" || variant === "gradient" || variant === "success";
+  const loud = variant === "primary" || variant === "danger" || variant === "inverse" || variant === "gradient" || variant === "success" || variant === "raised" || variant === "shine";
   return (
     <button
       ref={ref}
@@ -107,11 +148,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {loading ? <Spinner size={size === "xs" || size === "sm" ? 13 : 15} /> : icon}
-      {iconOnly ? null : <span className="truncate">{children}</span>}
+      {iconOnly ? null : <span className={cn("relative truncate", classNames?.label)}>{children}</span>}
       {badge !== undefined && badge !== null ? (
-        <span className={cn("ml-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-caption font-semibold tabular-nums", loud ? "bg-black/15 text-inherit" : "bg-surface-2 text-ink-2")}>{badge}</span>
+        <span className={cn("ml-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-caption font-semibold tabular-nums", loud ? "bg-black/15 text-inherit" : "bg-surface-2 text-ink-2", classNames?.badge)}>{badge}</span>
       ) : null}
-      {shortcut ? <kbd className={cn("ml-1 rounded-sm border px-1 font-sans text-caption font-normal", loud ? "border-current/30 opacity-80" : "border-line text-ink-3")}>{shortcut}</kbd> : null}
+      {shortcut ? <kbd className={cn("ml-1 rounded-sm border px-1 font-sans text-caption font-normal", loud ? "border-current/30 opacity-80" : "border-line text-ink-3", classNames?.shortcut)}>{shortcut}</kbd> : null}
       {iconRight}
     </button>
   );
@@ -200,7 +241,7 @@ export function ToggleButton({ pressed, defaultPressed = false, onPressedChange,
         setOwn(!on);
         onPressedChange?.(!on);
       }}
-      className={cn(on && "bg-brand-soft text-ink hover:enabled:bg-brand-soft", className)}
+      className={cn(on && "bg-brand-soft text-ink hover:not-disabled:bg-brand-soft", className)}
     />
   );
 }

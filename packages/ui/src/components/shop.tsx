@@ -6,7 +6,7 @@ import { useId, useState } from "react";
 
 import { cn, focusRing } from "../cx";
 import { CloseGlyph } from "./icons";
-import { siteAction } from "./site";
+import { buttonClass, type ButtonVariant } from "./button";
 
 const formatter = (currency: string, locale?: string) => new Intl.NumberFormat(locale ?? "en-US", { style: "currency", currency });
 
@@ -22,21 +22,23 @@ export interface PriceTagProps {
   /** sm on cards, md by default, lg on a product's own page. */
   size?: "sm" | "md" | "lg";
   className?: string;
+  /** Classes for its parts: amount (the price now), compareAt (the old price), saving ("−20%"). */
+  classNames?: { amount?: string; compareAt?: string; saving?: string };
 }
 
 const priceSizes = { sm: "text-subtitle", md: "text-title", lg: "text-heading" };
 
 /** A price, and when it's on sale, the old price struck through and how much is saved. */
-export function PriceTag({ amount, compareAt, currency = "USD", locale, size = "md", className }: PriceTagProps) {
+export function PriceTag({ amount, compareAt, currency = "USD", locale, size = "md", className, classNames }: PriceTagProps) {
   const f = formatter(currency, locale);
   const sale = compareAt !== undefined && compareAt > amount;
   return (
     <span className={cn("inline-flex flex-wrap items-baseline gap-x-2 gap-y-0.5", className)}>
-      <span className={cn("font-semibold tabular-nums tracking-[-0.01em]", sale ? "text-danger" : "text-ink", priceSizes[size])}>{f.format(amount)}</span>
+      <span className={cn("font-semibold tabular-nums tracking-[-0.01em]", sale ? "text-danger" : "text-ink", priceSizes[size], classNames?.amount)}>{f.format(amount)}</span>
       {sale ? (
         <>
-          <s className="text-body tabular-nums text-ink-3">{f.format(compareAt)}</s>
-          <span className="text-caption font-semibold text-danger">−{Math.round((1 - amount / compareAt) * 100)}%</span>
+          <s className={cn("text-body tabular-nums text-ink-3", classNames?.compareAt)}>{f.format(compareAt)}</s>
+          <span className={cn("text-caption font-semibold text-danger", classNames?.saving)}>−{Math.round((1 - amount / compareAt) * 100)}%</span>
         </>
       ) : null}
     </span>
@@ -180,34 +182,89 @@ export interface ProductCardProps {
   ratio?: "square" | "tall";
   /** What renders links: Next's Link, say, so moving between pages keeps state. An <a> by default. */
   as?: React.ElementType;
+  /** The add button's look, the shop's one buying look: "raised", "shine", "fill", "hard", "primary". secondary by default. */
+  addVariant?: ButtonVariant;
+  /** The add button's words: "Add to bag", "Quick add". */
+  addLabel?: React.ReactNode;
+  /** The add button's shape, to match the shop's other buttons. */
+  addShape?: "default" | "pill" | "square";
+  /** overlay: the add button slides up over the photo on hover (always shown on touch screens). below: under the price. */
+  addPlacement?: "below" | "overlay";
   className?: string;
+  /**
+   * Classes for its parts, when the shop's design needs one adjusted: media (the photo's frame: its
+   * radius, border, ratio), image, badge, body (the text block), vendor, name, price, action (the add button).
+   * classNames={{ media: "rounded-none border-0", name: "font-display text-subtitle" }}
+   */
+  classNames?: { media?: string; image?: string; badge?: string; body?: string; vendor?: string; name?: string; price?: string; action?: string };
 }
 
 /** A product in a grid: photo, name, price and, when asked, a button to add it to the cart. */
-export function ProductCard({ name, href, image, hoverImage, imageAlt, price, compareAt, currency, vendor, rating, badge, onAdd, soldOut, ratio = "square", as = "a", className }: ProductCardProps) {
+export function ProductCard({
+  name,
+  href,
+  image,
+  hoverImage,
+  imageAlt,
+  price,
+  compareAt,
+  currency,
+  vendor,
+  rating,
+  badge,
+  onAdd,
+  soldOut,
+  ratio = "square",
+  as = "a",
+  addVariant = "secondary",
+  addLabel = "Add to cart",
+  addShape = "default",
+  addPlacement = "below",
+  className,
+  classNames,
+}: ProductCardProps) {
   const Name = href ? as : "span";
+  const overlay = addPlacement === "overlay";
+  const add = onAdd ? (
+    <button
+      type="button"
+      disabled={soldOut}
+      onClick={onAdd}
+      className={cn(
+        buttonClass({ variant: addVariant, size: "lg", shape: addShape, block: true }),
+        "relative z-10",
+        overlay &&
+          "absolute inset-x-2.5 bottom-2.5 w-auto transition-[opacity,transform] duration-200 [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/product:translate-y-0 [@media(hover:hover)]:group-hover/product:opacity-100 [@media(hover:hover)]:group-focus-within/product:translate-y-0 [@media(hover:hover)]:group-focus-within/product:opacity-100",
+        classNames?.action,
+      )}
+    >
+      {soldOut ? "Sold out" : addLabel}
+    </button>
+  ) : null;
   return (
     <article className={cn("group/product relative flex flex-col gap-3", soldOut && "opacity-70", className)}>
-      <div className={cn("relative overflow-hidden rounded-lg border border-line bg-surface-2", ratio === "tall" ? "aspect-[3/4]" : "aspect-square")}>
-        <img src={image} alt={imageAlt ?? (typeof name === "string" ? name : "")} loading="lazy" className="size-full object-cover transition-transform duration-500 ease-out group-hover/product:scale-[1.03]" />
-        {hoverImage ? <img src={hoverImage} alt="" loading="lazy" className="absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-300 group-hover/product:opacity-100" /> : null}
+      <div className={cn("relative overflow-hidden rounded-lg border border-line bg-surface-2", ratio === "tall" ? "aspect-[3/4]" : "aspect-square", classNames?.media)}>
+        <img
+          src={image}
+          alt={imageAlt ?? (typeof name === "string" ? name : "")}
+          loading="lazy"
+          className={cn("size-full object-cover transition-transform duration-500 ease-out group-hover/product:scale-[1.03]", classNames?.image)}
+        />
+        {hoverImage ? <img src={hoverImage} alt="" loading="lazy" className={cn("absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-300 group-hover/product:opacity-100", classNames?.image)} /> : null}
         {badge || soldOut ? (
-          <span className={cn("absolute left-2.5 top-2.5 rounded-sm px-1.5 py-0.5 text-caption font-semibold shadow-1", soldOut ? "bg-surface text-ink-2" : "bg-ink text-ground")}>{soldOut ? "Sold out" : badge}</span>
+          <span className={cn("absolute left-2.5 top-2.5 rounded-sm px-1.5 py-0.5 text-caption font-semibold shadow-1", soldOut ? "bg-surface text-ink-2" : "bg-ink text-ground", classNames?.badge)}>{soldOut ? "Sold out" : badge}</span>
         ) : null}
+        {overlay && !soldOut ? add : null}
       </div>
-      <div className="flex flex-col gap-1">
-        {vendor ? <span className="text-caption font-medium uppercase tracking-[0.04em] text-ink-3">{vendor}</span> : null}
-        <Name {...(href ? { href } : {})} className={cn("rounded-sm text-body font-medium text-ink no-underline", href && "after:absolute after:inset-0 hover:underline", focusRing)}>
+      <div className={cn("flex flex-col gap-1", classNames?.body)}>
+        {vendor ? <span className={cn("text-caption font-medium uppercase tracking-[0.04em] text-ink-3", classNames?.vendor)}>{vendor}</span> : null}
+        <Name {...(href ? { href } : {})} className={cn("rounded-sm text-body font-medium text-ink no-underline", href && "after:absolute after:inset-0 hover:underline", focusRing, classNames?.name)}>
           {name}
         </Name>
         {rating ? <Rating size="sm" value={rating.value} count={rating.count} /> : null}
-        <PriceTag size="sm" amount={price} compareAt={compareAt} currency={currency} />
+        <PriceTag size="sm" amount={price} compareAt={compareAt} currency={currency} className={classNames?.price} />
       </div>
-      {onAdd ? (
-        <button type="button" disabled={soldOut} onClick={onAdd} className={cn(siteAction("secondary"), "relative z-10 w-full disabled:cursor-not-allowed disabled:opacity-60")}>
-          {soldOut ? "Sold out" : "Add to cart"}
-        </button>
-      ) : null}
+      {overlay ? null : add}
     </article>
   );
 }
@@ -242,7 +299,13 @@ export interface CartSummaryProps {
   onCheckout?: () => void;
   /** Shown when there are no lines. */
   empty?: React.ReactNode;
+  /** The checkout button's look: the shop's one buying look ("raised", "shine", "fill", "hard"). primary by default. */
+  checkoutVariant?: ButtonVariant;
+  /** The checkout button's shape, to match the shop's other buttons. */
+  checkoutShape?: "default" | "pill" | "square";
   className?: string;
+  /** Classes for its parts: line (each product's row), image, totals (the sums' block), total (the last row), checkout (the button). */
+  classNames?: { line?: string; image?: string; totals?: string; total?: string; checkout?: string };
 }
 
 /** The cart: each line with its photo, quantity and price, then the totals and the checkout button. */
@@ -257,7 +320,10 @@ export function CartSummary({
   checkoutLabel = "Check out",
   onCheckout,
   empty = "Your cart is empty.",
+  checkoutVariant = "primary",
+  checkoutShape = "default",
   className,
+  classNames,
 }: CartSummaryProps) {
   const f = formatter(currency);
   const subtotal = lines.reduce((s, l) => s + l.price * l.quantity, 0);
@@ -271,8 +337,8 @@ export function CartSummary({
         <>
           <ul className="m-0 flex list-none flex-col divide-y divide-line p-0">
             {lines.map((l) => (
-              <li key={l.id} className="flex gap-3 p-4">
-                {l.image ? <img src={l.image} alt="" className="size-16 flex-none rounded-md border border-line object-cover" /> : null}
+              <li key={l.id} className={cn("flex gap-3 p-4", classNames?.line)}>
+                {l.image ? <img src={l.image} alt="" className={cn("size-16 flex-none rounded-md border border-line object-cover", classNames?.image)} /> : null}
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-start justify-between gap-3">
                     <span className="min-w-0 text-body font-medium text-ink">{l.name}</span>
@@ -292,7 +358,7 @@ export function CartSummary({
               </li>
             ))}
           </ul>
-          <div className="flex flex-col gap-2 border-t border-line p-4">
+          <div className={cn("flex flex-col gap-2 border-t border-line p-4", classNames?.totals)}>
             <div className={row}>
               <span className="text-ink-2">Subtotal</span>
               <span className="tabular-nums text-ink">{f.format(subtotal)}</span>
@@ -307,12 +373,12 @@ export function CartSummary({
                 <span className="tabular-nums text-ink">{f.format(tax)}</span>
               </div>
             ) : null}
-            <div className="mt-1 flex items-center justify-between border-t border-line pt-3">
+            <div className={cn("mt-1 flex items-center justify-between border-t border-line pt-3", classNames?.total)}>
               <span className="text-subtitle font-semibold text-ink">Total</span>
               <span className="text-title font-semibold tabular-nums text-ink">{f.format(total)}</span>
             </div>
             {note ? <p className="m-0 text-small text-ink-3">{note}</p> : null}
-            <button type="button" onClick={onCheckout} className={cn(siteAction("primary", "lg"), "mt-2 w-full")}>
+            <button type="button" onClick={onCheckout} className={cn(buttonClass({ variant: checkoutVariant, size: "xl", shape: checkoutShape, block: true }), "mt-2", classNames?.checkout)}>
               {checkoutLabel}
             </button>
           </div>

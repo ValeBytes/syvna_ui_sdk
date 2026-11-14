@@ -21,10 +21,12 @@ export interface FieldProps {
   /** One control: Input, Textarea, Select. It gets the id, aria and invalid it needs. */
   children: React.ReactNode;
   className?: string;
+  /** Classes for its parts: label, note (the hint or error under the control). */
+  classNames?: { label?: string; note?: string };
 }
 
 /** A label, a control, and its hint or error, wired together for screen readers. */
-export function Field({ label, hint, error, required, aside, children, className }: FieldProps) {
+export function Field({ label, hint, error, required, aside, children, className, classNames }: FieldProps) {
   const id = useId();
   const noteId = `${id}-note`;
   const note = error ?? hint;
@@ -43,7 +45,7 @@ export function Field({ label, hint, error, required, aside, children, className
     <FieldContext.Provider value={wiring}>
     <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
       <div className="flex items-baseline justify-between gap-2">
-        <label className="text-label font-medium text-ink" htmlFor={controlId ?? (wiring ? wiring.id : undefined)}>
+        <label className={cn("text-label font-medium text-ink", classNames?.label)} htmlFor={controlId ?? (wiring ? wiring.id : undefined)}>
           {label}
           {required ? (
             <span className="ml-0.5 text-danger" aria-hidden="true">
@@ -55,7 +57,7 @@ export function Field({ label, hint, error, required, aside, children, className
       </div>
       {control}
       {note ? (
-        <p id={noteId} className={cn("m-0 text-small", error ? "text-danger" : "text-ink-3")} role={error ? "alert" : undefined}>
+        <p id={noteId} className={cn("m-0 text-small", error ? "text-danger" : "text-ink-3", classNames?.note)} role={error ? "alert" : undefined}>
           {note}
         </p>
       ) : null}

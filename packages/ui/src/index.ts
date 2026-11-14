@@ -13,6 +13,7 @@ export {
   ToggleButton,
   CopyButton,
   buttonVariants,
+  buttonClass,
   type ButtonProps,
   type ButtonSize,
   type ButtonVariant,
@@ -122,6 +123,7 @@ export {
   SiteFooter,
   AuthLayout,
   AuthDivider,
+  authLayoutVariants,
   siteAction,
   type SectionProps,
   type FeatureGridProps,
@@ -133,6 +135,8 @@ export {
   type CallToActionProps,
   type SiteFooterProps,
   type AuthLayoutProps,
+  type AuthLayoutVariant,
+  type AuthAside,
 } from "./components/site";
 export {
   ProductCard,
@@ -320,3 +324,18 @@ export {
   type Mode as PaletteMode,
 } from "./palette";
 export { PaletteStyle, type PaletteStyleProps } from "./components/palette-style";
+export { Reveal, Stagger, revealEffects, type RevealProps, type RevealEffect, type StaggerProps } from "./components/motion";
+export {
+  Bento,
+  FeatureRows,
+  Stats,
+  Steps,
+  type BentoProps,
+  type BentoItem,
+  type FeatureRowsProps,
+  type FeatureRow,
+  type StatsProps,
+  type Stat,
+  type StepsProps,
+  type Step,
+} from "./components/site-sections";

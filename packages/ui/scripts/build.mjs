@@ -98,6 +98,7 @@ theme += `
   @keyframes sy-blink { to { visibility: hidden; } }
   @keyframes sy-pulse-dot { 0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
   @keyframes sy-indeterminate { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+  @keyframes sy-enter { from { opacity: 0; transform: var(--sy-enter-transform, none); filter: var(--sy-enter-filter, none); } }
   @keyframes sy-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
 }
 `;

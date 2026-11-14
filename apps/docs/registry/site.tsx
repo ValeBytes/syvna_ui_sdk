@@ -23,10 +23,12 @@ import {
   SiteFooter,
   SiteHeader,
   Testimonials,
+  authLayoutVariants,
   heroVariants,
   pricingVariants,
   siteAction,
   siteHeaderVariants,
+  type AuthLayoutVariant,
   type CartLine,
   type HeroVariant,
   type PricingVariant,
@@ -191,6 +193,68 @@ function RatingDemo({ value, count, interactive }: { value: number; count: numbe
     </div>
   ) : (
     <Rating value={value} count={count} />
+  );
+}
+
+const quietLink = "font-medium text-ink no-underline hover:underline";
+
+/** A small piece of a product, for the showcase panel. */
+function RequestsPreview() {
+  const rows = [
+    ["PO-2291", "Forklift service", "Hamburg", "Approved"],
+    ["PO-2290", "Packing film, 40 rolls", "Osaka", "Waiting"],
+    ["PO-2289", "Safety boots", "Lagos", "Approved"],
+    ["PO-2288", "Dock scanner", "São Paulo", "Waiting"],
+    ["PO-2287", "Pallet racking", "Hamburg", "Ordered"],
+  ];
+  return (
+    <table className="w-full min-w-[420px] border-collapse text-left text-label">
+      <thead>
+        <tr className="border-b border-line bg-surface-2 text-ink-3">
+          {["Request", "For", "Site", "Status"].map((h) => (
+            <th key={h} className="px-4 py-2.5 font-medium">{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r[0]} className="border-b border-line last:border-0">
+            <td className="px-4 py-2.5 font-mono text-caption text-ink-3">{r[0]}</td>
+            <td className="px-4 py-2.5 text-ink">{r[1]}</td>
+            <td className="px-4 py-2.5 text-ink-2">{r[2]}</td>
+            <td className="px-4 py-2.5 text-ink-2">{r[3]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function AuthDemo({ variant, proof, legal, help }: { variant: AuthLayoutVariant; proof: string; legal: boolean; help: boolean }) {
+  return (
+    <AuthLayout
+      className="min-h-[620px]"
+      variant={variant}
+      brand={<><span className="grid size-7 place-items-center rounded-md bg-brand font-display text-caption font-bold text-brand-ink">F</span> Fieldwork</>}
+      title="Sign in"
+      description="Welcome back."
+      aside={{
+        headline: "Every request, approval and purchase order in one place.",
+        body: variant === "banner" || variant === "showcase" ? "Raise it, approve it and track it without a spreadsheet." : undefined,
+        quote: proof === "quote" ? { quote: "Month-end closes two days sooner.", name: "Ingrid Solberg", role: "Finance lead" } : undefined,
+        points: proof === "points" ? ["Requests approved from a phone", "Budgets checked before anything is ordered", "Every change kept, for the auditors"] : undefined,
+        stats: proof === "stats" ? [{ value: "1,240", label: "requests a month" }, { value: "4 h", label: "to approve, on average" }] : undefined,
+        image: photo("photo-1586528116311-ad8dd3c8310d", 1200, 1400),
+        media: <RequestsPreview />,
+      }}
+      legal={legal ? <>By continuing you agree to the Terms and the Privacy Policy.</> : undefined}
+      help={help ? <a href="#" className="text-ink-3 no-underline hover:text-ink">Need help?</a> : undefined}
+      footer={<>New here? <a href="#" className={quietLink}>Create an account</a></>}
+    >
+      <Field label="Work email"><Input type="email" placeholder="you@company.com" /></Field>
+      <Field label="Password"><Input type="password" /></Field>
+      <Button variant="primary" size="lg" block>Sign in</Button>
+    </AuthLayout>
   );
 }
 
@@ -430,6 +494,9 @@ export const site: Doc[] = [
       rating: { type: "boolean", default: true },
       add: { type: "boolean", default: true, label: "Add to cart" },
       soldOut: { type: "boolean", default: false },
+      addVariant: { type: "select", options: ["secondary", "primary", "raised", "shine", "fill", "hard", "underline"], default: "secondary", label: "Add button" },
+      addPlacement: { type: "select", options: ["below", "overlay"], default: "below" },
+      sharp: { type: "boolean", default: false, label: "classNames: sharp photos" },
     },
     preview: (v) => (
       <div className="grid w-full max-w-[760px] grid-cols-2 gap-5 @container sm:grid-cols-3">
@@ -452,6 +519,9 @@ export const site: Doc[] = [
             onAdd={bool(v.add) ? () => {} : undefined}
             soldOut={bool(v.soldOut) && i === 2}
             ratio={str(v.ratio) as "square"}
+            addVariant={str(v.addVariant) as "secondary"}
+            addPlacement={str(v.addPlacement) as "below"}
+            classNames={bool(v.sharp) ? { media: "rounded-none border-0", badge: "rounded-none", name: "font-display text-subtitle" } : undefined}
           />
         ))}
       </div>
@@ -512,29 +582,50 @@ export const site: Doc[] = [
   },
   {
     name: "AuthLayout",
-    controls: { aside: { type: "boolean", default: true, label: "Brand panel" } },
+    controls: {
+      variant: { type: "select", options: authLayoutVariants, default: "split" },
+      all: { type: "boolean", default: false, label: `Show all ${authLayoutVariants.length}` },
+      proof: { type: "select", options: ["quote", "points", "stats", "none"], default: "quote", label: "Panel proof" },
+      legal: { type: "boolean", default: false, label: "Small print" },
+      help: { type: "boolean", default: false, label: "Help link" },
+    },
     stage: "block p-0",
-    preview: (v) => (
-      <AuthLayout
-        className="min-h-[560px]"
-        brand={<><Gem size={18} /> Lumen</>}
-        title="Sign in"
-        description="Welcome back."
-        aside={bool(v.aside) ? { headline: "Your studio, booked and paid.", quote: { quote: "Half our admin went away.", name: "Amara Okafor", role: "Owner, Lumen" } } : undefined}
-        footer={<>New here? <a href="#">Create an account</a></>}
-      >
-        <Field label="Email"><Input type="email" /></Field>
-        <Button variant="primary" size="lg" block>Sign in</Button>
-      </AuthLayout>
-    ),
+    preview: (v) =>
+      bool(v.all) ? (
+        <div className="flex flex-col">
+          {authLayoutVariants.map((x, i) => (
+            <div key={x} className="border-b-4 border-double border-line-strong">
+              <p className="m-0 bg-surface-2 px-4 py-2 font-mono text-caption text-ink-3">
+                {i + 1}. {x}
+              </p>
+              <AuthDemo variant={x} proof={str(v.proof)} legal={bool(v.legal)} help={bool(v.help)} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <AuthDemo variant={str(v.variant) as AuthLayoutVariant} proof={str(v.proof)} legal={bool(v.legal)} help={bool(v.help)} />
+      ),
     code: (v) =>
       jsx(
         "AuthLayout",
         {
-          brand: raw("<><Mark /> Lumen</>"),
+          variant: str(v.variant) === "split" ? undefined : str(v.variant),
+          brand: raw("<><Mark /> Fieldwork</>"),
           title: "Sign in",
           description: "Welcome back.",
-          aside: bool(v.aside) ? raw('{ headline: "Your studio, booked and paid.", quote: { quote: "Half our admin went away.", name: "Amara Okafor", role: "Owner, Lumen" } }') : undefined,
+          aside: raw(
+            `{ headline: "Every request, approval and purchase order in one place."${
+              str(v.proof) === "quote"
+                ? ', quote: { quote: "Month-end closes two days sooner.", name: "Ingrid Solberg", role: "Finance lead" }'
+                : str(v.proof) === "points"
+                  ? ', points: ["Requests approved from a phone", "Budgets checked before anything is ordered"]'
+                  : str(v.proof) === "stats"
+                    ? ', stats: [{ value: "1,240", label: "requests a month" }, { value: "4 h", label: "to approve, on average" }]'
+                    : ""
+            }${str(v.variant) === "photo" ? ', image: "/images/warehouse.jpg"' : ""}${str(v.variant) === "showcase" ? ", media: <RequestsPreview />" : ""} }`,
+          ),
+          legal: bool(v.legal) ? "By continuing you agree to the Terms and the Privacy Policy." : undefined,
+          help: bool(v.help) ? raw('<Link href="/help">Need help?</Link>') : undefined,
           footer: raw("<>New here? <Link href=\"/sign-up\">Create an account</Link></>"),
         },
         '{/* Only the options Syvna has set up: OAuthButtons draws them (and the divider) from colony.auth.providers(). */}\n<OAuthButtons providers={providers} />\n<AuthForm mode="sign-in" />',

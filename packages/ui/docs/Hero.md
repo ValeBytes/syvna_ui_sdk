@@ -14,3 +14,5 @@ Which variant:
 - **Words first:** `minimal` (the title alone), `editorial` (a large title with the words beside it), `left`.
 - **A band that stands out:** `inverted` (on ink), `brand` (on the brand colour), `card`, `gradient`, `bordered`.
 - **Launches and waitlists:** `announcement` (a "New" pill on the eyebrow), `signup` (an email field as the action, `signup`).
+
+`classNames` adjusts its parts for a design (`title`, `eyebrow`, `description`, `actions`, `note`, `media`, `inner`) with token classes; wrap it in `Reveal when="load"` for the page's opening movement.

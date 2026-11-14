@@ -22,11 +22,16 @@
             "inverse",
             "gradient",
             "success",
-            "danger-soft"
+            "danger-soft",
+            "raised",
+            "shine",
+            "fill",
+            "hard",
+            "underline"
           ],
           "required": false,
           "default": "\"secondary\"",
-          "description": "primary: the one main action in a view. secondary: everything else. ghost: in toolbars and rows.\ndanger: deletes. soft: a tinted second action. outline: bordered in the brand colour. subtle: a\ngrey fill, for filters. link: text that acts. dashed: \"Add another…\" at the end of a list.\ninverse: on the ink colour, for dark bands. gradient: a launch or upgrade moment, once per page.\nsuccess: approve, confirm. danger-soft: a quieter destructive action (Remove, Revoke)."
+          "description": "primary: the one main action in a view. secondary: everything else. ghost: in toolbars and rows.\ndanger: deletes. soft: a tinted second action. outline: bordered in the brand colour. subtle: a\ngrey fill, for filters. link: text that acts. dashed: \"Add another…\" at the end of a list.\ninverse: on the ink colour, for dark bands. gradient: a launch or upgrade moment, once per page.\nsuccess: approve, confirm. danger-soft: a quieter destructive action (Remove, Revoke).\nFor a shop's or landing page's main action (Add to cart, Check out, Start free), one look used\neverywhere: raised (a solid edge that presses in), shine (a sheen crosses it on hover), fill (an\noutline that fills with the brand colour), hard (an outlined button on a hard brand-coloured shadow, for bold brands),\nunderline (text over a line that draws in, for quiet premium brands). Not for app screens."
         },
         {
           "name": "size",
@@ -90,6 +95,12 @@
           "type": "boolean",
           "required": false,
           "description": "Full width of its container."
+        },
+        {
+          "name": "classNames",
+          "type": "{ label?: string; badge?: string; shortcut?: string }",
+          "required": false,
+          "description": "Classes for the button's inner parts, when a design needs one adjusted: label (the words), badge,\nshortcut. They win over the button's own. className is the button itself.\nclassNames={{ label: \"uppercase tracking-[0.08em]\" }}"
         },
         {
           "name": "...rest",
@@ -278,7 +289,12 @@
             "inverse",
             "gradient",
             "success",
-            "danger-soft"
+            "danger-soft",
+            "raised",
+            "shine",
+            "fill",
+            "hard",
+            "underline"
           ],
           "required": false,
           "default": "\"ghost\"",
@@ -346,9 +362,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -486,9 +502,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -541,9 +557,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -710,6 +726,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ label?: string; note?: string }",
+          "required": false,
+          "description": "Classes for its parts: label, note (the hint or error under the control)."
         }
       ]
     },
@@ -828,6 +850,12 @@
           "description": "false for content that runs to the edges: a flush Table, an image."
         },
         {
+          "name": "classNames",
+          "type": "{ header?: string; title?: string; description?: string; body?: string; footer?: string }",
+          "required": false,
+          "description": "Classes for its parts, when a design needs one adjusted: header, title, description, body, footer. className is the card itself."
+        },
+        {
           "name": "...rest",
           "type": "Omit<React.HTMLAttributes<HTMLElement>, \"title\">",
           "required": false,
@@ -869,6 +897,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ label?: string; value?: string; change?: string }",
+          "required": false,
+          "description": "Classes for its parts: label, value (the number), change."
         }
       ]
     },
@@ -906,6 +940,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ icon?: string; title?: string; description?: string; action?: string }",
+          "required": false,
+          "description": "Classes for its parts: icon, title, description, action."
         }
       ]
     },
@@ -1953,9 +1993,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -2089,9 +2129,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -2844,10 +2884,22 @@
           "description": ""
         },
         {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "The heading, then what's under it, ease in as the section is scrolled to. For public pages."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ inner?: string; header?: string; eyebrow?: string; title?: string; description?: string }",
+          "required": false,
+          "description": "Classes for its parts: inner (the width and padding), header (the heading block), eyebrow, title, description."
         }
       ]
     },
@@ -2881,10 +2933,22 @@
           "description": "plain: icon and text on the ground. cards: each in a raised card."
         },
         {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "The features ease in one after another as the grid is scrolled to."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ item?: string; icon?: string; title?: string; description?: string }",
+          "required": false,
+          "description": "Classes for its parts: item (each feature), icon, title, description."
         }
       ]
     },
@@ -2936,10 +3000,22 @@
           "description": "grid: cards in columns. single: one large quote, centred."
         },
         {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "The quotes ease in one after another as they're scrolled to."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ card?: string; quote?: string }",
+          "required": false,
+          "description": "Classes for its parts: card (each quote's card), quote (the words)."
         }
       ]
     },
@@ -3007,6 +3083,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ panel?: string; title?: string; description?: string; actions?: string }",
+          "required": false,
+          "description": "Classes for its parts: panel (the coloured block: its radius, padding, background), title, description, actions."
         }
       ]
     },
@@ -3057,14 +3139,14 @@
     },
     {
       "name": "AuthLayout",
-      "summary": "The page around sign-in, sign-up and password forms. The form sits in a\nnarrow column with no card around it, the brand at the top; on wide screens\na panel in the app's sidebar colours sits beside it with a short promise\nand a quote. On phones it's the form alone. Every auth page uses it, so\nthey read as one product.",
+      "summary": "The page around sign-in, sign-up and password forms, in twelve\narrangements: beside a panel with the product's promise, alone in a centred\ncolumn, on a card, under a top bar. Every auth page of an app uses the same\none, so they read as one product. On phones every arrangement is the form\nwith the brand over it.",
       "file": "src/components/site.tsx",
       "props": [
         {
           "name": "brand",
           "type": "React.ReactNode",
           "required": true,
-          "description": "The product's mark and name, top left: what it is, before anything else."
+          "description": "The product's mark and name: what it is, before anything else."
         },
         {
           "name": "title",
@@ -3088,13 +3170,46 @@
           "name": "footer",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Under the form: \"New here? Create an account\"."
+          "description": "Under the form: \"New here? Create an account\". The topbar variant shows it top right."
+        },
+        {
+          "name": "variant",
+          "type": "AuthLayoutVariant",
+          "values": [
+            "inset",
+            "compact",
+            "split",
+            "split-reverse",
+            "centered",
+            "card",
+            "card-brand",
+            "topbar",
+            "banner",
+            "photo",
+            "showcase",
+            "frame"
+          ],
+          "required": false,
+          "default": "\"split\"",
+          "description": "How the page is arranged.\nWith a panel (they need aside): split (panel left), split-reverse (panel right), inset (a rounded panel\nset into the page), photo (a photograph with the promise over it; needs aside.image), showcase (the\npromise over a piece of the product; needs aside.media), banner (a band across the top, the form on a\ncard over its edge).\nWithout one: centered (a plain column), card (the form on a raised card), card-brand (that card on the\nsidebar's colour), compact (a small card with everything centred: staff tools and admin sign-ins),\ntopbar (a bar with the brand and the link to the other page), frame (a bordered sheet with the small\nprint in its foot).\nA panel variant without aside draws centered."
         },
         {
           "name": "aside",
-          "type": "{ headline: React.ReactNode; body?: React.ReactNode; quote?: Quote }",
+          "type": "AuthAside",
           "required": false,
-          "description": "The panel beside the form on wide screens, in the sidebar's colours: a promise in a few words, and proof (a quote, a number, a product shot). Leave it out for a single centred column."
+          "description": "The panel's words and proof; see AuthAside. Leave it out for a page with the form alone."
+        },
+        {
+          "name": "legal",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Small print under everything: \"By continuing you agree to the Terms and Privacy Policy.\" or \"© 2026 Lumen\"."
+        },
+        {
+          "name": "help",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A quiet link in the top right corner: \"Need help?\", a language picker, \"Back to site\"."
         },
         {
           "name": "className",
@@ -3212,10 +3327,73 @@
           "description": "What renders links: Next's Link, say, so moving between pages keeps state. An <a> by default."
         },
         {
+          "name": "addVariant",
+          "type": "ButtonVariant",
+          "values": [
+            "primary",
+            "secondary",
+            "ghost",
+            "danger",
+            "soft",
+            "outline",
+            "subtle",
+            "link",
+            "dashed",
+            "inverse",
+            "gradient",
+            "success",
+            "danger-soft",
+            "raised",
+            "shine",
+            "fill",
+            "hard",
+            "underline"
+          ],
+          "required": false,
+          "default": "\"secondary\"",
+          "description": "The add button's look, the shop's one buying look: \"raised\", \"shine\", \"fill\", \"hard\", \"primary\". secondary by default."
+        },
+        {
+          "name": "addLabel",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "\"Add to cart\"",
+          "description": "The add button's words: \"Add to bag\", \"Quick add\"."
+        },
+        {
+          "name": "addShape",
+          "type": "\"default\" | \"pill\" | \"square\"",
+          "values": [
+            "default",
+            "pill",
+            "square"
+          ],
+          "required": false,
+          "default": "\"default\"",
+          "description": "The add button's shape, to match the shop's other buttons."
+        },
+        {
+          "name": "addPlacement",
+          "type": "\"below\" | \"overlay\"",
+          "values": [
+            "below",
+            "overlay"
+          ],
+          "required": false,
+          "default": "\"below\"",
+          "description": "overlay: the add button slides up over the photo on hover (always shown on touch screens). below: under the price."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ media?: string; image?: string; badge?: string; body?: string; vendor?: string; name?: string; price?: string; action?: string }",
+          "required": false,
+          "description": "Classes for its parts, when the shop's design needs one adjusted: media (the photo's frame: its\nradius, border, ratio), image, badge, body (the text block), vendor, name, price, action (the add button).\nclassNames={{ media: \"rounded-none border-0\", name: \"font-display text-subtitle\" }}"
         }
       ]
     },
@@ -3266,6 +3444,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ amount?: string; compareAt?: string; saving?: string }",
+          "required": false,
+          "description": "Classes for its parts: amount (the price now), compareAt (the old price), saving (\"−20%\")."
         }
       ]
     },
@@ -3444,10 +3628,55 @@
           "description": "Shown when there are no lines."
         },
         {
+          "name": "checkoutVariant",
+          "type": "ButtonVariant",
+          "values": [
+            "primary",
+            "secondary",
+            "ghost",
+            "danger",
+            "soft",
+            "outline",
+            "subtle",
+            "link",
+            "dashed",
+            "inverse",
+            "gradient",
+            "success",
+            "danger-soft",
+            "raised",
+            "shine",
+            "fill",
+            "hard",
+            "underline"
+          ],
+          "required": false,
+          "default": "\"primary\"",
+          "description": "The checkout button's look: the shop's one buying look (\"raised\", \"shine\", \"fill\", \"hard\"). primary by default."
+        },
+        {
+          "name": "checkoutShape",
+          "type": "\"default\" | \"pill\" | \"square\"",
+          "values": [
+            "default",
+            "pill",
+            "square"
+          ],
+          "required": false,
+          "default": "\"default\"",
+          "description": "The checkout button's shape, to match the shop's other buttons."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ line?: string; image?: string; totals?: string; total?: string; checkout?: string }",
+          "required": false,
+          "description": "Classes for its parts: line (each product's row), image, totals (the sums' block), total (the last row), checkout (the button)."
         }
       ]
     },
@@ -3504,12 +3733,12 @@
             "grid",
             "split",
             "split-reverse",
+            "card",
+            "photo",
             "left",
             "editorial",
-            "photo",
             "photo-bottom",
             "glow",
-            "card",
             "browser",
             "tilted",
             "collage",
@@ -3550,6 +3779,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ inner?: string; eyebrow?: string; title?: string; description?: string; actions?: string; note?: string; media?: string }",
+          "required": false,
+          "description": "Classes for its parts, when the design needs one adjusted: inner (the width and padding), eyebrow,\ntitle, description, actions (the buttons' row), note, media (the picture's frame).\nclassNames={{ title: \"font-normal tracking-[-0.04em]\", inner: \"py-24\" }}"
         }
       ]
     },
@@ -3599,8 +3834,8 @@
             "compact",
             "tall",
             "split",
-            "announcement",
             "centered",
+            "announcement",
             "brand-center",
             "stacked",
             "floating-card",
@@ -3656,6 +3891,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ inner?: string; brand?: string; link?: string; actions?: string }",
+          "required": false,
+          "description": "Classes for its parts: inner (the row: its width and padding), brand, link (each main link), actions. className is the bar itself."
         }
       ]
     },
@@ -3753,6 +3994,12 @@
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ plan?: string; price?: string; cta?: string; feature?: string; popular?: string }",
+          "required": false,
+          "description": "Classes for its parts: plan (each plan's card), price (the number), cta (each plan's button), feature (each line of what's included), popular (the \"Most popular\" pill)."
         }
       ]
     },
@@ -3813,9 +4060,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -5154,9 +5401,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -5320,9 +5567,9 @@
             "soft",
             "outline",
             "dashed",
+            "underline",
             "pill",
             "filled",
-            "underline",
             "cupertino",
             "floating",
             "notched",
@@ -6673,6 +6920,345 @@
           "required": false,
           "default": "\":root\"",
           "description": "Where it applies: the whole app (\":root\") or a part of it (\"[data-palette=ocean]\")."
+        }
+      ]
+    },
+    {
+      "name": "Reveal",
+      "summary": "A container that eases in when it's scrolled to, or as the page opens.\nNothing is hidden without JavaScript or for people who ask for less motion,\nand what is already on screen never jumps.",
+      "file": "src/components/motion.tsx",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "What eases in: a section's heading, a card, a picture, a whole band."
+        },
+        {
+          "name": "effect",
+          "type": "RevealEffect",
+          "values": [
+            "left",
+            "up",
+            "down",
+            "right",
+            "fade",
+            "scale",
+            "blur"
+          ],
+          "required": false,
+          "default": "\"up\"",
+          "description": "How it arrives. up: rises a little (the default, right for most things). down, left, right: from\nthat side (pictures beside text come from their own side). fade: only opacity (long text, tables).\nscale: grows slightly (a product shot, a card). blur: sharpens (one hero picture at most)."
+        },
+        {
+          "name": "when",
+          "type": "\"view\" | \"load\"",
+          "values": [
+            "view",
+            "load"
+          ],
+          "required": false,
+          "default": "\"view\"",
+          "description": "view: when it's scrolled to (the default); what's already on screen when the page opens stays\nstill. load: as the page opens, for the first screen: the hero's words, then its picture."
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": "Milliseconds to wait first: 0, 80, 160 down a row makes it arrive one after another."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "default": "600",
+          "description": "Milliseconds it takes. 600 by default; 400 for small things, 800 for one big picture."
+        },
+        {
+          "name": "distance",
+          "type": "number",
+          "required": false,
+          "default": "16",
+          "description": "How far it travels, in pixels, for up, down, left and right. 16 by default."
+        },
+        {
+          "name": "repeat",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Play every time it's scrolled to, not just the first. Off by default."
+        },
+        {
+          "name": "as",
+          "type": "React.ElementType",
+          "required": false,
+          "default": "\"div\"",
+          "description": "The element it renders: \"div\" by default; \"li\" inside a list, \"section\" for a band."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Stagger",
+      "summary": "A grid or row whose children ease in one after another.",
+      "file": "src/components/motion.tsx",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The things that arrive one after another: cards, features, logos, steps."
+        },
+        {
+          "name": "effect",
+          "type": "RevealEffect",
+          "values": [
+            "left",
+            "up",
+            "down",
+            "right",
+            "fade",
+            "scale",
+            "blur"
+          ],
+          "required": false,
+          "default": "\"up\"",
+          "description": "How each arrives; see Reveal."
+        },
+        {
+          "name": "when",
+          "type": "\"view\" | \"load\"",
+          "values": [
+            "view",
+            "load"
+          ],
+          "required": false,
+          "default": "\"view\"",
+          "description": "view (when scrolled to) or load (as the page opens); see Reveal."
+        },
+        {
+          "name": "gap",
+          "type": "number",
+          "required": false,
+          "default": "80",
+          "description": "Milliseconds between one and the next. 80 by default; keep the whole row under a second."
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": "Milliseconds before the first."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "default": "600",
+          "description": "Milliseconds each takes."
+        },
+        {
+          "name": "as",
+          "type": "React.ElementType",
+          "required": false,
+          "default": "\"div\"",
+          "description": "The container's element: \"div\" by default, \"ul\" for a list."
+        },
+        {
+          "name": "itemAs",
+          "type": "React.ElementType",
+          "required": false,
+          "default": "\"div\"",
+          "description": "Each child's wrapper: \"div\" by default, \"li\" inside a \"ul\"."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "The container's classes: the grid or row the children sit in."
+        },
+        {
+          "name": "itemClassName",
+          "type": "string",
+          "required": false,
+          "description": "Classes for each child's wrapper, which is the grid's item: \"h-full\", \"col-span-2\"."
+        }
+      ]
+    },
+    {
+      "name": "Bento",
+      "summary": "What the product does as a grid of unequal cells, each with its own picture: richer than a row of icons.",
+      "file": "src/components/site-sections.tsx",
+      "props": [
+        {
+          "name": "items",
+          "type": "BentoItem[]",
+          "required": true,
+          "description": "Four to six cells of different sizes, each showing a different thing the product does."
+        },
+        {
+          "name": "columns",
+          "type": "3 | 4",
+          "required": false,
+          "default": "3",
+          "description": "Columns on a wide screen."
+        },
+        {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "Cells ease in one after another as the grid is scrolled to."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ grid?: string; cell?: string; title?: string; description?: string; media?: string }",
+          "required": false,
+          "description": "Classes for its parts: grid, cell (every cell), title, description, media."
+        }
+      ]
+    },
+    {
+      "name": "FeatureRows",
+      "summary": "The product shown a part at a time: words on one side, a large real screen on the other, swapping sides down the page.",
+      "file": "src/components/site-sections.tsx",
+      "props": [
+        {
+          "name": "rows",
+          "type": "FeatureRow[]",
+          "required": true,
+          "description": "Two to four rows; the picture swaps sides from one to the next."
+        },
+        {
+          "name": "start",
+          "type": "\"media-right\" | \"media-left\"",
+          "values": [
+            "media-right",
+            "media-left"
+          ],
+          "required": false,
+          "default": "\"media-right\"",
+          "description": "Which side the first row's picture is on."
+        },
+        {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "Text and picture ease in from their own sides as each row is scrolled to."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ row?: string; text?: string; title?: string; description?: string; media?: string }",
+          "required": false,
+          "description": "Classes for its parts: row, text (the words' column), title, description, media (the picture's frame)."
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "summary": "A few numbers the product can stand behind, set large.",
+      "file": "src/components/site-sections.tsx",
+      "props": [
+        {
+          "name": "stats",
+          "type": "Stat[]",
+          "required": true,
+          "description": "Three or four real numbers."
+        },
+        {
+          "name": "variant",
+          "type": "\"plain\" | \"cards\" | \"band\"",
+          "values": [
+            "cards",
+            "plain",
+            "band"
+          ],
+          "required": false,
+          "default": "\"plain\"",
+          "description": "plain: on the ground, divided by lines. cards: each in a card. band: on the brand colour, the page's loud moment."
+        },
+        {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "The numbers ease in one after another."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ item?: string; value?: string; label?: string }",
+          "required": false,
+          "description": "Classes for its parts: item, value, label."
+        }
+      ]
+    },
+    {
+      "name": "Steps",
+      "summary": "How it works, as numbered steps in order: sign up, bring your data, get to work.",
+      "file": "src/components/site-sections.tsx",
+      "props": [
+        {
+          "name": "steps",
+          "type": "Step[]",
+          "required": true,
+          "description": "Three or four steps, in the order they happen. Only for a real sequence."
+        },
+        {
+          "name": "variant",
+          "type": "\"row\" | \"list\"",
+          "values": [
+            "list",
+            "row"
+          ],
+          "required": false,
+          "default": "\"row\"",
+          "description": "row: side by side, joined by a line. list: down the page, each with its picture beside it."
+        },
+        {
+          "name": "animate",
+          "type": "boolean",
+          "required": false,
+          "description": "The steps ease in one after another."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        },
+        {
+          "name": "classNames",
+          "type": "{ step?: string; number?: string; title?: string; description?: string; media?: string }",
+          "required": false,
+          "description": "Classes for its parts: step, number (the numbered circle), title, description, media."
         }
       ]
     }

@@ -77,25 +77,27 @@ export interface CardProps extends Omit<React.HTMLAttributes<HTMLElement>, "titl
   footer?: React.ReactNode;
   /** false for content that runs to the edges: a flush Table, an image. */
   padded?: boolean;
+  /** Classes for its parts, when a design needs one adjusted: header, title, description, body, footer. className is the card itself. */
+  classNames?: { header?: string; title?: string; description?: string; body?: string; footer?: string };
 }
 
 /** A surface for one group of things on a screen. Use them for groups, not for every item: a list of items is a Table. */
-export function Card({ title, description, actions, footer, padded = true, className, children, ...rest }: CardProps) {
+export function Card({ title, description, actions, footer, padded = true, className, classNames, children, ...rest }: CardProps) {
   const head = Boolean(title || description || actions);
   return (
     <section className={cn("flex min-w-0 flex-col text-ink", surface, className)} {...rest}>
       {head ? (
-        <header className="flex items-start justify-between gap-3 px-4 pt-3.5">
+        <header className={cn("flex items-start justify-between gap-3 px-4 pt-3.5", classNames?.header)}>
           <div className="min-w-0">
-            {title ? <h3 className="m-0 font-display text-subtitle font-semibold text-ink-heading">{title}</h3> : null}
-            {description ? <p className="m-0 mt-0.5 text-label text-ink-3">{description}</p> : null}
+            {title ? <h3 className={cn("m-0 font-display text-subtitle font-semibold text-ink-heading", classNames?.title)}>{title}</h3> : null}
+            {description ? <p className={cn("m-0 mt-0.5 text-label text-ink-3", classNames?.description)}>{description}</p> : null}
           </div>
           {actions ? <div className="flex flex-none gap-2">{actions}</div> : null}
         </header>
       ) : null}
-      <div className={cn("min-w-0", padded ? (head ? "px-4 pb-4 pt-3" : "p-4") : head && "pt-3")}>{children}</div>
+      <div className={cn("min-w-0", padded ? (head ? "px-4 pb-4 pt-3" : "p-4") : head && "pt-3", classNames?.body)}>{children}</div>
       {footer ? (
-        <footer className="flex items-center justify-between gap-3 border-t border-line px-4 py-2.5 text-label text-ink-3">{footer}</footer>
+        <footer className={cn("flex items-center justify-between gap-3 border-t border-line px-4 py-2.5 text-label text-ink-3", classNames?.footer)}>{footer}</footer>
       ) : null}
     </section>
   );
@@ -111,22 +113,24 @@ export interface StatCardProps {
   /** What it's compared with, or what to do: "vs last week". */
   hint?: React.ReactNode;
   className?: string;
+  /** Classes for its parts: label, value (the number), change. */
+  classNames?: { label?: string; value?: string; change?: string };
 }
 
 /** One number that matters today, with what it's compared against. */
-export function StatCard({ label, value, change, hint, className }: StatCardProps) {
+export function StatCard({ label, value, change, hint, className, classNames }: StatCardProps) {
   let tone: Tone = "neutral";
   if (change && change.trend !== "flat") {
     tone = (change.trend === "up") === (change.upIsGood ?? true) ? "success" : "danger";
   }
   return (
     <div className={cn("flex min-w-0 flex-col gap-1 p-4", surface, className)}>
-      <p className="m-0 text-small font-medium text-ink-3">{label}</p>
-      <p className="m-0 font-display text-stat font-semibold text-ink-heading tabular-nums">{value}</p>
+      <p className={cn("m-0 text-small font-medium text-ink-3", classNames?.label)}>{label}</p>
+      <p className={cn("m-0 font-display text-stat font-semibold text-ink-heading tabular-nums", classNames?.value)}>{value}</p>
       {change || hint ? (
         <p className="m-0 flex flex-wrap items-center gap-2 text-small">
           {change ? (
-            <span className={cn("inline-flex items-center gap-0.5 font-semibold tabular-nums", toneText[tone])}>
+            <span className={cn("inline-flex items-center gap-0.5 font-semibold tabular-nums", toneText[tone], classNames?.change)}>
               {change.trend === "up" ? <ArrowUpGlyph size={13} /> : change.trend === "down" ? <ArrowDownGlyph size={13} /> : null}
               {change.value}
             </span>
@@ -148,18 +152,20 @@ export interface EmptyStateProps {
   /** Usually one primary Button that makes the first one. */
   action?: React.ReactNode;
   className?: string;
+  /** Classes for its parts: icon, title, description, action. */
+  classNames?: { icon?: string; title?: string; description?: string; action?: string };
 }
 
 /** What a list shows before it has anything in it: what goes here, and the button that adds the first. */
-export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action, className, classNames }: EmptyStateProps) {
   return (
     <div className={cn("flex flex-col items-center px-6 py-10 text-center", className)}>
       {icon ? (
-        <div className="mb-3 grid size-10 place-items-center rounded-lg bg-surface-2 text-ink-2 ring-1 ring-inset ring-line">{icon}</div>
+        <div className={cn("mb-3 grid size-10 place-items-center rounded-lg bg-surface-2 text-ink-2 ring-1 ring-inset ring-line", classNames?.icon)}>{icon}</div>
       ) : null}
-      <p className="m-0 font-display text-subtitle font-semibold text-ink">{title}</p>
-      {description ? <p className="m-0 mt-1 max-w-[380px] text-label text-pretty text-ink-3">{description}</p> : null}
-      {action ? <div className="mt-4">{action}</div> : null}
+      <p className={cn("m-0 font-display text-subtitle font-semibold text-ink", classNames?.title)}>{title}</p>
+      {description ? <p className={cn("m-0 mt-1 max-w-[380px] text-label text-pretty text-ink-3", classNames?.description)}>{description}</p> : null}
+      {action ? <div className={cn("mt-4", classNames?.action)}>{action}</div> : null}
     </div>
   );
 }

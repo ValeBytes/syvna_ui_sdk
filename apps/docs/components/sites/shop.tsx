@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Lock, RotateCcw, ShoppingBag, Truck } from "lucide-react";
 import {
+  buttonClass,
   CartSummary,
   Field,
   Input,
@@ -26,6 +27,9 @@ import {
 
 import { base, heroPhoto, productBySlug, products, type Product } from "./catalogue";
 import { useCart } from "./data";
+
+// The shop's one buying look: every button that adds to the cart or pays wears it.
+const BUY = "raised" as const;
 
 const shop = `${base}/shop`;
 
@@ -120,6 +124,8 @@ function Grid({ items, onAdd }: { items: Product[]; onAdd?: (p: Product) => void
           rating={{ value: p.rating, count: p.reviews }}
           badge={p.badge}
           soldOut={p.stock === 0}
+          addVariant={BUY}
+          addPlacement="overlay"
           onAdd={onAdd ? () => onAdd(p) : undefined}
         />
       ))}
@@ -247,7 +253,7 @@ export function ProductPage({ slug }: { slug: string }) {
                     toast({ title: `${qty} × ${p.name} added`, tone: "success" });
                     router.push(`${shop}/cart`);
                   }}
-                  className={cn(siteAction("primary", "lg"), "flex-1 disabled:cursor-not-allowed disabled:opacity-50")}
+                  className={buttonClass({ variant: BUY, size: "xl", className: "flex-1" })}
                 >
                   {soldOut ? "Sold out" : "Add to cart"}
                 </button>
@@ -294,6 +300,7 @@ export function CartPage() {
               </p>
             ) : null}
             <CartSummary
+              checkoutVariant={BUY}
               lines={cart.lines}
               shipping={subtotal >= 100 ? 0 : subtotal ? 6.5 : undefined}
               onQuantity={cart.setQuantity}
@@ -317,7 +324,7 @@ export function CartPage() {
                 .filter((p) => p.stock > 0 && !cart.lines.some((l) => l.id.startsWith(p.slug)))
                 .slice(0, 2)
                 .map((p) => (
-                  <ProductCard key={p.slug} as={Link} href={`${shop}/product/${p.slug}`} name={p.name} image={p.photos[0]!} price={p.price} compareAt={p.compareAt} onAdd={() => cart.add(p)} />
+                  <ProductCard key={p.slug} as={Link} href={`${shop}/product/${p.slug}`} name={p.name} image={p.photos[0]!} price={p.price} compareAt={p.compareAt} onAdd={() => cart.add(p)} addVariant={BUY} />
                 ))}
             </div>
           </div>
@@ -442,7 +449,7 @@ export function Checkout() {
                 <span className="text-title font-semibold tabular-nums text-ink">${(subtotal + shipping).toFixed(2)}</span>
               </div>
             </div>
-            <button type="submit" disabled={placing || !cart.lines.length} className={cn(siteAction("primary", "lg"), "w-full disabled:cursor-not-allowed disabled:opacity-60")}>
+            <button type="submit" disabled={placing || !cart.lines.length} className={buttonClass({ variant: BUY, size: "xl", block: true })}>
               {placing ? "Placing order…" : "Continue to payment"}
             </button>
             <Link href={`${shop}/cart`} className="text-center text-small text-ink-3 no-underline hover:text-ink">

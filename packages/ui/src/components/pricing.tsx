@@ -87,6 +87,8 @@ export interface PricingTableProps {
   /** Called with the plan's name when its button is clicked. */
   onSelect?: (plan: string) => void;
   className?: string;
+  /** Classes for its parts: plan (each plan's card), price (the number), cta (each plan's button), feature (each line of what's included), popular (the "Most popular" pill). */
+  classNames?: { plan?: string; price?: string; cta?: string; feature?: string; popular?: string };
 }
 
 const tints = ["bg-info-soft", "bg-brand-soft", "bg-success-soft", "bg-warning-soft"];
@@ -103,6 +105,7 @@ export function PricingTable({
   comparison,
   onSelect,
   className,
+  classNames,
 }: PricingTableProps) {
   const v = variant;
   const [billing, setBilling] = useState(initial);
@@ -119,7 +122,7 @@ export function PricingTable({
     const n = typeof price === "number";
     return (
       <p className="m-0 flex flex-wrap items-baseline gap-x-1">
-        <span className={cn("font-display font-semibold tracking-[-0.03em] tabular-nums", size === "xl" ? "text-display-xl" : size === "lg" ? "text-display" : "text-heading", tone)}>
+        <span className={cn("font-display font-semibold tracking-[-0.03em] tabular-nums", size === "xl" ? "text-display-xl" : size === "lg" ? "text-display" : "text-heading", tone, classNames?.price)}>
           {n ? money(v === "calculator" ? (price as number) * count : (price as number)) : price}
         </span>
         {n ? <span className={cn("text-body opacity-70", tone)}>{v === "calculator" ? `/ month for ${count} ${unit?.name ?? "seat"}${count === 1 ? "" : "s"}` : "/ month"}</span> : null}
@@ -130,7 +133,7 @@ export function PricingTable({
   const Cta = ({ p, kind, className: c }: { p: PricingPlan; kind?: "primary" | "secondary" | "ghost"; className?: string }) => {
     const Tag = p.href ? "a" : "button";
     return (
-      <Tag {...(p.href ? { href: p.href } : { type: "button" as const })} onClick={() => onSelect?.(p.name)} className={cn(siteAction(kind ?? (p.featured ? "primary" : "secondary")), "w-full", c)}>
+      <Tag {...(p.href ? { href: p.href } : { type: "button" as const })} onClick={() => onSelect?.(p.name)} className={cn(siteAction(kind ?? (p.featured ? "primary" : "secondary")), "w-full", c, classNames?.cta)}>
         {p.cta}
       </Tag>
     );
@@ -139,7 +142,7 @@ export function PricingTable({
   const Features = ({ p, tone = "text-ink-2", check = "text-success", cols }: { p: PricingPlan; tone?: string; check?: string; cols?: boolean }) => (
     <ul className={cn("m-0 grid list-none gap-2.5 p-0", cols && "@2xl:grid-cols-2 @2xl:gap-x-8")}>
       {p.features.map((f, i) => (
-        <li key={i} className={cn("flex items-start gap-2.5 text-body", tone)}>
+        <li key={i} className={cn("flex items-start gap-2.5 text-body", tone, classNames?.feature)}>
           <CheckGlyph size={16} className={cn("mt-px flex-none", check)} />
           {f}
         </li>
@@ -155,7 +158,7 @@ export function PricingTable({
     </ul>
   );
 
-  const Popular = ({ className: c }: { className?: string }) => <span className={cn("rounded-full bg-brand px-2.5 py-0.5 text-caption font-semibold text-brand-ink", c)}>Most popular</span>;
+  const Popular = ({ className: c }: { className?: string }) => <span className={cn("rounded-full bg-brand px-2.5 py-0.5 text-caption font-semibold text-brand-ink", c, classNames?.popular)}>Most popular</span>;
 
   const Switch = hasYearly ? (
     <div className="flex items-center justify-center gap-3">
@@ -224,7 +227,7 @@ export function PricingTable({
       return (
         <li key={p.name} className="relative rounded-[13px] bg-gradient-to-br from-brand via-info to-success p-px shadow-3">
           <Popular className="absolute -top-2.5 left-6 z-10" />
-          <div className={cn(base, "rounded-xl bg-surface p-6")}>{body}</div>
+          <div className={cn(base, "rounded-xl bg-surface p-6", classNames?.plan)}>{body}</div>
         </li>
       );
     }
@@ -245,6 +248,7 @@ export function PricingTable({
                     dark ? "border-ink bg-ink shadow-3" : brand ? "border-brand bg-brand shadow-3" : "bg-surface",
                     !loud && (p.featured && ["cards", "compact", "price-first", "badges", "icons", "excluded", "gradient-featured"].includes(v) ? "border-brand shadow-2 ring-1 ring-brand" : "border-line"),
                   ),
+          classNames?.plan,
         )}
       >
         {p.featured && !["minimal", "joined", "badges", "outline"].includes(v) ? <Popular className={cn("absolute -top-2.5 left-6", loud && "bg-ground text-ink")} /> : null}

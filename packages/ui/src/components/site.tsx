@@ -9,6 +9,7 @@ import { useState } from "react";
 import type { SiteLink } from "./site-header";
 
 import { cn, focusRing } from "../cx";
+import { Reveal, Stagger } from "./motion";
 
 /** A link or button styled like Button, for websites where most actions go somewhere. */
 export function siteAction(variant: "primary" | "secondary" | "ghost" = "primary", size: "md" | "lg" = "md") {
@@ -36,22 +37,28 @@ export interface SectionProps {
   /** The anchor id, for links from the header ("#pricing"). */
   id?: string;
   children?: React.ReactNode;
+  /** The heading, then what's under it, ease in as the section is scrolled to. For public pages. */
+  animate?: boolean;
   className?: string;
+  /** Classes for its parts: inner (the width and padding), header (the heading block), eyebrow, title, description. */
+  classNames?: { inner?: string; header?: string; eyebrow?: string; title?: string; description?: string };
 }
 
 /** A band of a landing page: a heading and what's under it, at the page's width. */
-export function Section({ eyebrow, title, description, align = "start", tone = "ground", id, children, className }: SectionProps) {
+export function Section({ eyebrow, title, description, align = "start", tone = "ground", id, children, animate, className, classNames }: SectionProps) {
+  const header =
+    title || eyebrow || description ? (
+      <div className={cn("flex max-w-[680px] flex-col gap-3", align === "center" && "mx-auto items-center text-center", classNames?.header)}>
+        {eyebrow ? <span className={cn("text-label font-semibold text-brand", classNames?.eyebrow)}>{eyebrow}</span> : null}
+        {title ? <h2 className={cn("m-0 text-balance font-display text-heading font-semibold tracking-[-0.02em] text-ink @2xl:text-display", classNames?.title)}>{title}</h2> : null}
+        {description ? <p className={cn("m-0 text-pretty text-body-lg text-ink-2", classNames?.description)}>{description}</p> : null}
+      </div>
+    ) : null;
   return (
     <section id={id} className={cn("@container w-full scroll-mt-16", tone === "surface" && "border-y border-line bg-surface", className)}>
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-4 py-14 @3xl:px-6 @3xl:py-20">
-        {title || eyebrow || description ? (
-          <div className={cn("flex max-w-[680px] flex-col gap-3", align === "center" && "mx-auto items-center text-center")}>
-            {eyebrow ? <span className="text-label font-semibold text-brand">{eyebrow}</span> : null}
-            {title ? <h2 className="m-0 text-balance font-display text-heading font-semibold tracking-[-0.02em] text-ink @2xl:text-display">{title}</h2> : null}
-            {description ? <p className="m-0 text-pretty text-body-lg text-ink-2">{description}</p> : null}
-          </div>
-        ) : null}
-        {children}
+      <div className={cn("mx-auto flex max-w-[1200px] flex-col gap-10 px-4 py-14 @3xl:px-6 @3xl:py-20", classNames?.inner)}>
+        {header && animate ? <Reveal>{header}</Reveal> : header}
+        {children && animate ? <Reveal delay={120}>{children}</Reveal> : children}
       </div>
     </section>
   );
@@ -70,24 +77,38 @@ export interface FeatureGridProps {
   columns?: 2 | 3 | 4;
   /** plain: icon and text on the ground. cards: each in a raised card. */
   variant?: "plain" | "cards";
+  /** The features ease in one after another as the grid is scrolled to. */
+  animate?: boolean;
   className?: string;
+  /** Classes for its parts: item (each feature), icon, title, description. */
+  classNames?: { item?: string; icon?: string; title?: string; description?: string };
 }
 
 const featureCols = { 2: "@2xl:grid-cols-2", 3: "@2xl:grid-cols-2 @4xl:grid-cols-3", 4: "@2xl:grid-cols-2 @4xl:grid-cols-4" };
 
 /** What the product does, as short points with an icon each. */
-export function FeatureGrid({ features, columns = 3, variant = "plain", className }: FeatureGridProps) {
+export function FeatureGrid({ features, columns = 3, variant = "plain", animate, className, classNames }: FeatureGridProps) {
+  const grid = cn("m-0 grid list-none gap-x-8 gap-y-8 p-0", variant === "cards" && "gap-4", featureCols[columns]);
+  const items = features.map((f, i) => (
+    <div key={i} className={cn("flex h-full flex-col gap-2", variant === "cards" && "rounded-lg border border-line bg-surface p-5 shadow-1", classNames?.item)}>
+      {f.icon ? <span className={cn("mb-1 grid size-9 place-items-center rounded-md bg-brand-soft text-brand [&>svg]:size-[18px]", classNames?.icon)}>{f.icon}</span> : null}
+      <h3 className={cn("m-0 font-display text-subtitle font-semibold text-ink", classNames?.title)}>{f.title}</h3>
+      <p className={cn("m-0 text-body text-ink-2", classNames?.description)}>{f.description}</p>
+    </div>
+  ));
   return (
     <div className={cn("@container w-full", className)}>
-      <ul className={cn("m-0 grid list-none gap-x-8 gap-y-8 p-0", variant === "cards" && "gap-4", featureCols[columns])}>
-        {features.map((f, i) => (
-          <li key={i} className={cn("flex flex-col gap-2", variant === "cards" && "rounded-lg border border-line bg-surface p-5 shadow-1")}>
-            {f.icon ? <span className="mb-1 grid size-9 place-items-center rounded-md bg-brand-soft text-brand [&>svg]:size-[18px]">{f.icon}</span> : null}
-            <h3 className="m-0 font-display text-subtitle font-semibold text-ink">{f.title}</h3>
-            <p className="m-0 text-body text-ink-2">{f.description}</p>
-          </li>
-        ))}
-      </ul>
+      {animate ? (
+        <Stagger as="ul" itemAs="li" className={grid} itemClassName="h-full">
+          {items}
+        </Stagger>
+      ) : (
+        <ul className={grid}>
+          {items.map((it, i) => (
+            <li key={i}>{it}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -129,7 +150,11 @@ export interface TestimonialsProps {
   quotes: Quote[];
   /** grid: cards in columns. single: one large quote, centred. */
   variant?: "grid" | "single";
+  /** The quotes ease in one after another as they're scrolled to. */
+  animate?: boolean;
   className?: string;
+  /** Classes for its parts: card (each quote's card), quote (the words). */
+  classNames?: { card?: string; quote?: string };
 }
 
 function Person({ q, large }: { q: Quote; large?: boolean }) {
@@ -155,30 +180,39 @@ function Person({ q, large }: { q: Quote; large?: boolean }) {
 }
 
 /** What customers say, in their words, with their name and role. */
-export function Testimonials({ quotes, variant = "grid", className }: TestimonialsProps) {
+export function Testimonials({ quotes, variant = "grid", animate, className, classNames }: TestimonialsProps) {
   if (variant === "single" && quotes[0]) {
     const q = quotes[0];
-    return (
+    const one = (
       <figure className={cn("mx-auto flex max-w-[760px] flex-col gap-6 text-center", className)}>
-        <blockquote className="m-0 text-balance font-display text-title font-medium tracking-[-0.01em] text-ink @container">
+        <blockquote className={cn("m-0 text-balance font-display text-title font-medium tracking-[-0.01em] text-ink @container", classNames?.quote)}>
           <span className="@2xl:text-heading">“{q.quote}”</span>
         </blockquote>
         <Person q={q} large />
       </figure>
     );
+    return animate ? <Reveal>{one}</Reveal> : one;
   }
+  const grid = "m-0 grid list-none gap-4 p-0 @2xl:grid-cols-2 @4xl:grid-cols-3";
+  const cards = quotes.map((q, i) => (
+    <figure key={i} className={cn("m-0 flex h-full flex-col justify-between gap-5 rounded-lg border border-line bg-surface p-5 shadow-1", classNames?.card)}>
+      <blockquote className={cn("m-0 text-body-lg text-ink", classNames?.quote)}>“{q.quote}”</blockquote>
+      <Person q={q} />
+    </figure>
+  ));
   return (
     <div className={cn("@container w-full", className)}>
-      <ul className="m-0 grid list-none gap-4 p-0 @2xl:grid-cols-2 @4xl:grid-cols-3">
-        {quotes.map((q, i) => (
-          <li key={i}>
-            <figure className="m-0 flex h-full flex-col justify-between gap-5 rounded-lg border border-line bg-surface p-5 shadow-1">
-              <blockquote className="m-0 text-body-lg text-ink">“{q.quote}”</blockquote>
-              <Person q={q} />
-            </figure>
-          </li>
-        ))}
-      </ul>
+      {animate ? (
+        <Stagger as="ul" itemAs="li" className={grid} itemClassName="h-full">
+          {cards}
+        </Stagger>
+      ) : (
+        <ul className={grid}>
+          {cards.map((c, i) => (
+            <li key={i}>{c}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -235,10 +269,12 @@ export interface CallToActionProps {
   /** brand: on the brand colour, the page's loudest band. surface: a quiet raised card. */
   tone?: "brand" | "surface";
   className?: string;
+  /** Classes for its parts: panel (the coloured block: its radius, padding, background), title, description, actions. */
+  classNames?: { panel?: string; title?: string; description?: string; actions?: string };
 }
 
 /** The band near a page's end that asks for the one thing: sign up, book a call, shop now. */
-export function CallToAction({ title, description, actions, tone = "brand", className }: CallToActionProps) {
+export function CallToAction({ title, description, actions, tone = "brand", className, classNames }: CallToActionProps) {
   const brand = tone === "brand";
   return (
     <div className={cn("@container w-full", className)}>
@@ -246,11 +282,12 @@ export function CallToAction({ title, description, actions, tone = "brand", clas
         className={cn(
           "flex flex-col items-start gap-6 rounded-xl p-8 @3xl:flex-row @3xl:items-center @3xl:justify-between @3xl:p-10",
           brand ? "bg-brand text-brand-ink" : "border border-line bg-surface shadow-1",
+          classNames?.panel,
         )}
       >
         <div className="flex max-w-[560px] flex-col gap-2">
-          <h2 className={cn("m-0 text-balance font-display text-heading font-semibold tracking-[-0.02em]", brand ? "text-brand-ink" : "text-ink")}>{title}</h2>
-          {description ? <p className={cn("m-0 text-body-lg", brand ? "text-brand-ink/80" : "text-ink-2")}>{description}</p> : null}
+          <h2 className={cn("m-0 text-balance font-display text-heading font-semibold tracking-[-0.02em]", brand ? "text-brand-ink" : "text-ink", classNames?.title)}>{title}</h2>
+          {description ? <p className={cn("m-0 text-body-lg", brand ? "text-brand-ink/80" : "text-ink-2", classNames?.description)}>{description}</p> : null}
         </div>
         {actions ? (
           <div
@@ -258,6 +295,7 @@ export function CallToAction({ title, description, actions, tone = "brand", clas
               "flex flex-none flex-wrap gap-3",
               // On the brand colour the primary action inverts, so it still stands out.
               brand && "[&_.bg-brand]:bg-brand-ink [&_.bg-brand]:text-brand [&_.bg-brand:hover]:opacity-90",
+              classNames?.actions,
             )}
           >
             {actions}
@@ -317,8 +355,43 @@ export function SiteFooter({ brand, tagline, columns = [], legal, as: A = "a", c
   );
 }
 
+/** Every way AuthLayout can arrange a sign-in page. */
+export const authLayoutVariants = [
+  "split",
+  "split-reverse",
+  "inset",
+  "centered",
+  "card",
+  "card-brand",
+  "compact",
+  "topbar",
+  "banner",
+  "photo",
+  "showcase",
+  "frame",
+] as const;
+export type AuthLayoutVariant = (typeof authLayoutVariants)[number];
+
+/** What the panel beside the form says. Give what the app really has; every part but the headline is optional. */
+export interface AuthAside {
+  /** The promise, in a few words: "Every order, customer and delivery in one place." */
+  headline: React.ReactNode;
+  /** A sentence under the headline. */
+  body?: React.ReactNode;
+  /** Two to four short reasons, each on a line with a tick: "Approvals in one queue". */
+  points?: React.ReactNode[];
+  /** Two or three real numbers: [{ value: "1,240", label: "requests a month" }]. Never made up. */
+  stats?: { value: React.ReactNode; label: React.ReactNode }[];
+  /** A real customer's or colleague's words. */
+  quote?: Quote;
+  /** A photograph's address, for the photo variant: the workplace, the product, the team. */
+  image?: string;
+  /** A piece of the product (a screenshot, a small live table or chart), for the showcase variant. */
+  media?: React.ReactNode;
+}
+
 export interface AuthLayoutProps {
-  /** The product's mark and name, top left: what it is, before anything else. */
+  /** The product's mark and name: what it is, before anything else. */
   brand: React.ReactNode;
   /** What this page does, short: "Sign in", "Create your account", "Choose a new password". */
   title: React.ReactNode;
@@ -326,54 +399,261 @@ export interface AuthLayoutProps {
   description?: React.ReactNode;
   /** The form: OAuth buttons, then Fields and the submit Button (block, size lg). */
   children: React.ReactNode;
-  /** Under the form: "New here? Create an account". */
+  /** Under the form: "New here? Create an account". The topbar variant shows it top right. */
   footer?: React.ReactNode;
-  /** The panel beside the form on wide screens, in the sidebar's colours: a promise in a few words, and proof (a quote, a number, a product shot). Leave it out for a single centred column. */
-  aside?: { headline: React.ReactNode; body?: React.ReactNode; quote?: Quote };
+  /**
+   * How the page is arranged.
+   * With a panel (they need aside): split (panel left), split-reverse (panel right), inset (a rounded panel
+   * set into the page), photo (a photograph with the promise over it; needs aside.image), showcase (the
+   * promise over a piece of the product; needs aside.media), banner (a band across the top, the form on a
+   * card over its edge).
+   * Without one: centered (a plain column), card (the form on a raised card), card-brand (that card on the
+   * sidebar's colour), compact (a small card with everything centred: staff tools and admin sign-ins),
+   * topbar (a bar with the brand and the link to the other page), frame (a bordered sheet with the small
+   * print in its foot).
+   * A panel variant without aside draws centered.
+   */
+  variant?: AuthLayoutVariant;
+  /** The panel's words and proof; see AuthAside. Leave it out for a page with the form alone. */
+  aside?: AuthAside;
+  /** Small print under everything: "By continuing you agree to the Terms and Privacy Policy." or "© 2026 Lumen". */
+  legal?: React.ReactNode;
+  /** A quiet link in the top right corner: "Need help?", a language picker, "Back to site". */
+  help?: React.ReactNode;
   className?: string;
 }
 
-/**
- * The page around sign-in, sign-up and password forms. The form sits in a
- * narrow column with no card around it, the brand at the top; on wide screens
- * a panel in the app's sidebar colours sits beside it with a short promise
- * and a quote. On phones it's the form alone. Every auth page uses it, so
- * they read as one product.
- */
-export function AuthLayout({ brand, title, description, children, footer, aside, className }: AuthLayoutProps) {
+const panelVariants: AuthLayoutVariant[] = ["split", "split-reverse", "inset", "photo", "showcase", "banner"];
+
+function AuthTick() {
   return (
-    <div className={cn("@container min-h-dvh bg-ground text-ink", className)}>
-      <div className={cn("grid min-h-dvh", aside && "@4xl:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]")}>
-        {aside ? (
-          <aside className="chrome-scope relative hidden flex-col justify-between gap-10 overflow-hidden bg-surface p-10 text-ink @4xl:flex @6xl:p-14">
-            <div className="flex items-center gap-2.5 font-display text-title font-semibold">{brand}</div>
-            <div className="flex max-w-[460px] flex-col gap-4">
-              <h2 className="m-0 font-display text-display font-semibold tracking-[-0.025em] text-balance @6xl:text-display-xl">{aside.headline}</h2>
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="mt-[3px] size-4 shrink-0 text-brand">
+      <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/** The promise and its proof, as the panel variants share them. */
+function AuthPromise({ aside, onPhoto }: { aside: AuthAside; onPhoto?: boolean }) {
+  const strong = onPhoto ? "text-white" : "text-ink";
+  const soft = onPhoto ? "text-white/80" : "text-ink-2";
+  const quiet = onPhoto ? "text-white/70" : "text-ink-3";
+  const rule = onPhoto ? "border-white/25" : "border-line";
+  return (
+    <>
+      <div className="flex max-w-[460px] flex-col gap-4">
+        <h2 className={cn("m-0 font-display text-display font-semibold tracking-[-0.025em] text-balance @6xl:text-display-xl", strong)}>{aside.headline}</h2>
+        {aside.body ? <p className={cn("m-0 text-body-lg text-pretty", soft)}>{aside.body}</p> : null}
+        {aside.points?.length ? (
+          <ul className="m-0 mt-2 flex list-none flex-col gap-2.5 p-0">
+            {aside.points.map((p, i) => (
+              <li key={i} className={cn("flex gap-2.5 text-body", soft)}>
+                <AuthTick />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+      {aside.stats?.length || aside.quote ? (
+        <div className="flex max-w-[460px] flex-col gap-6">
+          {aside.stats?.length ? (
+            <dl className={cn("m-0 flex flex-wrap gap-x-10 gap-y-4 border-t pt-6", rule)}>
+              {aside.stats.map((s, i) => (
+                <div key={i} className="flex flex-col gap-0.5">
+                  <dd className={cn("m-0 font-display text-heading font-semibold tabular-nums", strong)}>{s.value}</dd>
+                  <dt className={cn("text-label", quiet)}>{s.label}</dt>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+          {aside.quote ? (
+            <figure className={cn("m-0 flex flex-col gap-3 border-t pt-6", rule)}>
+              <blockquote className={cn("m-0 text-body-lg text-pretty", strong)}>“{aside.quote.quote}”</blockquote>
+              <figcaption className={cn("text-label", quiet)}>
+                <span className={cn("font-medium", soft)}>{aside.quote.name}</span>
+                {aside.quote.role ? <> · {aside.quote.role}</> : null}
+              </figcaption>
+            </figure>
+          ) : null}
+        </div>
+      ) : (
+        <span />
+      )}
+    </>
+  );
+}
+
+/**
+ * The page around sign-in, sign-up and password forms, in twelve
+ * arrangements: beside a panel with the product's promise, alone in a centred
+ * column, on a card, under a top bar. Every auth page of an app uses the same
+ * one, so they read as one product. On phones every arrangement is the form
+ * with the brand over it.
+ */
+export function AuthLayout({ brand, title, description, children, footer, variant = "split", aside, legal, help, className }: AuthLayoutProps) {
+  const look: AuthLayoutVariant =
+    panelVariants.includes(variant) && (!aside || (variant === "photo" && !aside.image) || (variant === "showcase" && !aside.media))
+      ? aside
+        ? "split"
+        : "centered"
+      : variant;
+  const brandRow = "flex items-center gap-2.5 font-display text-title font-semibold text-ink";
+  const centred = look === "compact";
+  const heading = (
+    <div className={cn("flex flex-col gap-2", centred && "items-center text-center")}>
+      <h1 className={cn("m-0 font-display font-semibold tracking-[-0.025em] text-ink", centred || look === "card" || look === "card-brand" || look === "banner" || look === "frame" ? "text-heading" : "text-display")}>{title}</h1>
+      {description ? <p className="m-0 text-body text-ink-3">{description}</p> : null}
+    </div>
+  );
+  const form = <div className="flex flex-col gap-4">{children}</div>;
+  const foot = footer ? <div className={cn("text-label text-ink-3", centred && "text-center")}>{footer}</div> : null;
+  const small = legal ? <p className="m-0 text-caption text-ink-4 text-pretty">{legal}</p> : null;
+  const helpLink = help ? <div className="text-label text-ink-3">{help}</div> : null;
+
+  // The form on a card: card, card-brand, compact, banner.
+  if (look === "card" || look === "card-brand" || look === "compact" || look === "banner") {
+    const onChrome = look === "card-brand";
+    // chrome-scope paints its own background; these only want its text colours.
+    const clear = onChrome ? { backgroundColor: "transparent" } : undefined;
+    const card = (
+      <div className={cn("w-full rounded-xl border border-line bg-surface shadow-2", look === "compact" ? "max-w-[360px] p-6 @xl:p-7" : "max-w-[440px] p-6 @xl:p-9")}>
+        <div className="flex flex-col gap-6">
+          {look === "compact" ? <div className={cn(brandRow, "justify-center")}>{brand}</div> : null}
+          {heading}
+          {form}
+          {look === "compact" ? foot : null}
+        </div>
+      </div>
+    );
+    if (look === "banner" && aside) {
+      return (
+        <div className={cn("@container min-h-dvh bg-ground text-ink", className)}>
+          <div className="chrome-scope bg-surface px-5 pt-6 pb-32 text-ink @xl:px-10 @xl:pt-8">
+            <div className="mx-auto flex w-full max-w-[1080px] items-center justify-between gap-4">
+              <div className={brandRow}>{brand}</div>
+              {helpLink}
+            </div>
+            <div className="mx-auto mt-10 flex w-full max-w-[560px] flex-col items-center gap-3 text-center @xl:mt-14">
+              <h2 className="m-0 font-display text-heading font-semibold tracking-[-0.02em] text-balance text-ink @xl:text-display">{aside.headline}</h2>
               {aside.body ? <p className="m-0 text-body-lg text-ink-2 text-pretty">{aside.body}</p> : null}
             </div>
-            {aside.quote ? (
-              <figure className="m-0 flex max-w-[460px] flex-col gap-3 border-t border-line pt-6">
-                <blockquote className="m-0 text-body-lg text-ink text-pretty">“{aside.quote.quote}”</blockquote>
-                <figcaption className="text-label text-ink-3">
-                  <span className="font-medium text-ink-2">{aside.quote.name}</span>
-                  {aside.quote.role ? <> · {aside.quote.role}</> : null}
-                </figcaption>
-              </figure>
-            ) : (
-              <span />
-            )}
-          </aside>
-        ) : null}
-        <main className="flex flex-col px-5 py-8 @xl:px-10">
-          <div className={cn("flex items-center gap-2.5 font-display text-title font-semibold", aside && "@4xl:invisible")}>{brand}</div>
-          <div className="mx-auto flex w-full max-w-[380px] flex-1 flex-col justify-center gap-7 py-10">
-            <div className="flex flex-col gap-2">
-              <h1 className="m-0 font-display text-display font-semibold tracking-[-0.025em] text-ink">{title}</h1>
-              {description ? <p className="m-0 text-body text-ink-3">{description}</p> : null}
-            </div>
-            <div className="flex flex-col gap-4">{children}</div>
-            {footer ? <div className="text-label text-ink-3">{footer}</div> : null}
           </div>
+          <div className="-mt-20 flex flex-col items-center gap-5 px-5 pb-10">
+            {card}
+            {foot}
+            {small ? <div className="max-w-[440px] text-center">{small}</div> : null}
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className={cn("@container flex min-h-dvh flex-col text-ink", onChrome ? "bg-chrome" : "bg-surface-2", className)}>
+        {helpLink ? <div className={cn("flex justify-end px-5 pt-6 @xl:px-10", onChrome && "chrome-scope")} style={clear}>{helpLink}</div> : null}
+        <div className="flex flex-1 flex-col items-center justify-center gap-6 px-5 py-10">
+          {look === "compact" ? null : <div className={cn(brandRow, onChrome && "text-chrome-ink")}>{brand}</div>}
+          {card}
+          {look === "compact" ? null : <div className={onChrome ? "chrome-scope" : undefined} style={clear}>{foot}</div>}
+          {small ? <div className={cn("max-w-[440px] text-center", onChrome && "chrome-scope")} style={clear}>{small}</div> : null}
+        </div>
+      </div>
+    );
+  }
+
+  // A bordered sheet: the brand in its head, the small print in its foot.
+  if (look === "frame") {
+    return (
+      <div className={cn("@container flex min-h-dvh flex-col items-center justify-center gap-6 bg-ground px-5 py-10 text-ink", className)}>
+        <div className="w-full max-w-[460px] overflow-hidden rounded-xl border border-line-strong bg-surface">
+          <div className="flex items-center justify-between gap-4 border-b border-line px-6 py-4 @xl:px-8">
+            <div className={cn(brandRow, "text-subtitle")}>{brand}</div>
+            {helpLink}
+          </div>
+          <div className="flex flex-col gap-6 px-6 py-7 @xl:px-8 @xl:py-9">
+            {heading}
+            {form}
+          </div>
+          {foot || small ? (
+            <div className="flex flex-col gap-2 border-t border-line bg-surface-2 px-6 py-4 @xl:px-8">
+              {foot}
+              {small}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
+  // The form alone: centered, or under a bar that holds the brand and the way to the other page.
+  if (look === "centered" || look === "topbar") {
+    const bar = look === "topbar";
+    return (
+      <div className={cn("@container flex min-h-dvh flex-col bg-ground text-ink", className)}>
+        <header className={cn("flex items-center justify-between gap-4 px-5 @xl:px-10", bar ? "h-16 border-b border-line bg-surface" : "pt-8")}>
+          <div className={brandRow}>{brand}</div>
+          <div className="flex items-center gap-5">
+            {bar ? foot : null}
+            {helpLink}
+          </div>
+        </header>
+        <main className="mx-auto flex w-full max-w-[380px] flex-1 flex-col justify-center gap-7 px-5 py-10 @xl:px-0">
+          {heading}
+          {form}
+          {bar ? null : foot}
+        </main>
+        {small ? <footer className="px-5 pb-8 text-center @xl:px-10">{small}</footer> : null}
+      </div>
+    );
+  }
+
+  // Beside a panel: split, split-reverse, inset, photo, showcase.
+  const panel = aside as AuthAside;
+  const reverse = look === "split-reverse" || look === "showcase";
+  const inset = look === "inset";
+  return (
+    <div className={cn("@container min-h-dvh bg-ground text-ink", className)}>
+      <div className={cn("grid min-h-[inherit]", reverse ? "@4xl:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]" : "@4xl:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]", inset && "@4xl:p-3")}>
+        <aside
+          className={cn(
+            "relative hidden flex-col justify-between gap-10 overflow-hidden p-10 @4xl:flex @6xl:p-14",
+            look === "photo" ? "bg-black text-white" : look === "showcase" ? "border-l border-line bg-surface-2 pr-0 pb-0 text-ink @6xl:pr-0 @6xl:pb-0" : "chrome-scope bg-surface text-ink",
+            inset && "rounded-xl",
+            reverse && "order-2",
+          )}
+        >
+          {look === "photo" ? (
+            <>
+              <img src={panel.image} alt="" className="absolute inset-0 size-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
+            </>
+          ) : null}
+          <div className={cn("relative flex items-center gap-2.5 font-display text-title font-semibold", reverse && "invisible")}>{brand}</div>
+          {look === "showcase" ? (
+            <>
+              <div className="flex max-w-[460px] flex-col gap-4 pr-10 @6xl:pr-14">
+                <h2 className="m-0 font-display text-heading font-semibold tracking-[-0.02em] text-balance text-ink @6xl:text-display">{panel.headline}</h2>
+                {panel.body ? <p className="m-0 text-body-lg text-ink-2 text-pretty">{panel.body}</p> : null}
+              </div>
+              <div className="overflow-hidden rounded-tl-xl border-t border-l border-line-strong bg-surface shadow-3">{panel.media}</div>
+            </>
+          ) : (
+            <div className="relative flex flex-1 flex-col justify-between gap-10">
+              <span />
+              <AuthPromise aside={panel} onPhoto={look === "photo"} />
+            </div>
+          )}
+        </aside>
+        <main className={cn("flex flex-col px-5 py-8 @xl:px-10", reverse && "order-1")}>
+          <div className="flex items-center justify-between gap-4">
+            <div className={cn(brandRow, !reverse && "@4xl:invisible")}>{brand}</div>
+            {helpLink}
+          </div>
+          <div className="mx-auto flex w-full max-w-[380px] flex-1 flex-col justify-center gap-7 py-10">
+            {heading}
+            {form}
+            {foot}
+          </div>
+          {small ? <div className="mx-auto w-full max-w-[380px]">{small}</div> : null}
         </main>
       </div>
     </div>

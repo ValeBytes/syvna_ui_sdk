@@ -72,6 +72,8 @@ export interface SiteHeaderProps {
   /** What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default. */
   as?: React.ElementType;
   className?: string;
+  /** Classes for its parts: inner (the row: its width and padding), brand, link (each main link), actions. className is the bar itself. */
+  classNames?: { inner?: string; brand?: string; link?: string; actions?: string };
 }
 
 type On = "default" | "inverse" | "brand";
@@ -113,6 +115,7 @@ export function SiteHeader({
   sticky,
   as: A = "a",
   className,
+  classNames,
 }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -124,7 +127,7 @@ export function SiteHeader({
   const floating = v === "floating" || v === "floating-card";
 
   const Brand = (
-    <A href={brandHref} className={cn("flex flex-none items-center gap-2 rounded-sm font-display font-semibold tracking-[-0.01em] no-underline", v === "tall" ? "text-title" : v === "compact" ? "text-body" : "text-subtitle", on === "default" ? "text-ink" : t.active, focusRing)}>
+    <A href={brandHref} className={cn("flex flex-none items-center gap-2 rounded-sm font-display font-semibold tracking-[-0.01em] no-underline", v === "tall" ? "text-title" : v === "compact" ? "text-body" : "text-subtitle", on === "default" ? "text-ink" : t.active, focusRing, classNames?.brand)}>
       {brand}
     </A>
   );
@@ -141,6 +144,7 @@ export function SiteHeader({
             ? cn("flex h-full items-center border-l border-line px-5", active ? "bg-surface-2 font-medium text-ink" : "text-ink-2 hover:bg-surface-2 hover:text-ink")
             : cn("rounded-md px-3 py-1.5", t.link, active && cn("font-medium", t.active)),
       focusRing,
+      classNames?.link,
     );
 
   const Links = (
@@ -163,7 +167,7 @@ export function SiteHeader({
     </nav>
   );
 
-  const Actions = actions ? <div className={cn("hidden flex-none items-center gap-2 @3xl:flex", t.fix, v === "boxed" && "h-full border-l border-line pl-4")}>{actions}</div> : null;
+  const Actions = actions ? <div className={cn("hidden flex-none items-center gap-2 @3xl:flex", t.fix, v === "boxed" && "h-full border-l border-line pl-4", classNames?.actions)}>{actions}</div> : null;
 
   const MenuButton =
     links.length || actions ? (
@@ -299,6 +303,7 @@ export function SiteHeader({
     v === "boxed" ? "border-x border-line pl-4 @3xl:pl-6" : "px-4 @3xl:px-6",
     v === "floating" && "max-w-[1080px] rounded-full border border-line bg-surface/85 pl-5 pr-2 shadow-2 backdrop-blur-md @3xl:pl-6 @3xl:pr-2",
     v === "floating-card" && "max-w-[1140px] rounded-xl border border-line bg-surface/90 shadow-2 backdrop-blur-md",
+    classNames?.inner,
   );
 
   const panelLink = cn("rounded-md px-2 py-2.5 text-body-lg no-underline", on === "default" ? "text-ink hover:bg-surface-2" : t.link, focusRing);

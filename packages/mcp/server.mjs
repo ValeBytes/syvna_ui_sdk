@@ -36,7 +36,7 @@ function refresh() {
 }
 
 function kitOf(file) {
-  if (["site", "hero", "site-header", "pricing", "shop"].includes(file)) return "website";
+  if (["site", "site-sections", "motion", "hero", "site-header", "pricing", "shop"].includes(file)) return "website";
   if (["trace", "chat", "dev"].includes(file)) return "agent";
   return "dashboard";
 }
