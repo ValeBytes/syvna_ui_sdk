@@ -21,7 +21,7 @@ export const groups = [
   { kit: "dashboard", name: "Layout", items: ["Card", "Tabs", "Accordion", "Stepper", "EmptyState", "Skeleton"] },
   { kit: "dashboard", name: "Feedback", items: ["Alert", "Banner", "Toaster", "Dialog", "Popover", "Tooltip", "CommandPalette"] },
   { kit: "dashboard", name: "Workspace", items: ["NotificationCenter", "AuditLog", "PermissionMatrix", "InviteMembers", "UsageMeter", "PlanSummary", "SetupChecklist", "SaveBar", "ConfirmByTyping", "ApprovalCard"] },
-  { kit: "website", name: "Marketing", items: ["SiteHeader", "Hero", "Section", "FeatureGrid", "LogoCloud", "Testimonials", "PricingTable", "Faq", "CallToAction", "SiteFooter"] },
+  { kit: "website", name: "Marketing", items: ["SiteHeader", "Hero", "Section", "FeatureGrid", "LogoCloud", "Testimonials", "PricingTable", "Faq", "CallToAction", "SiteFooter", "AuthLayout"] },
   { kit: "website", name: "Shop", items: ["ProductCard", "PriceTag", "Rating", "QuantityStepper", "CartSummary"] },
   { kit: "agent", name: "Chat", items: ["Conversation", "Message", "PromptInput", "Suggestions", "Thinking", "StreamCaret", "MessageActions", "Attachment", "ModelSelector", "ContextMeter"] },
   { kit: "agent", name: "Agent at work", items: ["Plan", "TaskList", "ToolCall", "Reasoning", "Subagent", "Trace", "TraceStep", "Sources", "InlineCitation", "Checkpoint"] },

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Copy, Download, LayoutGrid, List, MoreHorizontal, Package, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import {
+  AuthDivider,
+  AuthLayout,
   Alert,
   Avatar,
   AvatarUpload,
@@ -466,35 +468,50 @@ export function SignIn() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   return (
-    <div className="grid min-h-full w-full place-items-center bg-ground px-4 py-12">
-      <div className="flex w-full max-w-[400px] flex-col gap-6">
-        <div className="flex flex-col items-center gap-3 text-center">
-          <span className="grid size-11 place-items-center rounded-lg bg-brand font-display text-subtitle font-bold text-brand-ink">CV</span>
-          <h1 className="m-0 font-display text-heading font-semibold text-ink">Sign in to Casa Verde</h1>
-          <p className="m-0 text-body text-ink-3">Welcome back. Your orders are waiting.</p>
-        </div>
-        <Card>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setBusy(true);
-              setError("");
-              setTimeout(() => {
-                setBusy(false);
-                setError("That password doesn't match this email. Try again, or reset it.");
-              }, 1200);
-            }}
-          >
-            {error ? <Alert tone="danger">{error}</Alert> : null}
-            <Field label="Email"><Input type="email" defaultValue="lucia@casaverde.shop" autoComplete="email" /></Field>
-            <Field label="Password" aside={<a href="#" className="text-ink-2 no-underline hover:text-ink">Forgot it?</a>}><Input type="password" defaultValue="hunter22" autoComplete="current-password" /></Field>
-            <Checkbox label="Keep me signed in" defaultChecked />
-            <Button type="submit" variant="primary" size="lg" block loading={busy}>{busy ? "Signing in" : "Sign in"}</Button>
-          </form>
-        </Card>
-        <p className="m-0 text-center text-label text-ink-3">New here? <a href="#" className="font-medium text-ink no-underline hover:underline">Open a shop</a></p>
-      </div>
-    </div>
+    <AuthLayout
+      className="min-h-full"
+      brand={
+        <>
+          <span className="grid size-8 place-items-center rounded-md bg-brand font-display text-label font-bold text-brand-ink">CV</span>
+          Casa Verde
+        </>
+      }
+      title="Sign in"
+      description="Welcome back. Your orders are waiting."
+      aside={{
+        headline: "Every order, customer and delivery in one place.",
+        body: "Run the shop from the counter or your phone.",
+        quote: { quote: "We stopped losing orders in WhatsApp the week we moved over.", name: "Lucía Fernández", role: "Owner, Casa Verde" },
+      }}
+      footer={
+        <>
+          New here?{" "}
+          <a href="#" className="font-medium text-ink no-underline hover:underline">
+            Open a shop
+          </a>
+        </>
+      }
+    >
+      <Button block size="lg">Continue with Google</Button>
+      <AuthDivider />
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setBusy(true);
+          setError("");
+          setTimeout(() => {
+            setBusy(false);
+            setError("That password doesn't match this email. Try again, or reset it.");
+          }, 1200);
+        }}
+      >
+        {error ? <Alert tone="danger">{error}</Alert> : null}
+        <Field label="Email"><Input type="email" defaultValue="lucia@casaverde.shop" autoComplete="email" /></Field>
+        <Field label="Password" aside={<a href="#" className="text-ink-2 no-underline hover:text-ink">Forgot it?</a>}><Input type="password" defaultValue="hunter22" autoComplete="current-password" /></Field>
+        <Checkbox label="Keep me signed in" defaultChecked />
+        <Button type="submit" variant="primary" size="lg" block loading={busy}>{busy ? "Signing in" : "Sign in"}</Button>
+      </form>
+    </AuthLayout>
   );
 }

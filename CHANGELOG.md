@@ -10,6 +10,13 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- `AuthLayout` and `AuthDivider`: the page around sign-in, sign-up and password
+  forms. The brand, a short title, the form in a narrow column without a card,
+  and on wide screens a panel in the sidebar's colours with a promise and a
+  quote. The Sign in template uses it.
+
 ## v0.4.0 (2026-11-14)
 
 ### Fixed

@@ -120,6 +120,8 @@ export {
   Faq,
   CallToAction,
   SiteFooter,
+  AuthLayout,
+  AuthDivider,
   siteAction,
   type SectionProps,
   type FeatureGridProps,
@@ -130,6 +132,7 @@ export {
   type FaqProps,
   type CallToActionProps,
   type SiteFooterProps,
+  type AuthLayoutProps,
 } from "./components/site";
 export {
   ProductCard,

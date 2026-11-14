@@ -3056,6 +3056,61 @@
       ]
     },
     {
+      "name": "AuthLayout",
+      "summary": "The page around sign-in, sign-up and password forms. The form sits in a\nnarrow column with no card around it, the brand at the top; on wide screens\na panel in the app's sidebar colours sits beside it with a short promise\nand a quote. On phones it's the form alone. Every auth page uses it, so\nthey read as one product.",
+      "file": "src/components/site.tsx",
+      "props": [
+        {
+          "name": "brand",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The product's mark and name, top left: what it is, before anything else."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "What this page does, short: \"Sign in\", \"Create your account\", \"Choose a new password\"."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "One line under the title: \"Welcome back. Your courses are where you left them.\""
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The form: OAuth buttons, then Fields and the submit Button (block, size lg)."
+        },
+        {
+          "name": "footer",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Under the form: \"New here? Create an account\"."
+        },
+        {
+          "name": "aside",
+          "type": "{ headline: React.ReactNode; body?: React.ReactNode; quote?: Quote }",
+          "required": false,
+          "description": "The panel beside the form on wide screens, in the sidebar's colours: a promise in a few words, and proof (a quote, a number, a product shot). Leave it out for a single centred column."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        }
+      ]
+    },
+    {
+      "name": "AuthDivider",
+      "summary": "\"or\" between the OAuth buttons and the email form.",
+      "file": "src/components/site.tsx",
+      "props": []
+    },
+    {
       "name": "ProductCard",
       "summary": "A product in a grid: photo, name, price and, when asked, a button to add it to the cart.",
       "file": "src/components/shop.tsx",

@@ -316,3 +316,77 @@ export function SiteFooter({ brand, tagline, columns = [], legal, as: A = "a", c
     </footer>
   );
 }
+
+export interface AuthLayoutProps {
+  /** The product's mark and name, top left: what it is, before anything else. */
+  brand: React.ReactNode;
+  /** What this page does, short: "Sign in", "Create your account", "Choose a new password". */
+  title: React.ReactNode;
+  /** One line under the title: "Welcome back. Your courses are where you left them." */
+  description?: React.ReactNode;
+  /** The form: OAuth buttons, then Fields and the submit Button (block, size lg). */
+  children: React.ReactNode;
+  /** Under the form: "New here? Create an account". */
+  footer?: React.ReactNode;
+  /** The panel beside the form on wide screens, in the sidebar's colours: a promise in a few words, and proof (a quote, a number, a product shot). Leave it out for a single centred column. */
+  aside?: { headline: React.ReactNode; body?: React.ReactNode; quote?: Quote };
+  className?: string;
+}
+
+/**
+ * The page around sign-in, sign-up and password forms. The form sits in a
+ * narrow column with no card around it, the brand at the top; on wide screens
+ * a panel in the app's sidebar colours sits beside it with a short promise
+ * and a quote. On phones it's the form alone. Every auth page uses it, so
+ * they read as one product.
+ */
+export function AuthLayout({ brand, title, description, children, footer, aside, className }: AuthLayoutProps) {
+  return (
+    <div className={cn("@container min-h-dvh bg-ground text-ink", className)}>
+      <div className={cn("grid min-h-dvh", aside && "@4xl:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]")}>
+        {aside ? (
+          <aside className="chrome-scope relative hidden flex-col justify-between gap-10 overflow-hidden bg-surface p-10 text-ink @4xl:flex @6xl:p-14">
+            <div className="flex items-center gap-2.5 font-display text-title font-semibold">{brand}</div>
+            <div className="flex max-w-[460px] flex-col gap-4">
+              <h2 className="m-0 font-display text-display font-semibold tracking-[-0.025em] text-balance @6xl:text-display-xl">{aside.headline}</h2>
+              {aside.body ? <p className="m-0 text-body-lg text-ink-2 text-pretty">{aside.body}</p> : null}
+            </div>
+            {aside.quote ? (
+              <figure className="m-0 flex max-w-[460px] flex-col gap-3 border-t border-line pt-6">
+                <blockquote className="m-0 text-body-lg text-ink text-pretty">“{aside.quote.quote}”</blockquote>
+                <figcaption className="text-label text-ink-3">
+                  <span className="font-medium text-ink-2">{aside.quote.name}</span>
+                  {aside.quote.role ? <> · {aside.quote.role}</> : null}
+                </figcaption>
+              </figure>
+            ) : (
+              <span />
+            )}
+          </aside>
+        ) : null}
+        <main className="flex flex-col px-5 py-8 @xl:px-10">
+          <div className={cn("flex items-center gap-2.5 font-display text-title font-semibold", aside && "@4xl:invisible")}>{brand}</div>
+          <div className="mx-auto flex w-full max-w-[380px] flex-1 flex-col justify-center gap-7 py-10">
+            <div className="flex flex-col gap-2">
+              <h1 className="m-0 font-display text-display font-semibold tracking-[-0.025em] text-ink">{title}</h1>
+              {description ? <p className="m-0 text-body text-ink-3">{description}</p> : null}
+            </div>
+            <div className="flex flex-col gap-4">{children}</div>
+            {footer ? <div className="text-label text-ink-3">{footer}</div> : null}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+/** "or" between the OAuth buttons and the email form. */
+export function AuthDivider({ children = "or" }: { children?: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-3 text-caption uppercase tracking-[0.08em] text-ink-4" role="separator">
+      <span className="h-px flex-1 bg-line" />
+      {children}
+      <span className="h-px flex-1 bg-line" />
+    </div>
+  );
+}

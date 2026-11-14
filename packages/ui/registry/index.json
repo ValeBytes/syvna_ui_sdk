@@ -460,7 +460,7 @@
     },
     {
       "name": "site",
-      "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter",
+      "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter, AuthLayout, AuthDivider",
       "description": "A band of a landing page: a heading and what's under it, at the page's width.",
       "components": [
         "Section",
@@ -469,7 +469,9 @@
         "Testimonials",
         "Faq",
         "CallToAction",
-        "SiteFooter"
+        "SiteFooter",
+        "AuthLayout",
+        "AuthDivider"
       ],
       "dependencies": [],
       "registryDependencies": [

@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
 import { BarChart3, Gem, Globe2, Lock, Receipt, Rocket, Sparkles, Sprout, Zap } from "lucide-react";
 import {
+  AuthDivider,
+  AuthLayout,
+  Button,
+  Field,
+  Input,
   CallToAction,
   CartSummary,
   Faq,
@@ -504,5 +510,37 @@ export const site: Doc[] = [
         onCheckout: raw("checkout"),
       }),
     stage: "items-start",
+  },
+  {
+    name: "AuthLayout",
+    controls: { aside: { type: "boolean", default: true, label: "Brand panel" } },
+    stage: "block p-0",
+    preview: (v) => (
+      <AuthLayout
+        className="min-h-[560px]"
+        brand={<><Gem size={18} /> Lumen</>}
+        title="Sign in"
+        description="Welcome back."
+        aside={bool(v.aside) ? { headline: "Your studio, booked and paid.", quote: { quote: "Half our admin went away.", name: "Amara Okafor", role: "Owner, Lumen" } } : undefined}
+        footer={<>New here? <a href="#">Create an account</a></>}
+      >
+        <Button block size="lg">Continue with Google</Button>
+        <AuthDivider />
+        <Field label="Email"><Input type="email" /></Field>
+        <Button variant="primary" size="lg" block>Sign in</Button>
+      </AuthLayout>
+    ),
+    code: (v) =>
+      jsx(
+        "AuthLayout",
+        {
+          brand: raw("<><Mark /> Lumen</>"),
+          title: "Sign in",
+          description: "Welcome back.",
+          aside: bool(v.aside) ? raw('{ headline: "Your studio, booked and paid.", quote: { quote: "Half our admin went away.", name: "Amara Okafor", role: "Owner, Lumen" } }') : undefined,
+          footer: raw("<>New here? <Link href=\"/sign-up\">Create an account</Link></>"),
+        },
+        '<OAuthButtons />\n<AuthDivider />\n<AuthForm mode="sign-in" />',
+      ),
   },
 ];
