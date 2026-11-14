@@ -9,7 +9,7 @@ export const kits = [
 export type Kit = (typeof kits)[number]["value"];
 
 export const groups = [
-  { kit: "dashboard", name: "App shell", items: ["AppShell", "SideNav", "Sidebar", "NavSection", "NavItem", "Topbar", "Breadcrumbs", "Menu", "SidePanel", "DetailList"] },
+  { kit: "dashboard", name: "App shell", items: ["AppShell", "SideNav", "Sidebar", "NavSection", "NavItem", "Topbar", "PageCrumbs", "Breadcrumbs", "Menu", "SidePanel", "DetailList"] },
   { kit: "dashboard", name: "Actions", items: ["Button", "ButtonGroup", "SplitButton", "ToggleButton", "CopyButton", "Spinner"] },
   {
     kit: "dashboard",

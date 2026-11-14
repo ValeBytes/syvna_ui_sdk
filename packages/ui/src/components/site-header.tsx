@@ -69,7 +69,7 @@ export interface SiteHeaderProps {
   search?: { placeholder?: string; onSearch?: (query: string) => void };
   /** Stays at the top as the page scrolls. */
   sticky?: boolean;
-  /** What renders links: Next's Link, say, so moving between pages keeps state. An <a> by default. */
+  /** What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default. */
   as?: React.ElementType;
   className?: string;
 }
@@ -192,7 +192,7 @@ export function SiteHeader({
       }}
       className="hidden min-w-0 max-w-[420px] flex-1 @3xl:flex"
     >
-      <label className="flex h-9 w-full items-center gap-2 rounded-full border border-line bg-surface-2 px-3.5 text-ink-3 focus-within:border-focus focus-within:outline-1 focus-within:outline-focus">
+      <label className="flex h-9 w-full items-center gap-2 rounded-full border border-line bg-surface-2 px-3.5 text-ink-3 focus-within:border-focus focus-within:outline-1 focus-within:outline-offset-[-1px] focus-within:outline-focus">
         <SearchGlyph />
         <input
           type="search"

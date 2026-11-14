@@ -277,7 +277,7 @@ export interface SiteFooterProps {
   columns?: { title: React.ReactNode; links: SiteLink[] }[];
   /** The bottom line: copyright, legal links. */
   legal?: React.ReactNode;
-  /** What renders links: Next's Link, say, so moving between pages keeps state. An <a> by default. */
+  /** What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default. */
   as?: React.ElementType;
   className?: string;
 }

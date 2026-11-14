@@ -63,12 +63,14 @@ export {
   NavItem,
   Topbar,
   Breadcrumbs,
+  PageCrumbs,
   type AppShellProps,
   type SidebarProps,
   type NavSectionProps,
   type NavItemProps,
   type TopbarProps,
   type BreadcrumbsProps,
+  type PageCrumbsProps,
   type Crumb,
 } from "./components/shell";
 export { Menu, type MenuProps, type MenuItem } from "./components/menu";

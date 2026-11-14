@@ -5,8 +5,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { cn, focusRing } from "../cx";
 import { ChevronRightGlyph, CloseGlyph, MenuGlyph } from "./icons";
 
-type ShellState = { navOpen: boolean; setNavOpen: (open: boolean) => void };
-const ShellContext = createContext<ShellState>({ navOpen: false, setNavOpen: () => {} });
+type PageTrail = { items: Crumb[]; as?: React.ElementType };
+type ShellState = {
+  navOpen: boolean;
+  setNavOpen: (open: boolean) => void;
+  /** The screen's breadcrumbs, set by its PageCrumbs and drawn by the Topbar. */
+  trail: PageTrail | null;
+  setTrail: (trail: PageTrail | null) => void;
+};
+const ShellContext = createContext<ShellState>({ navOpen: false, setNavOpen: () => {}, trail: null, setTrail: () => {} });
 
 /** The AppShell around this: whether its drawer is open (phones), and a way to close it. */
 export function useShell(): ShellState {
@@ -36,6 +43,7 @@ export interface AppShellProps {
  */
 export function AppShell({ sidebar, topbar, children, width = "default", className }: AppShellProps) {
   const [navOpen, setNavOpen] = useState(false);
+  const [trail, setTrail] = useState<PageTrail | null>(null);
   useEffect(() => {
     if (!navOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setNavOpen(false);
@@ -43,7 +51,7 @@ export function AppShell({ sidebar, topbar, children, width = "default", classNa
     return () => document.removeEventListener("keydown", onKey);
   }, [navOpen]);
   return (
-    <ShellContext.Provider value={{ navOpen, setNavOpen }}>
+    <ShellContext.Provider value={{ navOpen, setNavOpen, trail, setTrail }}>
       <div className={cn("@container relative flex h-dvh overflow-hidden bg-ground text-ink", className)}>
         {navOpen ? (
           <div
@@ -141,7 +149,7 @@ export interface NavItemProps {
   active?: boolean;
   /** What's waiting there: new orders, unread messages. */
   count?: number;
-  /** The link component: Next.js's Link. Defaults to a plain <a>. */
+  /** What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default. */
   as?: React.ElementType;
   className?: string;
 }
@@ -155,7 +163,7 @@ export function NavItem({ href, label, icon, active, count, as: Link = "a", clas
       aria-current={active ? "page" : undefined}
       onClick={() => setNavOpen(false)}
       className={cn(
-        "flex h-8 items-center gap-2 rounded-md px-2.5 text-label font-medium no-underline transition-colors",
+        "flex h-8 items-center gap-2 rounded-md px-2.5 text-label font-medium no-underline transition-colors pointer-coarse:h-11",
         active ? "bg-brand-soft text-ink" : "text-ink-2 hover:bg-surface-2 hover:text-ink",
         "[&>svg]:flex-none",
         active ? "[&>svg]:text-ink" : "[&>svg]:text-ink-3",
@@ -173,16 +181,26 @@ export function NavItem({ href, label, icon, active, count, as: Link = "a", clas
 }
 
 export interface TopbarProps {
-  /** Usually Breadcrumbs, or a search Input. */
+  /** Where this screen sits. Leave it off in the layout: each page sets its own with PageCrumbs, and the Topbar draws them here. Pass it only for a Topbar that is the same on every screen. */
+  crumbs?: Crumb[];
+  /** What renders the breadcrumb links, from a client component only (Next's Link). An <a> by default. */
+  linkAs?: React.ElementType;
+  /** Anything else on the left, after the breadcrumbs (rare: a search field). The breadcrumbs belong here, not in the page. */
   children?: React.ReactNode;
-  /** On the right: notifications, help, a primary action. */
+  /** On the right: the screen's main action, notifications, the account Menu. */
   actions?: React.ReactNode;
   className?: string;
 }
 
-/** The bar over a screen, inside an AppShell. On phones it holds the button that opens the Sidebar. */
-export function Topbar({ children, actions, className }: TopbarProps) {
-  const { setNavOpen } = useContext(ShellContext);
+/**
+ * The bar over every signed-in screen. It says where you are (breadcrumbs, from
+ * the page's PageCrumbs) and holds the actions that are always there. It stays
+ * at the top while the screen scrolls. A page never draws its own title or
+ * breadcrumbs above its content: they live here.
+ */
+export function Topbar({ crumbs, linkAs, children, actions, className }: TopbarProps) {
+  const { setNavOpen, trail } = useContext(ShellContext);
+  const items = trail?.items.length ? trail.items : crumbs;
   return (
     <header
       className={cn(
@@ -194,14 +212,41 @@ export function Topbar({ children, actions, className }: TopbarProps) {
         type="button"
         onClick={() => setNavOpen(true)}
         aria-label="Open menu"
-        className={cn("-ml-1.5 inline-flex rounded-sm p-1.5 text-ink-2 hover:text-ink @3xl:hidden", focusRing)}
+        className={cn("-ml-1.5 inline-flex rounded-sm p-1.5 text-ink-2 hover:text-ink pointer-coarse:p-3 @3xl:hidden", focusRing)}
       >
         <MenuGlyph size={20} />
       </button>
-      <div className="flex min-w-0 flex-1 items-center">{children}</div>
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        {items?.length ? <Breadcrumbs items={items} as={trail?.as ?? linkAs} /> : null}
+        {children}
+      </div>
       {actions ? <div className="flex flex-none items-center gap-2">{actions}</div> : null}
     </header>
   );
+}
+
+export interface PageCrumbsProps {
+  /** From the top down: { label, href? }; the last is this screen. */
+  items: Crumb[];
+  /** What renders the links, from a client component only (Next's Link). Leave it out on a server page. */
+  as?: React.ElementType;
+}
+
+/**
+ * A screen's breadcrumbs. Put it anywhere in the page (a server page too): it
+ * draws nothing where it is, and the AppShell's Topbar shows the trail. This is
+ * how every screen says where it is; never a heading or Breadcrumbs in the page.
+ */
+export function PageCrumbs({ items, as }: PageCrumbsProps) {
+  const { setTrail } = useContext(ShellContext);
+  const key = JSON.stringify(items.map((c) => [typeof c.label === "string" ? c.label : "", c.href ?? ""]));
+  useEffect(() => {
+    setTrail({ items, as });
+    return () => setTrail(null);
+    // The trail changes when its labels or links do, not on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, as, setTrail]);
+  return null;
 }
 
 export interface Crumb {
@@ -213,7 +258,7 @@ export interface Crumb {
 export interface BreadcrumbsProps {
   /** From the top down: { label, href? }; the last is the current screen. */
   items: Crumb[];
-  /** The link component: Next.js's Link. */
+  /** What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default. */
   as?: React.ElementType;
   className?: string;
 }

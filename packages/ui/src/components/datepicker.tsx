@@ -23,11 +23,13 @@ export interface CalendarProps {
   locale?: string;
   /** 0 for Sunday, 1 for Monday (most of the world). */
   weekStartsOn?: 0 | 1;
+  /** Days with something on them (assignments due, bookings), marked with a dot: [new Date(2026, 10, 20)]. */
+  marked?: Date[];
   className?: string;
 }
 
 /** A month to pick a day from. DatePicker opens one from a field; use it alone for a booking screen. */
-export function Calendar({ value, onChange, min, max, locale, weekStartsOn = 1, className }: CalendarProps) {
+export function Calendar({ value, onChange, min, max, locale, weekStartsOn = 1, marked, className }: CalendarProps) {
   const [month, setMonth] = useState(() => {
     const d = value ?? new Date();
     return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -70,23 +72,27 @@ export function Calendar({ value, onChange, min, max, locale, weekStartsOn = 1, 
           const out = d.getMonth() !== month.getMonth();
           const picked = same(value, d);
           const disabled = off(d);
+          const dot = !!marked?.some((m) => same(m, d));
           return (
             <button
               key={d.toISOString()}
               type="button"
               role="gridcell"
               aria-selected={picked}
-              aria-label={long.format(d)}
+              aria-label={long.format(d) + (dot ? ", has something on" : "")}
               disabled={!!disabled}
               onClick={() => onChange?.(d)}
               className={cn(
-                "grid h-8 cursor-pointer place-items-center rounded-md text-label tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-35",
+                "relative grid h-8 cursor-pointer place-items-center rounded-md text-label tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-35",
                 focusRing,
                 picked ? "bg-accent font-medium text-accent-ink" : out ? "text-ink-4 hover:bg-surface-2" : "text-ink hover:bg-surface-2",
                 !picked && same(today, d) && "font-semibold underline decoration-2 underline-offset-4",
               )}
             >
               {d.getDate()}
+              {dot ? (
+                <span aria-hidden="true" className={cn("absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full", picked ? "bg-accent-ink" : "bg-accent")} />
+              ) : null}
             </button>
           );
         })}

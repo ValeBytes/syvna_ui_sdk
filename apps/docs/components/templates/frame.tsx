@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, Inbox as InboxIcon, LayoutGrid, LogOut, Package, Plus, Search, Settings, ShoppingBag, User, Users } from "lucide-react";
-import { AppShell, Avatar, Breadcrumbs, Button, CommandPalette, Menu, NotificationCenter, SideNav, Toaster, Topbar, toast, useCommandKey, type SideNavVariant } from "@syvna/ui";
+import { AppShell, Avatar, Button, CommandPalette, Menu, NotificationCenter, SideNav, Toaster, Topbar, toast, useCommandKey, type SideNavVariant } from "@syvna/ui";
 
 import { LookControls, LookProvider, Stage, useEmbed, useLook } from "../look";
 import { SidebarPicker } from "./sidebar-picker";
@@ -139,6 +139,8 @@ function Frame({ children }: { children: React.ReactNode }) {
               }
               topbar={
                 <Topbar
+                  crumbs={crumbs(path)}
+                  linkAs={Link}
                   actions={
                     <>
                       <Button size="sm" icon={<Search size={14} />} onClick={() => setPalette(true)} className="text-ink-3">
@@ -150,9 +152,7 @@ function Frame({ children }: { children: React.ReactNode }) {
                       </Button>
                     </>
                   }
-                >
-                  <Breadcrumbs as={Link} items={crumbs(path)} />
-                </Topbar>
+                />
               }
             >
               {children}

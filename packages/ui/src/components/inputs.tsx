@@ -1,8 +1,9 @@
 "use client";
 
-import { forwardRef, useId, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useContext, useId, useImperativeHandle, useRef, useState } from "react";
 
 import { cn, focusRing } from "../cx";
+import { FieldContext } from "./field";
 import { CheckGlyph, ChevronDownGlyph, CloseGlyph, CopyGlyph, EyeGlyph, EyeOffGlyph } from "./icons";
 import { Spinner } from "./spinner";
 
@@ -13,7 +14,7 @@ export type FieldSize = "sm" | "md" | "lg";
 /** The box every text control shares, as outline; each variant overrides what it changes. */
 const box =
   "relative flex w-full items-center rounded-md border border-line-strong bg-surface text-ink shadow-1 transition-[border-color,background-color,box-shadow] duration-150 " +
-  "hover:border-ink-4 focus-within:border-focus focus-within:outline-1 focus-within:outline-focus";
+  "hover:border-ink-4 focus-within:border-focus focus-within:outline-1 focus-within:outline-offset-[-1px] focus-within:outline-focus";
 
 const variants: Record<FieldVariant, string> = {
   outline: "",
@@ -27,7 +28,7 @@ const variants: Record<FieldVariant, string> = {
   ghost: "border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-surface-2 focus-within:border-line-strong focus-within:bg-surface",
   floating:
     "rounded-b-none border-0 border-b border-line-strong bg-surface-2 shadow-none hover:bg-[color-mix(in_oklch,var(--color-surface-2),var(--color-ink)_4%)] focus-within:border-b-2 focus-within:border-brand focus-within:outline-none",
-  notched: "shadow-none focus-within:border-brand focus-within:outline-1 focus-within:outline-brand",
+  notched: "shadow-none focus-within:border-brand focus-within:outline-1 focus-within:outline-offset-[-1px] focus-within:outline-brand",
   soft: "border-transparent bg-brand-soft shadow-none hover:border-transparent focus-within:border-brand focus-within:bg-surface focus-within:outline-none",
   inset: "border-line bg-surface-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)] focus-within:bg-surface",
   elevated: "border-transparent shadow-2 hover:border-transparent focus-within:border-focus",
@@ -136,7 +137,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const [ownLength, setOwnLength] = useState(String(rest.defaultValue ?? "").length);
   const length = rest.value !== undefined ? String(rest.value).length : ownLength;
   const auto = useId();
-  const inputId = id ?? auto;
+  const fc = useContext(FieldContext);
+  const inputId = id ?? fc?.id ?? auto;
   const password = type === "password" && reveal;
   const inside = (variant === "floating" || variant === "notched") && !!label;
   const inlineLabel = variant === "inline" && !!label;
@@ -231,6 +233,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           variant === "floating" && inside && "pt-4",
           inside && "placeholder:text-transparent focus:placeholder:text-ink-4",
         )}
+        aria-describedby={fc?.describedBy}
         {...rest}
       />
       {inside ? (
@@ -273,20 +276,23 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 
 /** Text over several lines: notes, descriptions, messages. */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { invalid, variant = "outline", className, rows = 4, ...rest },
+  { invalid, variant = "outline", className, rows = 4, id, ...rest },
   ref,
 ) {
+  const fc = useContext(FieldContext);
   const look = variant === "floating" ? "filled" : variant === "notched" ? "outline" : variant;
   return (
     <textarea
       ref={ref}
       rows={rows}
+      id={id ?? fc?.id}
+      aria-describedby={fc?.describedBy}
       aria-invalid={invalid || undefined}
       className={cn(
         fieldBox(look, { invalid, disabled: rest.disabled }),
         "block min-h-20 resize-y py-1.5 text-body outline-none placeholder:text-ink-4",
         look === "pill" ? "rounded-[18px] px-4" : sides(look),
-        look === "outline" || look === "ghost" || look === "pill" ? "focus-visible:border-focus focus-visible:outline-1 focus-visible:outline-solid focus-visible:outline-focus" : "",
+        look === "outline" || look === "ghost" || look === "pill" ? "focus-visible:border-focus focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-solid focus-visible:outline-focus" : "",
         look === "filled" || look === "underline" ? "focus-visible:border-b-2 focus-visible:border-brand" : "",
         look === "cupertino" ? "focus-visible:ring-[3px] focus-visible:ring-[color-mix(in_oklch,var(--color-focus)_35%,transparent)]" : "",
         className,
@@ -317,15 +323,18 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
 
 /** Pick one from a short list (under about 12). The browser's own list opens, so it works on phones and with a keyboard. */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { options, placeholder, invalid, variant = "outline", size = "md", className, defaultValue, value, ...rest },
+  { options, placeholder, invalid, variant = "outline", size = "md", className, defaultValue, value, id, ...rest },
   ref,
 ) {
+  const fc = useContext(FieldContext);
   const look = variant === "floating" ? "filled" : variant === "notched" ? "outline" : variant;
   const controlled = value !== undefined;
   return (
     <span className={cn(fieldBox(look, { invalid, disabled: rest.disabled }), heights[size], className)}>
       <select
         ref={ref}
+        id={id ?? fc?.id}
+        aria-describedby={fc?.describedBy}
         aria-invalid={invalid || undefined}
         className={cn(
           "h-full w-full min-w-0 cursor-pointer appearance-none bg-transparent pr-8 text-inherit outline-none disabled:cursor-not-allowed",
@@ -351,3 +360,4 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
     </span>
   );
 });
+

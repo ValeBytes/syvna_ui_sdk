@@ -1,8 +1,11 @@
 "use client";
 
-import { Children, cloneElement, isValidElement, useId } from "react";
+import { Children, cloneElement, createContext, isValidElement, useId } from "react";
 
 import { cn } from "../cx";
+
+/** What a Field tells the control inside it, so the label is wired even when the control can't be cloned (a child passed from a server page). */
+export const FieldContext = createContext<{ id: string; describedBy?: string; invalid?: boolean } | null>(null);
 
 export interface FieldProps {
   /** What goes in the field: a short noun, "Email address". */
@@ -35,10 +38,12 @@ export function Field({ label, hint, error, required, aside, children, className
         invalid: error ? true : own?.invalid,
       })
     : children;
+  const wiring = Children.count(children) === 1 ? { id: controlId ?? id, describedBy: note ? noteId : undefined, invalid: error ? true : undefined } : null;
   return (
+    <FieldContext.Provider value={wiring}>
     <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
       <div className="flex items-baseline justify-between gap-2">
-        <label className="text-label font-medium text-ink" htmlFor={controlId}>
+        <label className="text-label font-medium text-ink" htmlFor={controlId ?? (wiring ? wiring.id : undefined)}>
           {label}
           {required ? (
             <span className="ml-0.5 text-danger" aria-hidden="true">
@@ -55,5 +60,7 @@ export function Field({ label, hint, error, required, aside, children, className
         </p>
       ) : null}
     </div>
+    </FieldContext.Provider>
   );
 }
+

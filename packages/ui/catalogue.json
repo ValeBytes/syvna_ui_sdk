@@ -994,7 +994,7 @@
     },
     {
       "name": "Table",
-      "summary": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.",
+      "summary": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right.",
       "file": "src/components/table.tsx",
       "props": [
         {
@@ -1385,7 +1385,7 @@
           "type": "React.ElementType",
           "required": false,
           "default": "\"a\"",
-          "description": "The link component: Next.js's Link. Defaults to a plain <a>."
+          "description": "What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default."
         },
         {
           "name": "className",
@@ -1397,20 +1397,32 @@
     },
     {
       "name": "Topbar",
-      "summary": "The bar over a screen, inside an AppShell. On phones it holds the button that opens the Sidebar.",
+      "summary": "The bar over every signed-in screen. It says where you are (breadcrumbs, from\nthe page's PageCrumbs) and holds the actions that are always there. It stays\nat the top while the screen scrolls. A page never draws its own title or\nbreadcrumbs above its content: they live here.",
       "file": "src/components/shell.tsx",
       "props": [
+        {
+          "name": "crumbs",
+          "type": "Crumb[]",
+          "required": false,
+          "description": "Where this screen sits. Leave it off in the layout: each page sets its own with PageCrumbs, and the Topbar draws them here. Pass it only for a Topbar that is the same on every screen."
+        },
+        {
+          "name": "linkAs",
+          "type": "React.ElementType",
+          "required": false,
+          "description": "What renders the breadcrumb links, from a client component only (Next's Link). An <a> by default."
+        },
         {
           "name": "children",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Usually Breadcrumbs, or a search Input."
+          "description": "Anything else on the left, after the breadcrumbs (rare: a search field). The breadcrumbs belong here, not in the page."
         },
         {
           "name": "actions",
           "type": "React.ReactNode",
           "required": false,
-          "description": "On the right: notifications, help, a primary action."
+          "description": "On the right: the screen's main action, notifications, the account Menu."
         },
         {
           "name": "className",
@@ -1436,13 +1448,32 @@
           "type": "React.ElementType",
           "required": false,
           "default": "\"a\"",
-          "description": "The link component: Next.js's Link."
+          "description": "What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default."
         },
         {
           "name": "className",
           "type": "string",
           "required": false,
           "description": "More classes; one here wins over the component's own of the same kind."
+        }
+      ]
+    },
+    {
+      "name": "PageCrumbs",
+      "summary": "A screen's breadcrumbs. Put it anywhere in the page (a server page too): it\ndraws nothing where it is, and the AppShell's Topbar shows the trail. This is\nhow every screen says where it is; never a heading or Breadcrumbs in the page.",
+      "file": "src/components/shell.tsx",
+      "props": [
+        {
+          "name": "items",
+          "type": "Crumb[]",
+          "required": true,
+          "description": "From the top down: { label, href? }; the last is this screen."
+        },
+        {
+          "name": "as",
+          "type": "React.ElementType",
+          "required": false,
+          "description": "What renders the links, from a client component only (Next's Link). Leave it out on a server page."
         }
       ]
     },
@@ -2017,6 +2048,12 @@
           "required": false,
           "default": "1",
           "description": "0 for Sunday, 1 for Monday (most of the world)."
+        },
+        {
+          "name": "marked",
+          "type": "Date[]",
+          "required": false,
+          "description": "Days with something on them (assignments due, bookings), marked with a dot: [new Date(2026, 10, 20)]."
         },
         {
           "name": "className",
@@ -3008,7 +3045,7 @@
           "type": "React.ElementType",
           "required": false,
           "default": "\"a\"",
-          "description": "What renders links: Next's Link, say, so moving between pages keeps state. An <a> by default."
+          "description": "What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default."
         },
         {
           "name": "className",
@@ -3557,7 +3594,7 @@
           "type": "React.ElementType",
           "required": false,
           "default": "\"a\"",
-          "description": "What renders links: Next's Link, say, so moving between pages keeps state. An <a> by default."
+          "description": "What renders links, from a client component only: Next's Link, say, so moving between pages keeps state. A server page can't pass a component here (Next refuses it), so leave it out there: plain <a> links work. An <a> by default."
         },
         {
           "name": "className",

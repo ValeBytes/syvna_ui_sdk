@@ -120,7 +120,7 @@ export function FilterBar({ filters, values, onValuesChange, query, onQueryChang
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
       {onQueryChange ? (
-        <span className="relative flex h-8 w-full items-center rounded-md border border-line-strong bg-surface shadow-1 focus-within:border-focus focus-within:outline-1 focus-within:outline-focus @lg:w-64">
+        <span className="relative flex h-8 w-full items-center rounded-md border border-line-strong pointer-coarse:h-11 bg-surface shadow-1 focus-within:border-focus focus-within:outline-1 focus-within:outline-offset-[-1px] focus-within:outline-focus @lg:w-64">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" className="ml-2.5 flex-none text-ink-3" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-3.5-3.5" />
@@ -146,7 +146,7 @@ export function FilterBar({ filters, values, onValuesChange, query, onQueryChang
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-label transition-colors",
+                  "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-label transition-colors pointer-coarse:h-11",
                   focusRing,
                   picked.length ? "border-brand bg-brand-soft text-ink" : "border-dashed border-line-strong text-ink-2 hover:border-ink-4 hover:text-ink",
                 )}
@@ -166,7 +166,7 @@ export function FilterBar({ filters, values, onValuesChange, query, onQueryChang
                   role="menuitemcheckbox"
                   aria-checked={on}
                   onClick={() => toggle(f.key, o.value)}
-                  className={cn("flex h-8 w-full cursor-pointer items-center gap-2 rounded-md px-2 text-left text-label text-ink-2 hover:bg-surface-2 hover:text-ink", focusRing)}
+                  className={cn("flex h-8 w-full cursor-pointer items-center gap-2 rounded-md px-2 text-left text-label text-ink-2 hover:bg-surface-2 hover:text-ink pointer-coarse:h-11", focusRing)}
                 >
                   <span className={cn("grid size-4 flex-none place-items-center rounded-[4px] border", on ? "border-brand bg-brand text-brand-ink" : "border-line-strong")}>
                     {on ? <CheckGlyph size={11} /> : null}

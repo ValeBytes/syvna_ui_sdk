@@ -159,7 +159,12 @@ export function createPalette(seed: PaletteSeed): Palette {
   const tint = seed.neutral === "none" ? 0 : Math.min(1, Math.max(0, seed.tint ?? 0.5));
   const nc = (brand.c > 0.02 || seed.neutral === "cool" || seed.neutral === "warm" || typeof seed.neutral === "number" ? 0.022 : 0) * tint;
   const accent = toOklch(seed.accent ?? oklch(0.66, Math.max(0.12, brand.c), (brand.h + 160) % 360));
-  const chrome = seed.chrome ?? "surface";
+  // A keyword or a colour; anything else ("neutral", a typo) would be read as
+  // a colour and come out unreadable, so it's the plain surface instead.
+  const chrome =
+    seed.chrome && (["surface", "brand", "dark", "tinted"].includes(seed.chrome) || /^(#|oklch\(|rgb|hsl)/i.test(seed.chrome))
+      ? seed.chrome
+      : "surface";
 
   const build = (mode: Mode): Tokens => {
     const light = mode === "light";

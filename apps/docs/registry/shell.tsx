@@ -143,6 +143,7 @@ function OrdersScreen({ width }: { width: "default" | "full" }) {
       }
       topbar={
         <Topbar
+          crumbs={[{ label: "Shop", href: "#" }, { label: "Orders" }]}
           actions={
             <>
               <Button variant="ghost" aria-label="Notifications" icon={<Bell size={16} />} />
@@ -151,9 +152,7 @@ function OrdersScreen({ width }: { width: "default" | "full" }) {
               </Button>
             </>
           }
-        >
-          <Breadcrumbs items={[{ label: "Shop", href: "#" }, { label: "Orders" }]} />
-        </Topbar>
+        />
       }
     >
       <div className="flex flex-col gap-6">
@@ -282,9 +281,9 @@ export const shell: Doc[] = [
         {
           width: str(v.width),
           sidebar: raw("<Sidebar brand={<><Mark /> Casa Verde</>} footer={<AccountMenu />}>…</Sidebar>"),
-          topbar: raw('<Topbar actions={<Button variant="primary" size="sm">New order</Button>}><Breadcrumbs items={crumbs} /></Topbar>'),
+          topbar: raw('<Topbar actions={<Button variant="primary" size="sm">New order</Button>} />'),
         },
-        '<div className="grid gap-4 @xl:grid-cols-3">{stats}</div>\n<Table rows={orders} … />',
+        '<PageCrumbs items={[{ label: "Shop", href: "/" }, { label: "Orders" }]} />\n<div className="grid gap-4 @xl:grid-cols-3">{stats}</div>\n<Table rows={orders} … />',
         { width: "default" },
       ),
   },
@@ -358,6 +357,7 @@ export const shell: Doc[] = [
     preview: (v) => (
       <Topbar
         className="static"
+        crumbs={v.content === "search" ? undefined : [{ label: "Shop", href: "#" }, { label: "Orders" }]}
         actions={
           bool(v.actions) ? (
             <>
@@ -369,17 +369,29 @@ export const shell: Doc[] = [
       >
         {v.content === "search" ? (
           <Input aria-label="Search" placeholder="Search orders, customers" className="max-w-[360px]" />
-        ) : (
-          <Breadcrumbs items={[{ label: "Shop", href: "#" }, { label: "Orders" }]} />
-        )}
+        ) : null}
       </Topbar>
     ),
     code: (v) =>
       jsx(
         "Topbar",
-        { actions: bool(v.actions) ? raw('<Button variant="ghost" aria-label="Notifications" icon={<Bell size={16} />} />') : undefined },
-        v.content === "search" ? '<Input aria-label="Search" placeholder="Search orders, customers" />' : "<Breadcrumbs items={crumbs} />",
+        {
+          crumbs: v.content === "search" ? undefined : raw("crumbs"),
+          actions: bool(v.actions) ? raw('<Button variant="ghost" aria-label="Notifications" icon={<Bell size={16} />} />') : undefined,
+        },
+        v.content === "search" ? '<Input aria-label="Search" placeholder="Search orders, customers" />' : undefined,
       ),
+  },
+  {
+    name: "PageCrumbs",
+    stage: "block p-0",
+    preview: () => (
+      <div className="flex flex-col">
+        <Topbar className="static" crumbs={[{ label: "Admin", href: "#" }, { label: "Invites" }]} />
+        <p className="m-0 p-4 text-body text-ink-3">The page set this trail with PageCrumbs; the Topbar drew it.</p>
+      </div>
+    ),
+    code: () => jsx("PageCrumbs", { items: raw('[{ label: "Admin", href: "/admin" }, { label: "Invites" }]') }),
   },
   {
     name: "Breadcrumbs",
@@ -609,9 +621,7 @@ function SideNavDemo({ variant }: { variant: SideNavVariant }) {
         />
       }
       topbar={
-        <Topbar>
-          <Breadcrumbs items={[{ label: "Shop", href: "#" }, { label: page?.label ?? "" }]} />
-        </Topbar>
+        <Topbar crumbs={[{ label: "Shop", href: "#" }, { label: page?.label ?? "" }]} />
       }
     >
       <p className="m-0 text-body text-ink-3">The {page?.label ?? ""} screen goes here. Pick another link in the sidebar.</p>

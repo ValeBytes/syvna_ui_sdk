@@ -291,6 +291,7 @@
       "dependencies": [],
       "registryDependencies": [
         "core",
+        "field",
         "icons",
         "spinner"
       ]
@@ -393,7 +394,7 @@
     },
     {
       "name": "shell",
-      "title": "AppShell, Sidebar, NavSection, NavItem, Topbar, Breadcrumbs",
+      "title": "AppShell, Sidebar, NavSection, NavItem, Topbar, Breadcrumbs, PageCrumbs",
       "description": "The frame of an app's signed-in screens: a sidebar on the left, a top bar,\nand the screen. It fills the window (or its className's height) and the\nscreen scrolls inside it, so the sidebar always fits. From 768px wide the\nsidebar stays on show; narrower, it slides in from the Topbar's menu button\nand closes when a link is picked. Those widths are the shell's own (container\nqueries), so it fits a box as well as the window; its main area is a\ncontainer too, for screens laid out with",
       "components": [
         "AppShell",
@@ -401,7 +402,8 @@
         "NavSection",
         "NavItem",
         "Topbar",
-        "Breadcrumbs"
+        "Breadcrumbs",
+        "PageCrumbs"
       ],
       "dependencies": [],
       "registryDependencies": [
@@ -510,7 +512,7 @@
     {
       "name": "table",
       "title": "Table",
-      "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.",
+      "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right.",
       "components": [
         "Table"
       ],

@@ -45,7 +45,11 @@ export interface TableProps<T> {
 
 type SortState = { key: string; dir: 1 | -1 } | null;
 
-/** Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges. */
+/**
+ * Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.
+ * Narrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the
+ * title, then each column's name and value, so nothing hides off to the right.
+ */
 export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flush, selected, caption, className }: TableProps<T>) {
   const [sort, setSort] = useState<SortState>(null);
   const sorted = useMemo(() => {
@@ -58,10 +62,10 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
   const edge = flush ? "first:pl-4 last:pr-4" : "first:rounded-tl-[calc(var(--radius-lg)-1px)] last:rounded-tr-[calc(var(--radius-lg)-1px)]";
 
   return (
-    <div className={cn("w-full overflow-x-auto", !flush && surface, className)}>
-      <table className="w-full border-separate border-spacing-0 text-body text-ink-2">
+    <div className={cn("@container w-full overflow-x-auto", !flush && surface, className)}>
+      <table className="w-full border-separate border-spacing-0 text-body text-ink-2 @max-lg:block">
         {caption ? <caption className="sr-only">{caption}</caption> : null}
-        <thead>
+        <thead className="@max-lg:hidden">
           <tr>
             {columns.map((c) => {
               const active = sort?.key === c.key;
@@ -98,7 +102,7 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
             })}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="@max-lg:block">
           {sorted.length === 0 ? (
             <tr>
               <td colSpan={columns.length} className="p-0">
@@ -113,6 +117,7 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                   key={key}
                   className={cn(
                     "[&:last-child>td]:border-b-0",
+                    "@max-lg:block @max-lg:border-b @max-lg:border-line @max-lg:px-3 @max-lg:py-2 @max-lg:last:border-b-0",
                     onRowClick &&
                       "cursor-pointer transition-colors hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus",
                     selected?.includes(key) && "bg-surface-2",
@@ -133,8 +138,12 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                   {columns.map((c) => (
                     <td
                       key={c.key}
+                      data-label={typeof c.header === "string" ? c.header : undefined}
                       className={cn(
                         "border-b border-line px-3 align-middle first:font-medium first:text-ink",
+                        "@max-lg:flex @max-lg:h-auto! @max-lg:min-h-8 @max-lg:items-center @max-lg:justify-between @max-lg:gap-3 @max-lg:border-b-0 @max-lg:px-0! @max-lg:py-1 @max-lg:text-right",
+                        "@max-lg:before:flex-none @max-lg:before:text-left @max-lg:before:text-small @max-lg:before:font-normal @max-lg:before:text-ink-3 @max-lg:before:content-[attr(data-label)]",
+                        "@max-lg:first:justify-start @max-lg:first:text-left @max-lg:first:before:content-none",
                         dense ? "h-8" : "h-10",
                         flush && "first:pl-4 last:pr-4",
                         c.align === "end" && "text-right tabular-nums",

@@ -10,6 +10,40 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Fixed
+
+- `Field` wires its label to the control inside it even when that control
+  comes from a server page (it shares the id through context), so clicking a
+  label focuses its field and the hydration warning on field ids is gone.
+  `Input`, `Textarea` and `Select` read it.
+- On touch screens, sidebar links (`NavItem`), the menu button, `FilterBar`'s
+  search, chips and options are 44px tall, big enough to tap. Desktop is
+  unchanged.
+- `text-caption` is 12px (was 11.5px), the smallest size that reads on a phone.
+
+- Focused fields (`Input`, its notched look, `Select` and `Textarea` looks, the
+  table and site-header search) drew their focus line outside the border, a
+  box inside a box. It's drawn over the border now: one clean edge.
+
+- `PaletteStyle`'s `chrome` takes `surface`, `brand`, `dark`, `tinted` or a
+  colour; anything else (`"neutral"`, a typo) used to be read as a colour and
+  made the sidebar's text unreadable. It's the plain surface now.
+- The `as` prop of `SiteHeader`, `SiteFooter`, `NavItem` and `Breadcrumbs` now
+  says it's for client components only: Next refuses a component passed from
+  a server page, which broke whole pages. Leave it out there; plain links work.
+
+### Added
+
+- `PageCrumbs`: a page sets its breadcrumbs with it, from anywhere in the page
+  (a server page too), and the `Topbar` draws them. `Topbar` takes `crumbs` and
+  `linkAs` for a trail that's the same on every screen. Screens no longer put a
+  title or Breadcrumbs over their content, which repeated what the Topbar said.
+- `Table` stacks each row into a card when its box is narrower than 32rem (a
+  phone, a side panel): the first cell as the title, then each column's name and
+  value, so status and actions no longer sit off-screen to the right.
+- `Calendar` (and `DatePicker`) take `marked`: days with something on them
+  (assignments due, bookings), shown with a dot.
+
 ## v0.3.0 (2026-11-14)
 
 ### Changed
