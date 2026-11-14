@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.7.0 (2026-11-14)
+
 ### Added
 
 - `Table` columns take `mobile` (`title`, `meta`, `row`, `actions`, `hide`):
