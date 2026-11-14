@@ -1,6 +1,6 @@
 {
   "name": "table",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "registry:ui",
   "title": "Table",
   "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right.",

@@ -1,6 +1,6 @@
 {
   "name": "fields-more",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "registry:ui",
   "title": "TagInput, NumberInput, CurrencyInput, InlineEdit, KeyValueEditor, ApiKeyField, Slider",
   "description": "Several values in one field: emails to invite, tags, recipients. Enter,\ncomma or Tab adds what's typed; pasting a list adds them all; Backspace\nin an empty field removes the last.",

@@ -1,6 +1,6 @@
 {
   "name": "core",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "registry:lib",
   "title": "Core",
   "description": "cn(), the tone classes, the palette generator, theme.css (Tailwind theme) and tokens.css (the design's values). Every item needs it.",

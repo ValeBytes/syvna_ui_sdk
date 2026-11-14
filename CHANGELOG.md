@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.5.0 (2026-11-14)
+
 ### Added
 
 - `AuthLayout` and `AuthDivider`: the page around sign-in, sign-up and password
