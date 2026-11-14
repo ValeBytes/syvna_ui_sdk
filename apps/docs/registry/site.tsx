@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { BarChart3, Gem, Globe2, Lock, Receipt, Rocket, Sparkles, Sprout, Zap } from "lucide-react";
 import {
-  AuthDivider,
   AuthLayout,
   Button,
   Field,
@@ -524,8 +523,6 @@ export const site: Doc[] = [
         aside={bool(v.aside) ? { headline: "Your studio, booked and paid.", quote: { quote: "Half our admin went away.", name: "Amara Okafor", role: "Owner, Lumen" } } : undefined}
         footer={<>New here? <a href="#">Create an account</a></>}
       >
-        <Button block size="lg">Continue with Google</Button>
-        <AuthDivider />
         <Field label="Email"><Input type="email" /></Field>
         <Button variant="primary" size="lg" block>Sign in</Button>
       </AuthLayout>
@@ -540,7 +537,7 @@ export const site: Doc[] = [
           aside: bool(v.aside) ? raw('{ headline: "Your studio, booked and paid.", quote: { quote: "Half our admin went away.", name: "Amara Okafor", role: "Owner, Lumen" } }') : undefined,
           footer: raw("<>New here? <Link href=\"/sign-up\">Create an account</Link></>"),
         },
-        '<OAuthButtons />\n<AuthDivider />\n<AuthForm mode="sign-in" />',
+        '{/* Only the options Syvna has set up: OAuthButtons draws them (and the divider) from colony.auth.providers(). */}\n<OAuthButtons providers={providers} />\n<AuthForm mode="sign-in" />',
       ),
   },
 ];

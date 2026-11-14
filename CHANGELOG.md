@@ -10,6 +10,12 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Fixed
+
+- `AuthLayout` has its guide, which v0.5.0 left out. It and the Sign in template
+  no longer show a hard-coded "Continue with Google": apps offer only the
+  sign-in options Syvna has set up, through the template's `OAuthButtons`.
+
 ## v0.5.0 (2026-11-14)
 
 ### Added

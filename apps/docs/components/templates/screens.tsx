@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Copy, Download, LayoutGrid, List, MoreHorizontal, Package, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import {
-  AuthDivider,
   AuthLayout,
   Alert,
   Avatar,
@@ -492,8 +491,6 @@ export function SignIn() {
         </>
       }
     >
-      <Button block size="lg">Continue with Google</Button>
-      <AuthDivider />
       <form
         className="flex flex-col gap-4"
         onSubmit={(e) => {
