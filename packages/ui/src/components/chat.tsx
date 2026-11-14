@@ -367,7 +367,7 @@ export function PromptInput({
               send();
             }
           }}
-          className="max-h-[220px] min-h-[24px] w-full resize-none bg-transparent px-1.5 py-1 text-body text-ink outline-none placeholder:text-ink-4"
+          className="max-h-[220px] min-h-[24px] w-full resize-none bg-transparent px-1.5 py-1 text-body text-ink outline-none! placeholder:text-ink-4"
         />
         <div className="flex items-center gap-1.5">
           {onFiles ? (

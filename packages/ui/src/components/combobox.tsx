@@ -123,7 +123,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
               setQuery("");
             }
           }}
-          className={cn("h-full min-w-0 flex-1 bg-transparent pr-8 text-inherit outline-none placeholder:text-ink-4 disabled:cursor-not-allowed", size === "sm" ? "text-small" : size === "lg" ? "text-body-lg" : "text-body", variant === "pill" ? "pl-4" : variant === "underline" ? "pl-0.5" : "pl-3")}
+          className={cn("h-full min-w-0 flex-1 bg-transparent pr-8 text-inherit outline-none! placeholder:text-ink-4 disabled:cursor-not-allowed", size === "sm" ? "text-small" : size === "lg" ? "text-body-lg" : "text-body", variant === "pill" ? "pl-4" : variant === "underline" ? "pl-0.5" : "pl-3")}
           {...aria}
         />
         <ChevronDownGlyph size={15} className={cn("pointer-events-none absolute right-2.5 text-ink-3 transition-transform", open && "rotate-180")} />

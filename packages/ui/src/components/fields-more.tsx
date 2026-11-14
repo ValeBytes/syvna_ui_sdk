@@ -146,7 +146,7 @@ export function TagInput({ value, defaultValue = [], onChange, suggestions = [],
             } else if (e.key === "Backspace" && !text && tags.length) remove(tags[tags.length - 1]!);
             else if (e.key === "Escape") setText("");
           }}
-          className={cn("h-6 min-w-[80px] flex-1 bg-transparent px-1 text-ink outline-none placeholder:text-ink-4", texts[size])}
+          className={cn("h-6 min-w-[80px] flex-1 bg-transparent px-1 text-ink outline-none! placeholder:text-ink-4", texts[size])}
         />
       </div>
       {open ? (
@@ -304,7 +304,7 @@ export function NumberInput({
             set(next);
           } else if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur();
         }}
-        className={cn("h-full min-w-0 flex-1 bg-transparent tabular-nums text-ink outline-none placeholder:text-ink-4", texts[size], controls === "stepper" ? "px-2 text-center" : "px-3", prefix && "pl-1.5", suffix && "pr-1.5")}
+        className={cn("h-full min-w-0 flex-1 bg-transparent tabular-nums text-ink outline-none! placeholder:text-ink-4", texts[size], controls === "stepper" ? "px-2 text-center" : "px-3", prefix && "pl-1.5", suffix && "pr-1.5")}
         {...aria}
       />
       {format === "percent" && draft === null && n !== null ? <span className="-ml-2 pr-2 text-label text-ink-3">%</span> : null}

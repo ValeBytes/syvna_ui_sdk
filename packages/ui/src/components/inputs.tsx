@@ -225,7 +225,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           onChange?.(e);
         }}
         className={cn(
-          "peer h-full min-w-0 flex-1 bg-transparent text-inherit outline-none placeholder:text-ink-4 disabled:cursor-not-allowed",
+          "peer h-full min-w-0 flex-1 bg-transparent text-inherit outline-none! placeholder:text-ink-4 disabled:cursor-not-allowed",
           texts[size],
           variant === "minimal" ? "px-0.5" : sides(variant),
           leading && !inside && "pl-2",
@@ -337,7 +337,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         aria-describedby={fc?.describedBy}
         aria-invalid={invalid || undefined}
         className={cn(
-          "h-full w-full min-w-0 cursor-pointer appearance-none bg-transparent pr-8 text-inherit outline-none disabled:cursor-not-allowed",
+          "h-full w-full min-w-0 cursor-pointer appearance-none bg-transparent pr-8 text-inherit outline-none! disabled:cursor-not-allowed",
           texts[size],
           look === "pill" ? "pl-4" : look === "underline" ? "pl-0.5" : "pl-3",
           "has-[option[value='']:checked]:text-ink-4 [&_option]:bg-surface [&_option]:text-ink",

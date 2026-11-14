@@ -10,6 +10,14 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Fixed
+
+- Text boxes no longer show a second, inner focus outline when an app's own CSS
+  outlines everything focused (`:focus-visible { outline: … }`): the box draws
+  its one focus line and the text field inside it never does. Input, Select,
+  Combobox, NumberInput, TagInput, FilterBar's search, the command palette,
+  PromptInput, the site header's search and the quantity stepper.
+
 ## v0.5.1 (2026-11-14)
 
 ### Fixed

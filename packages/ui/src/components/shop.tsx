@@ -142,7 +142,7 @@ export function QuantityStepper({ value, defaultValue = 1, onValueChange, min = 
         inputMode="numeric"
         value={n}
         onChange={(e) => set(parseInt(e.target.value, 10))}
-        className={cn("w-9 border-x border-line bg-transparent text-center tabular-nums text-ink outline-none focus:bg-surface-2", size === "sm" ? "text-small" : "text-body")}
+        className={cn("w-9 border-x border-line bg-transparent text-center tabular-nums text-ink outline-none! focus:bg-surface-2", size === "sm" ? "text-small" : "text-body")}
       />
       <button type="button" aria-label="One more" disabled={n >= max} onClick={() => set(n + 1)} className={btn}>
         <span aria-hidden="true" className="relative size-2.5">

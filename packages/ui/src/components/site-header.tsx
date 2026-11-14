@@ -200,7 +200,7 @@ export function SiteHeader({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={search.placeholder ?? "Search"}
           aria-label="Search"
-          className="min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-4"
+          className="min-w-0 flex-1 bg-transparent text-body text-ink outline-none! placeholder:text-ink-4"
         />
       </label>
     </form>

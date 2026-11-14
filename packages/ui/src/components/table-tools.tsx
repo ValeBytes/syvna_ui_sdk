@@ -310,7 +310,7 @@ export function TransferList({ items, value, onChange, titles = ["Available", "S
         </div>
         <label className="flex items-center gap-2 border-b border-line px-3 text-ink-3">
           <SearchGlyph size={13} />
-          <input value={q[side]} onChange={(e) => setQ((x) => (side === 0 ? [e.target.value, x[1]] : [x[0], e.target.value]))} placeholder="Search" aria-label={`Search ${titles[side]}`} className="h-8 min-w-0 flex-1 bg-transparent text-small text-ink outline-none placeholder:text-ink-4" />
+          <input value={q[side]} onChange={(e) => setQ((x) => (side === 0 ? [e.target.value, x[1]] : [x[0], e.target.value]))} placeholder="Search" aria-label={`Search ${titles[side]}`} className="h-8 min-w-0 flex-1 bg-transparent text-small text-ink outline-none! placeholder:text-ink-4" />
         </label>
         <ul className="m-0 h-56 list-none overflow-y-auto p-1">
           {shown.map((i) => (

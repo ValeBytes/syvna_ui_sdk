@@ -131,7 +131,7 @@ export function FilterBar({ filters, values, onValuesChange, query, onQueryChang
             placeholder={placeholder}
             value={query ?? ""}
             onChange={(e) => onQueryChange(e.target.value)}
-            className="h-full min-w-0 flex-1 bg-transparent px-2 text-body text-ink outline-none placeholder:text-ink-4"
+            className="h-full min-w-0 flex-1 bg-transparent px-2 text-body text-ink outline-none! placeholder:text-ink-4"
           />
         </span>
       ) : null}

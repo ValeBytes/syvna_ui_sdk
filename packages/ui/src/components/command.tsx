@@ -105,7 +105,7 @@ export function CommandPalette({ open, onClose, groups, placeholder = "Search or
           aria-expanded="true"
           aria-controls={`${id}-list`}
           aria-activedescendant={flat[at] ? `${id}-${at}` : undefined}
-          className="h-12 w-full border-0 border-b border-line bg-transparent px-4 text-body text-ink outline-none placeholder:text-ink-4"
+          className="h-12 w-full border-0 border-b border-line bg-transparent px-4 text-body text-ink outline-none! placeholder:text-ink-4"
         />
         <div ref={list} id={`${id}-list`} role="listbox" className="max-h-[min(360px,50vh)] overflow-y-auto p-1.5">
           {shown.length === 0 ? <p className="m-0 px-3 py-8 text-center text-label text-ink-3">{empty}</p> : null}
