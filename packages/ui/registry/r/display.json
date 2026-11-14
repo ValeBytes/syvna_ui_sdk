@@ -1,6 +1,6 @@
 {
   "name": "display",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "registry:ui",
   "title": "Badge, Avatar, Card, StatCard, EmptyState, Skeleton, Progress",
   "description": "One or two words of status. The same status gets the same tone on every screen.",

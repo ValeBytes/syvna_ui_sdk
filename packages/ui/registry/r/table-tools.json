@@ -1,6 +1,6 @@
 {
   "name": "table-tools",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "registry:ui",
   "title": "BulkActionBar, ColumnSettings, SavedViews, TransferList, TreeView",
   "description": "When rows are selected, what can be done to all of them at once, with how many and a way out.",

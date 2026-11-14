@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.3.0 (2026-11-14)
+
 ### Changed
 
 - **Dark mode no longer follows the device by default.** The default (light)

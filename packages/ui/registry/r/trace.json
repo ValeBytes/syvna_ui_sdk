@@ -1,6 +1,6 @@
 {
   "name": "trace",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "registry:ui",
   "title": "Trace, TraceStep, Plan, TaskList, ToolCall, Reasoning, Subagent, Sources, InlineCitation, Checkpoint",
   "description": "A list of steps, joined by a thin line down the icons.",

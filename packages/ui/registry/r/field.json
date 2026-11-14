@@ -1,6 +1,6 @@
 {
   "name": "field",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "registry:ui",
   "title": "Field",
   "description": "A label, a control, and its hint or error, wired together for screen readers.",
