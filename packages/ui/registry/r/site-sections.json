@@ -1,6 +1,6 @@
 {
   "name": "site-sections",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "type": "registry:ui",
   "title": "Bento, FeatureRows, Stats, Steps",
   "description": "What the product does as a grid of unequal cells, each with its own picture: richer than a row of icons.",
