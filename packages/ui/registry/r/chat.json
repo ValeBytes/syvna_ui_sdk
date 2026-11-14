@@ -1,6 +1,6 @@
 {
   "name": "chat",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "registry:ui",
   "title": "Conversation, Message, Thinking, StreamCaret, MessageActions, Attachment, Suggestions, PromptInput, Confirmation, Questionnaire, VariantChooser, ModelSelector, ContextMeter",
   "description": "The scrolling list of messages. It stays at the bottom while replies stream\nin, unless they've scrolled up to read; then a \"Latest\" button takes them back.",

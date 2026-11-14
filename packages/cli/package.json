@@ -1,6 +1,6 @@
 {
   "name": "syvna-ui",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Copy Syvna UI components into an app: npx syvna-ui add DateRangePicker.",
   "private": true,
   "type": "module",

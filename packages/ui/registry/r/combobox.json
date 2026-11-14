@@ -1,6 +1,6 @@
 {
   "name": "combobox",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "registry:ui",
   "title": "Combobox",
   "description": "Pick one from a long list by typing: a customer, a country, a product.\nFor under about 12 choices, Select is simpler.",

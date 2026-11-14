@@ -1,6 +1,6 @@
 {
   "name": "shell",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "registry:ui",
   "title": "AppShell, Sidebar, NavSection, NavItem, Topbar, Breadcrumbs, PageCrumbs",
   "description": "The frame of an app's signed-in screens: a sidebar on the left, a top bar,\nand the screen. It fills the window (or its className's height) and the\nscreen scrolls inside it, so the sidebar always fits. From 768px wide the\nsidebar stays on show; narrower, it slides in from the Topbar's menu button\nand closes when a link is picked. Those widths are the shell's own (container\nqueries), so it fits a box as well as the window; its main area is a\ncontainer too, for screens laid out with",

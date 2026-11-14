@@ -1,6 +1,6 @@
 {
   "name": "daterange",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "registry:ui",
   "title": "DateRangePicker, RangeCalendar",
   "description": "A field for a period (a report's dates, a filter): presets, two months to pick on, and Apply.",

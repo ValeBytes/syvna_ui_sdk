@@ -1,6 +1,6 @@
 {
   "name": "site",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "registry:ui",
   "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter, AuthLayout, AuthDivider",
   "description": "A band of a landing page: a heading and what's under it, at the page's width.",

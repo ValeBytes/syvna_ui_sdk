@@ -1,6 +1,6 @@
 {
   "name": "@syvna/ui-mcp",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "MCP server for Syvna UI: find components, read their props and guides, check code against the design.",
   "private": true,
   "type": "module",

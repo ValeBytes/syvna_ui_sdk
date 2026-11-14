@@ -1,6 +1,6 @@
 {
   "name": "basics",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "registry:ui",
   "title": "Accordion, Kbd, AvatarGroup, RelativeTime, Banner, Stepper",
   "description": "Sections that open one at a time or together: settings groups, details, help.",
