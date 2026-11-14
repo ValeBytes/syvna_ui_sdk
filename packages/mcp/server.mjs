@@ -32,7 +32,11 @@ function refresh() {
       const guidePath = join(ui, "docs", `${c.name}.md`);
       return { ...c, fileName: file, kit: kitOf(file), item: itemOf.get(c.name) ?? file, guide: existsSync(guidePath) ? readFileSync(guidePath, "utf8") : "" };
     });
-  data = { components, registry, tokens, byName: new Map(components.map((c) => [c.name.toLowerCase(), c])) };
+  // Every name the package exports (types and helpers too), so importing one isn't taken for a mistake.
+  const exported = new Set();
+  const index = join(ui, "src/index.ts");
+  if (existsSync(index)) for (const m of readFileSync(index, "utf8").matchAll(/export\s*{([^}]*)}/g)) for (const n of m[1].split(",")) exported.add(n.trim().replace(/^type\s+/, "").split(/\s+as\s+/).pop());
+  data = { components, registry, tokens, exported, byName: new Map(components.map((c) => [c.name.toLowerCase(), c])) };
 }
 
 function kitOf(file) {
@@ -236,19 +240,29 @@ const tools = {
       const problems = [];
       const imported = new Set();
       for (const m of code.matchAll(/import\s*{([^}]*)}\s*from\s*["'](@syvna\/ui|@\/components\/syvna)["']/g)) for (const n of m[1].split(",")) imported.add(n.trim().split(/\s+as\s+/)[0].replace(/^type\s+/, ""));
-      for (const n of imported) if (/^[A-Z]/.test(n) && !find(n) && !/Props$|Variant$|Option$|Item$/.test(n) && !data.components.some((c) => c.name === n)) problems.push(`${n} isn't in the library. ${tools.search_components.run({ query: n.replace(/([a-z])([A-Z])/g, "$1 $2"), limit: 3 }).split("\n")[0]}`);
-      for (const m of code.matchAll(/<([A-Z][A-Za-z]+)\b([^<>]*?(?:{[^{}]*(?:{[^{}]*}[^{}]*)*}[^<>]*?)*)\/?>/g)) {
-        const c = find(m[1]);
-        if (!c || !imported.has(c.name)) continue;
-        const attrs = [...m[2].matchAll(/(?:^|\s)([a-zA-Z][\w-]*)(?:=(?:"([^"]*)"|{))?/g)];
+      for (const n of imported) if (/^[A-Z]/.test(n) && !data.exported?.has(n) && !find(n) && !/Props$|Variant$|Option$|Item$/.test(n) && !data.components.some((c) => c.name === n)) problems.push(`${n} isn't in the library. ${tools.search_components.run({ query: n.replace(/([a-z])([A-Z])/g, "$1 $2"), limit: 3 }).split("\n")[0]}`);
+      // Props are read with a small scanner (jsxOpenings), not a pattern: a
+      // prop's value can hold whole JSX (actions={<a>Get started</a>}), and its
+      // words are not props.
+      const declared = new Set([...code.matchAll(/(?:function|const|let|class)\s+([A-Z][A-Za-z0-9]*)\b/g)].map((m) => m[1]));
+      const unimported = new Set();
+      for (const tag of jsxOpenings(code)) {
+        const c = find(tag.name);
+        if (!c || c.name !== tag.name) continue;
+        if (!imported.has(c.name)) {
+          if (!declared.has(c.name) && !unimported.has(c.name)) {
+            unimported.add(c.name);
+            problems.push(`<${c.name}> is used but not imported: add it to the import from "@/components/syvna", or the page crashes.`);
+          }
+          continue;
+        }
         const known = new Set(c.props.map((p) => p.name));
         const open = c.props.some((p) => p.name === "...rest");
-        for (const a of attrs) {
-          const prop = a[1];
-          if (["key", "ref", "className", "children", "id", "style"].includes(prop) || prop.startsWith("aria-") || prop.startsWith("data-") || prop.startsWith("on")) continue;
+        for (const [prop, value] of tag.attrs) {
+          if (["key", "ref", "className", "children", "id", "style"].includes(prop) || prop.startsWith("aria-") || prop.startsWith("data-") || /^on[A-Z]/.test(prop)) continue;
           if (!known.has(prop) && !open) problems.push(`<${c.name}> has no prop "${prop}". It takes: ${[...known].filter((k) => k !== "...rest").join(", ")}.`);
           const def = c.props.find((p) => p.name === prop);
-          if (def?.values && a[2] !== undefined && !def.values.includes(a[2])) problems.push(`<${c.name} ${prop}="${a[2]}">: no such value. Use one of ${def.values.join(", ")}.`);
+          if (def?.values && value !== undefined && !def.values.includes(value)) problems.push(`<${c.name} ${prop}="${value}">: no such value. Use one of ${def.values.join(", ")}.`);
         }
       }
       const rules = [
@@ -259,14 +273,73 @@ const tools = {
         [/<h1[^>]*>[^<]*<\/h1>\s*<p/g, "starts the screen with a title and a description; app screens don't have page titles (breadcrumbs say where you are)."],
         [/<div className="[^"]*justify-end[^"]*">\s*(?:<Button\b[\s\S]*?<\/Button>\s*)+<\/div>/g, "is a row with only buttons in it; put a screen's actions on an existing line: Tabs actions, FilterBar actions, Card actions, or Topbar actions."],
       ];
+      // A palette's seed is where a brand's hex belongs (PaletteStyle seed={{ brand: "#0f766e" }}).
+      const styled = code.replace(/<PaletteStyle\b[\s\S]*?\/>/g, "").replace(/\b(?:seed|createPalette)\s*[=(]\s*{{?[^}]*}}?/g, "");
       for (const [re, msg] of rules) {
-        const hits = [...new Set(code.match(re) ?? [])];
+        const hits = [...new Set(styled.match(re) ?? [])];
         if (hits.length) problems.push(`${hits.slice(0, 4).join(", ")}: ${msg}`);
       }
       return problems.length ? problems.map((p) => `- ${p}`).join("\n") : "OK: nothing found.";
     },
   },
 };
+
+// ---------- reading JSX ----------
+
+// The index just past the brace that closes the one at i, skipping strings
+// and template literals. A quote counts as a string only where an expression
+// could start one, so an apostrophe in JSX text ("Don't") isn't taken for one.
+function skipBraces(code, i) {
+  let depth = 0;
+  for (; i < code.length; i++) {
+    const c = code[i];
+    const before = code[i - 1] ?? " ";
+    if (c === "`" || ((c === '"' || c === "'") && !/[A-Za-z0-9]/.test(before))) {
+      for (i++; i < code.length && code[i] !== c; i++) if (code[i] === "\\") i++;
+      continue;
+    }
+    if (c === "{") depth++;
+    else if (c === "}" && --depth === 0) return i + 1;
+  }
+  return code.length;
+}
+
+/** Every opening tag of a capitalised component: its name, and its props each with its value when that's a plain string. */
+function jsxOpenings(code) {
+  const out = [];
+  for (const m of code.matchAll(/<([A-Z][A-Za-z0-9]*)(?=[\s/>])/g)) {
+    const attrs = [];
+    let i = m.index + m[0].length;
+    while (i < code.length) {
+      while (i < code.length && /\s/.test(code[i])) i++;
+      if (code[i] === ">" || (code[i] === "/" && code[i + 1] === ">")) break;
+      if (code[i] === "{") {
+        i = skipBraces(code, i); // {...spread}
+        continue;
+      }
+      const name = /^[A-Za-z_][\w-]*/.exec(code.slice(i, i + 64));
+      if (!name) break;
+      i += name[0].length;
+      let value;
+      if (code[i] === "=") {
+        i++;
+        if (code[i] === '"' || code[i] === "'") {
+          const end = code.indexOf(code[i], i + 1);
+          value = code.slice(i + 1, end);
+          i = end + 1;
+        } else if (code[i] === "{") {
+          const end = skipBraces(code, i);
+          const plain = /^\s*["'`]([^"'`$]*)["'`]\s*$/.exec(code.slice(i + 1, end - 1));
+          if (plain) value = plain[1];
+          i = end;
+        }
+      }
+      attrs.push([name[0], value]);
+    }
+    out.push({ name: m[1], attrs });
+  }
+  return out;
+}
 
 // ---------- MCP over stdio ----------
 
@@ -310,10 +383,12 @@ async function handle(msg) {
   }
 }
 
-// Run a tool from the command line, for testing: node server.mjs call search_components '{"query":"…"}'
+// Run a tool from the command line, for testing: node server.mjs call search_components '{"query":"…"}'.
+// "@file.json" reads the arguments from a file, for code longer than a command line takes.
 if (process.argv[2] === "call") {
   refresh();
-  const out = await tools[process.argv[3]].run(JSON.parse(process.argv[4] ?? "{}"));
+  const arg = process.argv[4] ?? "{}";
+  const out = await tools[process.argv[3]].run(JSON.parse(arg.startsWith("@") ? readFileSync(arg.slice(1), "utf8") : arg));
   console.log(typeof out === "object" ? out.error : out);
 } else {
   const rl = createInterface({ input: process.stdin });

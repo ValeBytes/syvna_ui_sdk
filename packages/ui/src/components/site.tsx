@@ -9,19 +9,8 @@ import { useState } from "react";
 import type { SiteLink } from "./site-header";
 
 import { cn, focusRing } from "../cx";
+import { siteAction } from "./button-class";
 import { Reveal, Stagger } from "./motion";
-
-/** A link or button styled like Button, for websites where most actions go somewhere. */
-export function siteAction(variant: "primary" | "secondary" | "ghost" = "primary", size: "md" | "lg" = "md") {
-  return cn(
-    "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium no-underline transition-colors",
-    size === "lg" ? "h-11 px-5 text-body-lg" : "h-9 px-4 text-body",
-    variant === "primary" && "bg-brand text-brand-ink shadow-1 hover:bg-brand-hover",
-    variant === "secondary" && "border border-line-strong bg-surface text-ink shadow-1 hover:bg-surface-2",
-    variant === "ghost" && "text-ink-2 hover:bg-surface-2 hover:text-ink",
-    focusRing,
-  );
-}
 
 export interface SectionProps {
   /** A word or two over the title: "Features", "Pricing". */
@@ -657,6 +646,37 @@ export function AuthLayout({ brand, title, description, children, footer, varian
         </main>
       </div>
     </div>
+  );
+}
+
+export interface MobileBarProps {
+  /** The one action that should never be out of reach on a phone: Add to cart and the price, Book a table, Start free. */
+  children: React.ReactNode;
+  /** A line beside or over the action: the price, "Free delivery over $50". */
+  note?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * A bar fixed to the bottom of the screen on phones only, for the one action a
+ * visitor should always reach (Add to cart, Book). On wider screens it isn't
+ * there at all, so the action must also be on the page. It leaves room for
+ * itself, so it never covers the page's end.
+ */
+export function MobileBar({ children, note, className }: MobileBarProps) {
+  return (
+    <>
+      <div aria-hidden="true" className="h-20 md:hidden" />
+      <div
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-line bg-surface px-4 pt-3 pb-[max(env(safe-area-inset-bottom),12px)] shadow-3 md:hidden",
+          className,
+        )}
+      >
+        {note ? <div className="min-w-0 flex-1 text-small text-ink-2">{note}</div> : null}
+        <div className={cn("flex gap-2", note ? "flex-none" : "flex-1 [&>*]:flex-1")}>{children}</div>
+      </div>
+    </>
   );
 }
 

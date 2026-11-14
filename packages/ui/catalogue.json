@@ -1034,14 +1034,14 @@
     },
     {
       "name": "Table",
-      "summary": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right.",
+      "summary": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right. A column's `mobile`\nsays where it goes in that card.",
       "file": "src/components/table.tsx",
       "props": [
         {
           "name": "columns",
           "type": "TableColumn<T>[]",
           "required": true,
-          "description": "What each column shows: { key, header, render?, align?, sort?, width? }."
+          "description": "What each column shows: { key, header, render?, align?, sort?, width?, nowrap?, mobile? }."
         },
         {
           "name": "rows",
@@ -2723,7 +2723,7 @@
     },
     {
       "name": "BarChart",
-      "summary": "Amounts over a few periods, side by side: sales by day, orders by month. Hover a bar for its value.",
+      "summary": "Amounts side by side: sales by day, orders by month; or, as rows, amounts by gym, product or region. Hover a bar for its value.",
       "file": "src/components/data.tsx",
       "props": [
         {
@@ -2757,6 +2757,23 @@
           "type": "string",
           "required": true,
           "description": "Read by screen readers: what the chart shows, and its point."
+        },
+        {
+          "name": "layout",
+          "type": "\"columns\" | \"rows\"",
+          "values": [
+            "columns",
+            "rows"
+          ],
+          "required": false,
+          "default": "\"columns\"",
+          "description": "columns: bars standing side by side (periods: days, months). rows: bars lying one under another,\neach with its whole name and value, for comparing named things (gyms, products, regions), or more\nthan eight of anything. Columns cut long names short; rows never do."
+        },
+        {
+          "name": "sorted",
+          "type": "boolean",
+          "required": false,
+          "description": "For rows: largest first."
         },
         {
           "name": "className",
@@ -3224,6 +3241,31 @@
       "summary": "\"or\" between the OAuth buttons and the email form.",
       "file": "src/components/site.tsx",
       "props": []
+    },
+    {
+      "name": "MobileBar",
+      "summary": "A bar fixed to the bottom of the screen on phones only, for the one action a\nvisitor should always reach (Add to cart, Book). On wider screens it isn't\nthere at all, so the action must also be on the page. It leaves room for\nitself, so it never covers the page's end.",
+      "file": "src/components/site.tsx",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The one action that should never be out of reach on a phone: Add to cart and the price, Book a table, Start free."
+        },
+        {
+          "name": "note",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A line beside or over the action: the price, \"Free delivery over $50\"."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        }
+      ]
     },
     {
       "name": "ProductCard",
@@ -3920,6 +3962,7 @@
             "table",
             "compact",
             "cards",
+            "rows",
             "single",
             "split",
             "joined",
@@ -3931,7 +3974,6 @@
             "badges",
             "icons",
             "excluded",
-            "rows",
             "radio",
             "calculator",
             "tabs",

@@ -23,7 +23,7 @@ export const groups = [
   { kit: "dashboard", name: "Workspace", items: ["NotificationCenter", "AuditLog", "PermissionMatrix", "InviteMembers", "UsageMeter", "PlanSummary", "SetupChecklist", "SaveBar", "ConfirmByTyping", "ApprovalCard"] },
   { kit: "website", name: "Marketing", items: ["SiteHeader", "Hero", "Section", "FeatureGrid", "LogoCloud", "Testimonials", "Bento", "FeatureRows", "Stats", "Steps", "PricingTable", "Faq", "CallToAction", "SiteFooter", "AuthLayout"] },
   { kit: "website", name: "Motion", items: ["Reveal", "Stagger"] },
-  { kit: "website", name: "Shop", items: ["ProductCard", "PriceTag", "Rating", "QuantityStepper", "CartSummary"] },
+  { kit: "website", name: "Shop", items: ["ProductCard", "PriceTag", "Rating", "QuantityStepper", "CartSummary", "MobileBar"] },
   { kit: "agent", name: "Chat", items: ["Conversation", "Message", "PromptInput", "Suggestions", "Thinking", "StreamCaret", "MessageActions", "Attachment", "ModelSelector", "ContextMeter"] },
   { kit: "agent", name: "Agent at work", items: ["Plan", "TaskList", "ToolCall", "Reasoning", "Subagent", "Trace", "TraceStep", "Sources", "InlineCitation", "Checkpoint"] },
   { kit: "agent", name: "Asking the user", items: ["Confirmation", "Questionnaire", "VariantChooser"] },

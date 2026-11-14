@@ -8,7 +8,7 @@ import { useState } from "react";
 
 import { cn } from "../cx";
 import { Input } from "./inputs";
-import { siteAction } from "./site";
+import { siteAction } from "./button-class";
 
 export const heroVariants = [
   "center",

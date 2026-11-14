@@ -19,10 +19,20 @@ export interface TableColumn<T> {
   sort?: (a: T, b: T) => number;
   /** A CSS width: "120px", "30%". */
   width?: string;
+  /** Keeps the cell on one line: ids, dates, amounts, short statuses ("T-10482" never breaks in two). */
+  nowrap?: boolean;
+  /**
+   * How it shows when the table is narrow (a phone, a side panel), where each row becomes a card.
+   * title: the card's heading (the first column, by default). meta: small text beside the others
+   * like it, under the title, without its name (a team, a date, an id). row: its name and value on
+   * a line of their own (the default). actions: the row's buttons, along the card's foot. hide: left
+   * out. Keep a card to a title, a few metas and two or three rows, so a list stays scannable.
+   */
+  mobile?: "title" | "meta" | "row" | "actions" | "hide";
 }
 
 export interface TableProps<T> {
-  /** What each column shows: { key, header, render?, align?, sort?, width? }. */
+  /** What each column shows: { key, header, render?, align?, sort?, width?, nowrap?, mobile? }. */
   columns: TableColumn<T>[];
   /** The rows, already filtered; sorting a column reorders them here. */
   rows: T[];
@@ -48,7 +58,8 @@ type SortState = { key: string; dir: 1 | -1 } | null;
 /**
  * Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.
  * Narrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the
- * title, then each column's name and value, so nothing hides off to the right.
+ * title, then each column's name and value, so nothing hides off to the right. A column's `mobile`
+ * says where it goes in that card.
  */
 export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flush, selected, caption, className }: TableProps<T>) {
   const [sort, setSort] = useState<SortState>(null);
@@ -117,7 +128,7 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                   key={key}
                   className={cn(
                     "[&:last-child>td]:border-b-0",
-                    "@max-lg:block @max-lg:border-b @max-lg:border-line @max-lg:px-3 @max-lg:py-2 @max-lg:last:border-b-0",
+                    "@max-lg:flex @max-lg:flex-wrap @max-lg:items-center @max-lg:gap-x-3 @max-lg:border-b @max-lg:border-line @max-lg:px-3 @max-lg:py-2 @max-lg:last:border-b-0",
                     onRowClick &&
                       "cursor-pointer transition-colors hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus",
                     selected?.includes(key) && "bg-surface-2",
@@ -135,23 +146,31 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                   }
                   tabIndex={onRowClick ? 0 : undefined}
                 >
-                  {columns.map((c) => (
+                  {columns.map((c, i) => {
+                    const place = c.mobile ?? (i === 0 ? "title" : "row");
+                    return (
                     <td
                       key={c.key}
                       data-label={typeof c.header === "string" ? c.header : undefined}
                       className={cn(
                         "border-b border-line px-3 align-middle first:font-medium first:text-ink",
-                        "@max-lg:flex @max-lg:h-auto! @max-lg:min-h-8 @max-lg:items-center @max-lg:justify-between @max-lg:gap-3 @max-lg:border-b-0 @max-lg:px-0! @max-lg:py-1 @max-lg:text-right",
-                        "@max-lg:before:flex-none @max-lg:before:text-left @max-lg:before:text-small @max-lg:before:font-normal @max-lg:before:text-ink-3 @max-lg:before:content-[attr(data-label)]",
-                        "@max-lg:first:justify-start @max-lg:first:text-left @max-lg:first:before:content-none",
+                        "@max-lg:flex @max-lg:h-auto! @max-lg:items-center @max-lg:gap-3 @max-lg:border-b-0 @max-lg:px-0! @max-lg:py-1",
+                        place === "row" &&
+                          "@max-lg:min-h-8 @max-lg:basis-full @max-lg:justify-between @max-lg:text-right @max-lg:before:flex-none @max-lg:before:text-left @max-lg:before:text-small @max-lg:before:font-normal @max-lg:before:text-ink-3 @max-lg:before:content-[attr(data-label)]",
+                        place === "title" && "@max-lg:min-h-8 @max-lg:basis-full @max-lg:justify-start @max-lg:text-left @max-lg:font-medium @max-lg:text-ink",
+                        place === "meta" && "@max-lg:flex-none @max-lg:py-0 @max-lg:text-small @max-lg:text-ink-3",
+                        place === "actions" && "@max-lg:basis-full @max-lg:justify-end @max-lg:pt-2",
+                        place === "hide" && "@max-lg:hidden",
                         dense ? "h-8" : "h-10",
                         flush && "first:pl-4 last:pr-4",
                         c.align === "end" && "text-right tabular-nums",
+                        c.nowrap && "whitespace-nowrap",
                       )}
                     >
                       {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? "")}
                     </td>
-                  ))}
+                    );
+                  })}
                 </tr>
               );
             })

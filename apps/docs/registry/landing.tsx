@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, Check, Clock, ShieldCheck } from "lucide-react";
-import { Badge, Bento, FeatureRows, Reveal, Stagger, Stats, Steps, revealEffects, type RevealEffect } from "@syvna/ui";
+import { Badge, Bento, Button, FeatureRows, MobileBar, PriceTag, Reveal, Stagger, Stats, Steps, revealEffects, type RevealEffect } from "@syvna/ui";
 
 import { bool, jsx, num, raw, str } from "./code";
 import type { Doc } from "./types";
@@ -66,6 +66,22 @@ const steps = [
 ];
 
 export const landing: Doc[] = [
+  {
+    name: "MobileBar",
+    controls: { note: { type: "boolean", default: true, label: "Price beside the button" } },
+    stage: "items-start",
+    preview: (v) => (
+      <div className="flex w-full max-w-[420px] flex-col gap-3">
+        <p className="m-0 text-small text-ink-3">On a phone it's fixed to the bottom of the screen; here it's shown in place. Wider than a phone, it isn't drawn at all.</p>
+        <div className="overflow-hidden rounded-xl border border-line [&>div:last-child]:static [&>div:last-child]:flex">
+          <MobileBar note={bool(v.note) ? <PriceTag amount={38} /> : undefined}>
+            <Button variant="raised" size="lg">Add to cart</Button>
+          </MobileBar>
+        </div>
+      </div>
+    ),
+    code: (v) => jsx("MobileBar", { note: bool(v.note) ? raw("<PriceTag amount={38} />") : undefined }, '<Button variant="raised" size="lg" onClick={add}>Add to cart</Button>'),
+  },
   {
     name: "Bento",
     controls: { columns: { type: "select", options: ["3", "4"], default: "3" }, animate: { type: "boolean", default: false } },

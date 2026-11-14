@@ -6,7 +6,7 @@ import { useId, useState } from "react";
 
 import { cn, focusRing } from "../cx";
 import { CloseGlyph } from "./icons";
-import { buttonClass, type ButtonVariant } from "./button";
+import { buttonClass, type ButtonVariant } from "./button-class";
 
 const formatter = (currency: string, locale?: string) => new Intl.NumberFormat(locale ?? "en-US", { style: "currency", currency });
 

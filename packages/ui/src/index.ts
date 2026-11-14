@@ -12,11 +12,7 @@ export {
   SplitButton,
   ToggleButton,
   CopyButton,
-  buttonVariants,
-  buttonClass,
   type ButtonProps,
-  type ButtonSize,
-  type ButtonVariant,
   type ButtonGroupProps,
   type SplitButtonProps,
   type ToggleButtonProps,
@@ -123,8 +119,8 @@ export {
   SiteFooter,
   AuthLayout,
   AuthDivider,
+  MobileBar,
   authLayoutVariants,
-  siteAction,
   type SectionProps,
   type FeatureGridProps,
   type Feature,
@@ -135,6 +131,7 @@ export {
   type CallToActionProps,
   type SiteFooterProps,
   type AuthLayoutProps,
+  type MobileBarProps,
   type AuthLayoutVariant,
   type AuthAside,
 } from "./components/site";
@@ -339,3 +336,4 @@ export {
   type StepsProps,
   type Step,
 } from "./components/site-sections";
+export { buttonClass, buttonVariants, siteAction, type ButtonSize, type ButtonVariant } from "./components/button-class";

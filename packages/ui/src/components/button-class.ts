@@ -1,0 +1,96 @@
+// Buttons' classes, apart from the Button component: plain functions with no
+// "use client", so a server page can call them (<Link className={buttonClass(…)}>).
+// A function in a client module can only be called from the client.
+
+import { cn, focusRing } from "../cx";
+
+export const buttonVariants = [
+  "primary",
+  "secondary",
+  "ghost",
+  "danger",
+  "soft",
+  "outline",
+  "subtle",
+  "link",
+  "dashed",
+  "inverse",
+  "gradient",
+  "success",
+  "danger-soft",
+  "raised",
+  "shine",
+  "fill",
+  "hard",
+  "underline",
+] as const;
+export type ButtonVariant = (typeof buttonVariants)[number];
+export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
+
+export const buttonBase =
+  "inline-flex items-center justify-center whitespace-nowrap border border-transparent font-medium tracking-[-0.005em] select-none cursor-pointer no-underline " +
+  "transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-150 ease-[cubic-bezier(.16,1,.3,1)] active:not-disabled:translate-y-px motion-reduce:transition-none " +
+  "disabled:cursor-not-allowed disabled:not-aria-busy:opacity-50 aria-busy:cursor-progress aria-busy:opacity-80";
+
+export const buttonLooks: Record<ButtonVariant, string> = {
+  primary: "bg-brand text-brand-ink shadow-1 hover:not-disabled:bg-brand-hover",
+  secondary: "bg-surface text-ink border-line-strong shadow-1 hover:not-disabled:bg-surface-2",
+  ghost: "bg-transparent text-ink-2 hover:not-disabled:bg-surface-2 hover:not-disabled:text-ink",
+  danger: "bg-danger text-danger-ink shadow-1 hover:not-disabled:brightness-95",
+  soft: "bg-brand-soft text-ink hover:not-disabled:bg-[color-mix(in_oklch,var(--color-brand-soft),var(--color-brand)_14%)]",
+  outline: "border-brand bg-transparent text-ink hover:not-disabled:bg-brand-soft",
+  subtle: "bg-surface-2 text-ink hover:not-disabled:bg-[color-mix(in_oklch,var(--color-surface-2),var(--color-ink)_6%)]",
+  link: "h-auto! border-0 bg-transparent px-0! text-ink underline decoration-line-strong underline-offset-4 hover:not-disabled:decoration-current",
+  dashed: "border-dashed border-line-strong bg-transparent text-ink-2 hover:not-disabled:border-ink-4 hover:not-disabled:bg-surface-2 hover:not-disabled:text-ink",
+  inverse: "bg-ink text-ground shadow-1 hover:not-disabled:opacity-90",
+  gradient: "bg-[linear-gradient(135deg,var(--color-brand),color-mix(in_oklch,var(--color-brand),var(--color-info)_55%))] text-brand-ink shadow-2 hover:not-disabled:brightness-110",
+  success: "bg-success text-white shadow-1 hover:not-disabled:brightness-95",
+  // The edge is the brand mixed towards the ink it's read on, so it shows under a black brand too.
+  raised:
+    "bg-brand text-brand-ink shadow-[0_3px_0_color-mix(in_oklch,var(--color-brand)_62%,var(--color-brand-ink))] hover:not-disabled:-translate-y-px hover:not-disabled:shadow-[0_4px_0_color-mix(in_oklch,var(--color-brand)_62%,var(--color-brand-ink))] active:not-disabled:translate-y-[3px] active:not-disabled:shadow-none",
+  shine:
+    "relative overflow-hidden bg-brand text-brand-ink shadow-1 hover:not-disabled:bg-brand-hover before:pointer-events-none before:absolute before:inset-y-0 before:-left-1/2 before:w-1/3 before:-skew-x-12 before:bg-brand-ink/25 before:transition-transform before:duration-700 before:ease-out hover:not-disabled:before:translate-x-[500%] motion-reduce:before:hidden",
+  fill:
+    "border-brand bg-transparent bg-[linear-gradient(var(--color-brand),var(--color-brand))] bg-[length:0%_100%] bg-no-repeat text-ink transition-[background-size,color,transform] duration-300 hover:not-disabled:bg-[length:100%_100%] hover:not-disabled:text-brand-ink",
+  // On the surface colour with an ink edge and shadow, so the offset shows whatever the brand is.
+  hard:
+    "border-2 border-ink bg-surface text-ink shadow-[4px_4px_0_var(--color-brand)] hover:not-disabled:-translate-x-px hover:not-disabled:-translate-y-px hover:not-disabled:shadow-[5px_5px_0_var(--color-brand)] active:not-disabled:translate-x-[3px] active:not-disabled:translate-y-[3px] active:not-disabled:shadow-none",
+  underline:
+    "h-auto! rounded-none! border-x-0 border-t-0 border-b border-line-strong bg-transparent bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1.5px] bg-[position:0_100%] bg-no-repeat px-0! pb-1.5 text-ink transition-[background-size] duration-300 hover:not-disabled:bg-[length:100%_1.5px]",
+  "danger-soft": "bg-danger-soft text-danger hover:not-disabled:bg-[color-mix(in_oklch,var(--color-danger-soft),var(--color-danger)_12%)]",
+};
+
+export const buttonSizes: Record<ButtonSize, { text: string; icon: string; radius: string }> = {
+  xs: { text: "h-6 gap-1 px-2 text-caption", icon: "w-6 px-0", radius: "rounded-sm" },
+  sm: { text: "h-7 gap-1.5 px-2.5 text-small", icon: "w-7 px-0", radius: "rounded-sm" },
+  md: { text: "h-8 gap-1.5 px-3 text-label", icon: "w-8 px-0", radius: "rounded-md" },
+  lg: { text: "h-9 gap-2 px-4 text-body", icon: "w-9 px-0", radius: "rounded-md" },
+  xl: { text: "h-11 gap-2 px-5 text-body-lg", icon: "w-11 px-0", radius: "rounded-lg" },
+};
+
+/**
+ * A button's classes, for something that isn't a <button> but should look like one: a link to a
+ * page, Next's Link. <Link className={buttonClass({ variant: "shine", size: "xl" })} href="/shop">.
+ */
+export function buttonClass({
+  variant = "secondary",
+  size = "md",
+  shape = "default",
+  block,
+  className,
+}: { variant?: ButtonVariant; size?: ButtonSize; shape?: "default" | "pill" | "square"; block?: boolean; className?: string } = {}) {
+  return cn(buttonBase, focusRing, buttonLooks[variant], buttonSizes[size].text, shape === "pill" ? "rounded-full" : shape === "square" ? "rounded-none" : buttonSizes[size].radius, block && "flex w-full", className);
+}
+
+
+/** A link or button styled like Button, for websites where most actions go somewhere. */
+export function siteAction(variant: "primary" | "secondary" | "ghost" = "primary", size: "md" | "lg" = "md") {
+  return cn(
+    "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium no-underline transition-colors",
+    size === "lg" ? "h-11 px-5 text-body-lg" : "h-9 px-4 text-body",
+    variant === "primary" && "bg-brand text-brand-ink shadow-1 hover:bg-brand-hover",
+    variant === "secondary" && "border border-line-strong bg-surface text-ink shadow-1 hover:bg-surface-2",
+    variant === "ghost" && "text-ink-2 hover:bg-surface-2 hover:text-ink",
+    focusRing,
+  );
+}

@@ -8,7 +8,7 @@ import { useId, useState } from "react";
 import { cn, focusRing } from "../cx";
 import { CheckGlyph, CloseGlyph } from "./icons";
 import { SegmentedControl } from "./selection";
-import { siteAction } from "./site";
+import { siteAction } from "./button-class";
 
 export const pricingVariants = [
   "cards",

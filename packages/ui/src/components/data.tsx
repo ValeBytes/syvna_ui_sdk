@@ -260,13 +260,45 @@ export interface BarChartProps {
   height?: number;
   /** Read by screen readers: what the chart shows, and its point. */
   label: string;
+  /**
+   * columns: bars standing side by side (periods: days, months). rows: bars lying one under another,
+   * each with its whole name and value, for comparing named things (gyms, products, regions), or more
+   * than eight of anything. Columns cut long names short; rows never do.
+   */
+  layout?: "columns" | "rows";
+  /** For rows: largest first. */
+  sorted?: boolean;
   className?: string;
 }
 
-/** Amounts over a few periods, side by side: sales by day, orders by month. Hover a bar for its value. */
-export function BarChart({ data, format = (v) => new Intl.NumberFormat().format(v), highlight, height = 160, label, className }: BarChartProps) {
+/** Amounts side by side: sales by day, orders by month; or, as rows, amounts by gym, product or region. Hover a bar for its value. */
+export function BarChart({ data, format = (v) => new Intl.NumberFormat().format(v), highlight, height = 160, label, layout = "columns", sorted, className }: BarChartProps) {
   const [hover, setHover] = useState<number | null>(null);
   const top = Math.max(1, ...data.map((d) => d.value));
+  if (layout === "rows") {
+    const rows = sorted ? [...data].sort((a, b) => b.value - a.value) : data;
+    return (
+      <div role="img" aria-label={label} className={cn("flex flex-col gap-2", className)}>
+        {rows.map((d, i) => {
+          const strong = highlight ? d.label === highlight : true;
+          return (
+            <div key={d.label} className="grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)_auto] items-center gap-3 text-small">
+              <span className="truncate text-ink-2" title={d.label}>
+                {d.label}
+              </span>
+              <span className="h-2.5 overflow-hidden rounded-full bg-surface-2">
+                <span
+                  className={cn("block h-full origin-left rounded-full bg-chart-1 transition-[width] duration-500 ease-[cubic-bezier(.16,1,.3,1)]", strong ? "opacity-90" : "opacity-40")}
+                  style={{ width: `${Math.max(1, (d.value / top) * 100)}%`, transitionDelay: `${i * 30}ms` }}
+                />
+              </span>
+              <span className="tabular-nums text-ink">{format(d.value)}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
   return (
     <div role="img" aria-label={label} className={cn("flex flex-col gap-2", className)}>
       <div className="flex items-end gap-2" style={{ height }}>
@@ -287,7 +319,7 @@ export function BarChart({ data, format = (v) => new Intl.NumberFormat().format(
       </div>
       <div className="flex gap-2">
         {data.map((d) => (
-          <span key={d.label} className="flex-1 truncate text-center text-caption text-ink-3">
+          <span key={d.label} title={d.label} className="flex-1 truncate text-center text-caption text-ink-3">
             {d.label}
           </span>
         ))}

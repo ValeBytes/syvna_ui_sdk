@@ -51,10 +51,13 @@ export function Bento({ items, columns = 3, animate, className, classNames }: Be
     const quiet = tone === "brand" ? "text-brand-ink/80" : tone === "ink" ? "text-ground/70" : "text-ink-2";
     return (
       <article key={i} className={cn("flex h-full min-h-[220px] flex-col overflow-hidden rounded-xl", bentoTone[tone], classNames?.cell, it.className)}>
-        <div className="flex flex-col gap-2 p-6">
+        {/* Without a picture, the icon sits at the top and the words at the foot, so a cell taller than its words reads as designed, not empty. */}
+        <div className={cn("flex flex-col gap-2 p-6", !it.media && "h-full justify-between gap-8")}>
           {it.icon ? <span className={cn("mb-1 grid size-9 place-items-center rounded-md [&>svg]:size-[18px]", tone === "surface" ? "bg-brand-soft text-brand" : "bg-current/10")}>{it.icon}</span> : null}
-          <h3 className={cn("m-0 font-display text-title font-semibold tracking-[-0.01em] text-balance", classNames?.title)}>{it.title}</h3>
-          {it.description ? <p className={cn("m-0 text-body text-pretty", quiet, classNames?.description)}>{it.description}</p> : null}
+          <div className="flex flex-col gap-2">
+            <h3 className={cn("m-0 font-display text-title font-semibold tracking-[-0.01em] text-balance", classNames?.title)}>{it.title}</h3>
+            {it.description ? <p className={cn("m-0 text-body text-pretty", quiet, classNames?.description)}>{it.description}</p> : null}
+          </div>
         </div>
         {it.media ? <div className={cn("mt-auto flex min-h-0 flex-1 items-end overflow-hidden px-6", classNames?.media)}>{it.media}</div> : null}
       </article>

@@ -33,6 +33,16 @@
       ]
     },
     {
+      "name": "button-class",
+      "title": "button-class",
+      "description": "Shared code the components use (button-class.ts).",
+      "components": [],
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
       "name": "button",
       "title": "Button, ButtonGroup, SplitButton, ToggleButton, CopyButton",
       "description": "A button. Verb first, sentence case: \"Save changes\", \"Add customer\".",
@@ -46,6 +56,7 @@
       "dependencies": [],
       "registryDependencies": [
         "core",
+        "button-class",
         "icons",
         "menu",
         "spinner"
@@ -266,7 +277,7 @@
       "registryDependencies": [
         "core",
         "inputs",
-        "site"
+        "button-class"
       ]
     },
     {
@@ -389,7 +400,7 @@
         "core",
         "icons",
         "selection",
-        "site"
+        "button-class"
       ]
     },
     {
@@ -439,7 +450,7 @@
       "registryDependencies": [
         "core",
         "icons",
-        "button"
+        "button-class"
       ]
     },
     {
@@ -489,7 +500,7 @@
     },
     {
       "name": "site",
-      "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter, AuthLayout, AuthDivider",
+      "title": "Section, FeatureGrid, LogoCloud, Testimonials, Faq, CallToAction, SiteFooter, AuthLayout, AuthDivider, MobileBar",
       "description": "A band of a landing page: a heading and what's under it, at the page's width.",
       "components": [
         "Section",
@@ -500,12 +511,14 @@
         "CallToAction",
         "SiteFooter",
         "AuthLayout",
-        "AuthDivider"
+        "AuthDivider",
+        "MobileBar"
       ],
       "dependencies": [],
       "registryDependencies": [
         "core",
         "site-header",
+        "button-class",
         "motion"
       ]
     },
@@ -544,7 +557,7 @@
     {
       "name": "table",
       "title": "Table",
-      "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right.",
+      "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right. A column's `mobile`\nsays where it goes in that card.",
       "components": [
         "Table"
       ],

@@ -10,6 +10,37 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- `Table` columns take `mobile` (`title`, `meta`, `row`, `actions`, `hide`):
+  where each goes when the table stacks into cards on a phone, so a long list
+  stays scannable. And `nowrap`, for ids, dates and amounts that must not
+  break in two.
+- `BarChart` takes `layout="rows"` (and `sorted`): bars lying one under
+  another with their whole names and values, for comparing named things.
+  Columns cut long names to "Con…"; rows never do.
+- `MobileBar`: a bar fixed to the bottom of the screen on phones only, for
+  the one action a visitor should always reach (Add to cart, Book).
+
+### Changed
+
+- `buttonClass`, `siteAction`, `buttonVariants` and the button types live in
+  a file of their own (`button-class`) without "use client", so a server page
+  can call them: `<Link className={buttonClass({ variant: "shine" })}>` used
+  to crash a server page ("Attempted to call buttonClass() from the server").
+  Apps import them from the same place as before. An app that copied
+  components in should add `button-class` (`npx syvna-ui upgrade` does).
+
+### Fixed
+
+- The MCP server's `check_code` read props with a pattern that took words
+  inside a prop's JSX value for props (`actions={<a>Get started</a>}` gave
+  "Hero has no prop Get"), burying real faults under false ones. It now
+  scans tags properly. It also reports a kit component used without being
+  imported (which crashes the page), no longer flags types the kit exports
+  (`TableColumn`) or a brand's hex in `PaletteStyle`'s seed, and `call` takes
+  `@file.json` for code longer than a command line.
+
 ## v0.6.0 (2026-11-14)
 
 ### Added

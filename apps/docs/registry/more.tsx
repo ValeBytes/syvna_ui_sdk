@@ -194,6 +194,17 @@ function ImagesDemo({ ratio, max, samples }: { ratio: "square" | "wide" | "tall"
   );
 }
 
+const gyms = [
+  { label: "Condesa", value: 412000 },
+  { label: "Polanco", value: 538000 },
+  { label: "Roma Norte", value: 365000 },
+  { label: "Coyoacán", value: 298000 },
+  { label: "Santa Fe", value: 451000 },
+  { label: "Del Valle", value: 276000 },
+  { label: "Narvarte", value: 241000 },
+  { label: "Reforma", value: 489000 },
+];
+
 export const more: Doc[] = [
   {
     name: "Toaster",
@@ -409,9 +420,29 @@ export const more: Doc[] = [
   },
   {
     name: "BarChart",
-    controls: { highlight: { type: "select", options: ["none", "Sat", "Fri"], default: "Sat" }, height: { type: "number", default: 180, min: 80, max: 320, step: 20 } },
-    preview: (v) => <BarChart key={`${v.highlight}`} className="w-full max-w-[520px]" data={week} height={num(v.height)} highlight={v.highlight === "none" ? undefined : str(v.highlight)} format={(n) => money.format(n)} label="Sales by day this week; Saturday was highest at $4,180" />,
-    code: (v) => jsx("BarChart", { data: raw("salesByDay"), highlight: v.highlight === "none" ? undefined : str(v.highlight), height: num(v.height), format: raw("(v) => money.format(v)"), label: "Sales by day this week; Saturday was highest" }, undefined, { height: 160 }),
+    controls: {
+      layout: { type: "select", options: ["columns", "rows"], default: "columns" },
+      highlight: { type: "select", options: ["none", "Sat", "Fri", "Polanco"], default: "Sat" },
+      height: { type: "number", default: 180, min: 80, max: 320, step: 20 },
+    },
+    preview: (v) =>
+      str(v.layout) === "rows" ? (
+        <BarChart
+          className="w-full max-w-[520px]"
+          layout="rows"
+          sorted
+          data={gyms}
+          highlight={v.highlight === "Polanco" ? "Polanco" : undefined}
+          format={(n) => `MX$${Math.round(n / 1000)}k`}
+          label="Revenue by gym this month; Polanco leads"
+        />
+      ) : (
+        <BarChart key={`${v.highlight}`} className="w-full max-w-[520px]" data={week} height={num(v.height)} highlight={v.highlight === "none" ? undefined : str(v.highlight)} format={(n) => money.format(n)} label="Sales by day this week; Saturday was highest at $4,180" />
+      ),
+    code: (v) =>
+      str(v.layout) === "rows"
+        ? jsx("BarChart", { layout: "rows", sorted: true, data: raw("revenueByGym"), format: raw("(v) => money.format(v)"), label: "Revenue by gym this month" })
+        : jsx("BarChart", { data: raw("salesByDay"), highlight: v.highlight === "none" ? undefined : str(v.highlight), height: num(v.height), format: raw("(v) => money.format(v)"), label: "Sales by day this week; Saturday was highest" }, undefined, { height: 160 }),
   },
   {
     name: "LineChart",
