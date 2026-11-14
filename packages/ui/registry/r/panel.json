@@ -1,6 +1,6 @@
 {
   "name": "panel",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "SidePanel, DetailList",
   "description": "One row's details, opened beside its list so people keep their place:\nan order from the orders table, a customer from customers. Focus stays\ninside until it closes.",

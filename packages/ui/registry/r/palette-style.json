@@ -1,6 +1,6 @@
 {
   "name": "palette-style",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "PaletteStyle",
   "description": "Applies a palette, light and dark, as a <style> tag: put it in the root\nlayout. One of preset, seed or palette; the neutral palette if none.",

@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.5.2 (2026-11-14)
+
 ### Fixed
 
 - Text boxes no longer show a second, inner focus outline when an app's own CSS

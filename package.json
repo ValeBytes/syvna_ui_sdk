@@ -1,6 +1,6 @@
 {
   "name": "syvna-ui-sdk",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Syvna UI: the component library, its copy-in registry and CLI, and the MCP server for agents.",
   "private": true,
   "repository": {

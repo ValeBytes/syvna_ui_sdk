@@ -1,6 +1,6 @@
 {
   "name": "overlays",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "Dialog, Alert",
   "description": "A task that needs the whole of someone's attention: a short form, or a confirmation. Focus stays inside until it closes.",

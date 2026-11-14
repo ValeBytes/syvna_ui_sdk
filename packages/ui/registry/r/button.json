@@ -1,6 +1,6 @@
 {
   "name": "button",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "Button, ButtonGroup, SplitButton, ToggleButton, CopyButton",
   "description": "A button. Verb first, sentence case: \"Save changes\", \"Add customer\".",

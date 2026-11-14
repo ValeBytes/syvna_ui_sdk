@@ -1,6 +1,6 @@
 {
   "name": "dev",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "CodeBlock, Terminal, StackTrace, TestResults, FileTree",
   "description": "Code to read and copy, with its file name or language and a Copy button.",

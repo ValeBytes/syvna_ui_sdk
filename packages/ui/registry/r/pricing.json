@@ -1,6 +1,6 @@
 {
   "name": "pricing",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "PricingTable",
   "description": "Two to four plans, the recommended one marked, with a monthly/yearly switch; 21 looks.",

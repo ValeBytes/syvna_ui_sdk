@@ -1,6 +1,6 @@
 {
   "name": "@syvna/ui",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Syvna's components: what apps' screens are built from, themed by a room's design through CSS variables.",
   "private": true,
   "type": "module",

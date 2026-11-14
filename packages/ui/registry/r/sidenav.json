@@ -1,6 +1,6 @@
 {
   "name": "sidenav",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "SideNav",
   "description": "The app's navigation as data, drawn as one of 21 sidebars: pass the\nscreens once and pick a variant. Put it in AppShell's sidebar. For a\nsidebar built by hand, use Sidebar, NavSection and NavItem instead.",

@@ -1,6 +1,6 @@
 {
   "name": "data",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "registry:ui",
   "title": "Pagination, FilterBar, Timeline, BarChart, LineChart",
   "description": "Moves through a long list a page at a time, under a Table.",
