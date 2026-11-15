@@ -10,6 +10,12 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Fixed
+
+- In dark mode, a black or grey brand (the Neutral palette, a `#171717`
+  seed) makes near-white main buttons instead of mid-grey ones, which read as
+  switched off. Coloured brands are unchanged.
+
 ## v0.8.0 (2026-11-15)
 
 ### Added

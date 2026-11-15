@@ -213,7 +213,18 @@ export function createPalette(given: PaletteSeed): Palette {
     t["ink-4"] = light ? oklch(0.7, nc, nh) : oklch(0.52, nc, nh);
 
     // The brand: dark enough for white text in light mode; lighter in dark mode.
-    const b = light ? (brand.l > 0.62 && brand.c < 0.12 ? oklch(0.5, brand.c, brand.h) : seed.brand) : brand.l < 0.62 ? oklch(Math.max(0.72, brand.l + 0.25), Math.min(brand.c, 0.16), brand.h) : seed.brand;
+    // In dark mode a dark brand is lifted to read on the ground; a black or grey
+    // one (no hue) becomes near-white, like the ink: lifted only part way it is
+    // a mid grey, and a mid-grey main button reads as switched off.
+    const b = light
+      ? brand.l > 0.62 && brand.c < 0.12
+        ? oklch(0.5, brand.c, brand.h)
+        : seed.brand
+      : brand.l < 0.62
+        ? brand.c < 0.02
+          ? oklch(0.94, 0, 0)
+          : oklch(Math.max(0.72, brand.l + 0.25), Math.min(brand.c, 0.16), brand.h)
+        : seed.brand;
     // A mid-tone brand is deepened just enough to carry white text on a button.
     t.brand = fillable(b, !light && toOklch(b).l > 0.6);
     const bl = toOklch(t.brand);
