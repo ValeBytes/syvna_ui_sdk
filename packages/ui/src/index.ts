@@ -104,6 +104,7 @@ export {
   type TimelineProps,
   type TimelineItem,
   type BarChartProps,
+  type ValueFormat,
   type LineChartProps,
   type ChartPoint,
 } from "./components/data";

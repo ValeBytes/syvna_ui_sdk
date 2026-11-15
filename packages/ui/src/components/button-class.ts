@@ -83,14 +83,21 @@ export function buttonClass({
 }
 
 
-/** A link or button styled like Button, for websites where most actions go somewhere. */
-export function siteAction(variant: "primary" | "secondary" | "ghost" = "primary", size: "md" | "lg" = "md") {
+/**
+ * A link or button styled like Button, for websites where most actions go somewhere. Takes any of
+ * Button's looks: siteAction("inverse", "lg") is a light button on a dark page.
+ */
+export function siteAction(variant: ButtonVariant = "primary", size: "sm" | "md" | "lg" | "xl" = "md") {
   return cn(
-    "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium no-underline transition-colors",
-    size === "lg" ? "h-11 px-5 text-body-lg" : "h-9 px-4 text-body",
-    variant === "primary" && "bg-brand text-brand-ink shadow-1 hover:bg-brand-hover",
-    variant === "secondary" && "border border-line-strong bg-surface text-ink shadow-1 hover:bg-surface-2",
-    variant === "ghost" && "text-ink-2 hover:bg-surface-2 hover:text-ink",
+    "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md border border-transparent font-medium no-underline transition-colors",
+    size === "xl" ? "h-12 px-6 text-body-lg" : size === "lg" ? "h-11 px-5 text-body-lg" : size === "sm" ? "h-8 px-3 text-label" : "h-9 px-4 text-body",
+    variant === "primary"
+      ? "bg-brand text-brand-ink shadow-1 hover:bg-brand-hover"
+      : variant === "secondary"
+        ? "border-line-strong bg-surface text-ink shadow-1 hover:bg-surface-2"
+        : variant === "ghost"
+          ? "text-ink-2 hover:bg-surface-2 hover:text-ink"
+          : (buttonLooks[variant] ?? buttonLooks.primary),
     focusRing,
   );
 }

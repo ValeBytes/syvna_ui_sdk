@@ -27,8 +27,8 @@ export interface PaletteSeed {
    * white text (the classic admin look). dark: near-black. tinted: a light wash of the brand. Or a hex colour.
    */
   chrome?: "surface" | "brand" | "dark" | "tinted" | string;
-  /** How the greys lean. brand: toward the brand's hue (the default). cool: blue-grey. warm: sand. none: pure grey. Or a hue, 0–360. */
-  neutral?: "brand" | "cool" | "warm" | "none" | number;
+  /** How the greys lean. brand: toward the brand's hue (the default). cool: blue-grey. warm: sand. none: pure grey. Or a hue, 0–360, or a hex colour to lean toward. */
+  neutral?: "brand" | "cool" | "warm" | "none" | number | (string & {});
   /** How strongly the greys lean, 0–1. 0.5 by default. */
   tint?: number;
   /** Headings and big numbers in the brand colour (light mode) instead of the text colour. On by default when the brand is dark enough to read. */
@@ -54,7 +54,28 @@ function rgbToHex([r, g, b]: [number, number, number]): string {
   return `#${to(r)}${to(g)}${to(b)}`;
 }
 
-export function toOklch(hex: string): Lch {
+/**
+ * Any colour a seed may be given, as OKLCH: hex (#0f77db, #fff), oklch(0.62 0.18 250) or
+ * oklch(62% 0.18 250), and rgb(15 119 219) / rgb(15, 119, 219).
+ */
+export function toOklch(colour: string): Lch {
+  const v = colour.trim().toLowerCase();
+  const nums = (s: string) => s.split(/[\s,/]+/).filter(Boolean);
+  const ok = /^oklch\(([^)]*)\)$/.exec(v);
+  if (ok) {
+    const [l = "0", c = "0", h = "0"] = nums(ok[1]!);
+    const L = l.endsWith("%") ? parseFloat(l) / 100 : parseFloat(l);
+    const C = c.endsWith("%") ? (parseFloat(c) / 100) * 0.4 : parseFloat(c);
+    return { l: L || 0, c: C || 0, h: parseFloat(h) || 0 };
+  }
+  const rgb = /^rgba?\(([^)]*)\)$/.exec(v);
+  if (rgb) {
+    const [r = "0", g = "0", b = "0"] = nums(rgb[1]!);
+    const hex = "#" + [r, g, b].map((x) => Math.round(Math.min(255, Math.max(0, parseFloat(x) || 0))).toString(16).padStart(2, "0")).join("");
+    return toOklch(hex);
+  }
+  const short = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/.exec(v);
+  const hex = short ? `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}` : v;
   const [r, g, b] = hexToRgb(hex).map(toLinear) as [number, number, number];
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
@@ -153,11 +174,22 @@ function chartColours(brand: Lch, accent: Lch, mode: Mode): string[] {
 }
 
 /** Every colour token, light and dark, from a few seeds. */
-export function createPalette(seed: PaletteSeed): Palette {
+export function createPalette(given: PaletteSeed): Palette {
+  // Seeds may come as oklch() or rgb(); the maths below works in hex.
+  const isColour = (s?: string) => !!s && /^(#|oklch\(|rgba?\()/i.test(s.trim());
+  const asHex = (s: string) => (/^#[0-9a-f]{6}$/i.test(s.trim()) ? s.trim() : (({ l, c, h }) => oklch(l, c, h))(toOklch(s)));
+  const seed: PaletteSeed = {
+    ...given,
+    brand: asHex(given.brand),
+    accent: isColour(given.accent) ? asHex(given.accent!) : given.accent,
+    chrome: isColour(given.chrome) ? asHex(given.chrome!) : given.chrome,
+  };
   const brand = toOklch(seed.brand);
-  const nh = seed.neutral === "cool" ? 250 : seed.neutral === "warm" ? 70 : typeof seed.neutral === "number" ? seed.neutral : brand.h;
+  // A colour for the greys ("#8b8373") leans them toward its hue.
+  const neutralColour = typeof seed.neutral === "string" && isColour(seed.neutral) ? toOklch(seed.neutral) : null;
+  const nh = seed.neutral === "cool" ? 250 : seed.neutral === "warm" ? 70 : typeof seed.neutral === "number" ? seed.neutral : neutralColour ? neutralColour.h : brand.h;
   const tint = seed.neutral === "none" ? 0 : Math.min(1, Math.max(0, seed.tint ?? 0.5));
-  const nc = (brand.c > 0.02 || seed.neutral === "cool" || seed.neutral === "warm" || typeof seed.neutral === "number" ? 0.022 : 0) * tint;
+  const nc = (brand.c > 0.02 || seed.neutral === "cool" || seed.neutral === "warm" || typeof seed.neutral === "number" || (neutralColour && neutralColour.c > 0.01) ? 0.022 : 0) * tint;
   const accent = toOklch(seed.accent ?? oklch(0.66, Math.max(0.12, brand.c), (brand.h + 160) % 360));
   // A keyword or a colour; anything else ("neutral", a typo) would be read as
   // a colour and come out unreadable, so it's the plain surface instead.
@@ -274,7 +306,16 @@ export function paletteCss(palette: Palette, selector = ":root"): string {
   return [
     `${selector} {\n${block(palette.light)}\n}`,
     `@media (prefers-color-scheme: dark) {\n  ${selector === ":root" ? ':root[data-theme="system"]' : `${sel}[data-theme="system"], [data-theme="system"] ${sel}`} {\n${block(palette.dark).replace(/^/gm, "  ")}\n  }\n}`,
-    `${selector === ":root" ? "" : `${sel}`}[data-theme="dark"]${selector === ":root" ? "" : `, [data-theme="dark"] ${sel}`} {\n${block(palette.dark)}\n}`,
-    `${selector === ":root" ? "" : `${sel}`}[data-theme="light"]${selector === ":root" ? "" : `, [data-theme="light"] ${sel}`} {\n${block(palette.light)}\n}`,
+    // A theme an ancestor sets (<html data-theme="light">) is the fallback;
+    // one set on the scope's own element must win over it, so those rules
+    // come last and carry one more attribute ([data-theme] again).
+    ...(selector === ":root"
+      ? [`[data-theme="dark"] {\n${block(palette.dark)}\n}`, `[data-theme="light"] {\n${block(palette.light)}\n}`]
+      : [
+          `[data-theme="dark"] ${sel} {\n${block(palette.dark)}\n}`,
+          `[data-theme="light"] ${sel} {\n${block(palette.light)}\n}`,
+          `${sel}[data-theme="dark"][data-theme] {\n${block(palette.dark)}\n}`,
+          `${sel}[data-theme="light"][data-theme] {\n${block(palette.light)}\n}`,
+        ]),
   ].join("\n");
 }

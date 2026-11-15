@@ -557,7 +557,7 @@
     {
       "name": "table",
       "title": "Table",
-      "description": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right. A column's `mobile`\nsays where it goes in that card.",
+      "description": "",
       "components": [
         "Table"
       ],

@@ -14,12 +14,13 @@ export interface TableColumn<T> {
   /** The cell; without it, the row's value at key. */
   render?: (row: T) => React.ReactNode;
   /** "end" for numbers and money, so the digits line up. */
-  align?: "start" | "end";
+  /** "end" (or "right") for numbers. */
+  align?: "start" | "end" | "left" | "right";
   /** Makes the header sortable with this comparison. */
   sort?: (a: T, b: T) => number;
   /** A CSS width: "120px", "30%". */
   width?: string;
-  /** Keeps the cell on one line: ids, dates, amounts, short statuses ("T-10482" never breaks in two). */
+  /** Keeps the cell on one line: ids, dates, amounts, short statuses ("T-10482" never breaks in two). On by default for align "end" (numbers). */
   nowrap?: boolean;
   /**
    * How it shows when the table is narrow (a phone, a side panel), where each row becomes a card.
@@ -61,6 +62,8 @@ type SortState = { key: string; dir: 1 | -1 } | null;
  * title, then each column's name and value, so nothing hides off to the right. A column's `mobile`
  * says where it goes in that card.
  */
+const isEnd = (a?: string) => a === "end" || a === "right";
+
 export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flush, selected, caption, className }: TableProps<T>) {
   const [sort, setSort] = useState<SortState>(null);
   const sorted = useMemo(() => {
@@ -88,7 +91,7 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                   className={cn(
                     "h-8 whitespace-nowrap border-b border-line bg-surface-2 px-3 text-left text-small font-medium text-ink-3",
                     edge,
-                    c.align === "end" && "text-right",
+                    isEnd(c.align) && "text-right",
                   )}
                   aria-sort={active ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
                 >
@@ -98,7 +101,7 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                       className={cn(
                         "-mx-1 inline-flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 hover:text-ink focus-visible:outline-2 focus-visible:outline-focus [&_svg]:opacity-60",
                         active && "text-ink [&_svg]:opacity-100",
-                        c.align === "end" && "flex-row-reverse",
+                        isEnd(c.align) && "flex-row-reverse",
                       )}
                       onClick={() => toggle(c.key)}
                     >
@@ -163,8 +166,8 @@ export function Table<T>({ columns, rows, rowKey, onRowClick, empty, dense, flus
                         place === "hide" && "@max-lg:hidden",
                         dense ? "h-8" : "h-10",
                         flush && "first:pl-4 last:pr-4",
-                        c.align === "end" && "text-right tabular-nums",
-                        c.nowrap && "whitespace-nowrap",
+                        isEnd(c.align) && "text-right tabular-nums",
+                        (c.nowrap ?? isEnd(c.align)) && "whitespace-nowrap",
                       )}
                     >
                       {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? "")}

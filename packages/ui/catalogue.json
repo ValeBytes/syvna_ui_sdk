@@ -1034,7 +1034,7 @@
     },
     {
       "name": "Table",
-      "summary": "Rows of the same kind of thing: orders, customers, bookings. Numbers right-aligned, statuses as Badges.\nNarrower than 32rem (a phone, a side panel), each row stacks into a card: its first cell as the\ntitle, then each column's name and value, so nothing hides off to the right. A column's `mobile`\nsays where it goes in that card.",
+      "summary": "",
       "file": "src/components/table.tsx",
       "props": [
         {
@@ -2654,19 +2654,22 @@
         {
           "name": "filters",
           "type": "Filter[]",
-          "required": true,
+          "required": false,
+          "default": "[]",
           "description": "The filters on offer, each a chip that opens its values."
         },
         {
           "name": "values",
           "type": "Record<string, string[]>",
-          "required": true,
+          "required": false,
+          "default": "{}",
           "description": "What's picked, by filter key: { status: [\"paid\"] }."
         },
         {
           "name": "onValuesChange",
           "type": "(values: Record<string, string[]>) => void",
-          "required": true,
+          "required": false,
+          "default": "() => {}",
           "description": "Called with every filter's picks after one changes."
         },
         {
@@ -2734,10 +2737,9 @@
         },
         {
           "name": "format",
-          "type": "(value: number) => string",
+          "type": "ValueFormat",
           "required": false,
-          "default": "(v) => new Intl.NumberFormat().format(v)",
-          "description": "How a value is written on hover and in the labels: (v) => money.format(v)."
+          "description": "How a value is written on hover and in the labels: a function ((v) => money.format(v)), or,\nfrom a server page (which can't pass functions), number-format options:\n{ style: \"currency\", currency: \"EUR\", maximumFractionDigits: 0 }."
         },
         {
           "name": "highlight",
@@ -2796,10 +2798,9 @@
         },
         {
           "name": "format",
-          "type": "(value: number) => string",
+          "type": "ValueFormat",
           "required": false,
-          "default": "(v) => new Intl.NumberFormat().format(v)",
-          "description": "How a value is written on hover: (v) => money.format(v)."
+          "description": "How a value is written on hover: a function, or number-format options (see BarChart)."
         },
         {
           "name": "height",

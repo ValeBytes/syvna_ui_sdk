@@ -81,7 +81,7 @@ type On = "default" | "inverse" | "photo" | "brand";
 const ink: Record<On, { title: string; body: string; muted: string; pill: string }> = {
   default: { title: "text-ink", body: "text-ink-2", muted: "text-ink-3", pill: "border-line bg-surface text-ink-2 shadow-1" },
   inverse: { title: "text-ground", body: "text-ground/75", muted: "text-ground/60", pill: "border-ground/20 bg-ground/10 text-ground" },
-  photo: { title: "text-white", body: "text-white/85", muted: "text-white/65", pill: "border-white/25 bg-white/10 text-white backdrop-blur-sm" },
+  photo: { title: "text-white [text-shadow:0_1px_16px_rgb(0_0_0/0.45)]", body: "text-white/90 [text-shadow:0_1px_12px_rgb(0_0_0/0.5)]", muted: "text-white/75 [text-shadow:0_1px_10px_rgb(0_0_0/0.5)]", pill: "border-white/25 bg-white/10 text-white backdrop-blur-sm" },
   brand: { title: "text-brand-ink", body: "text-brand-ink/80", muted: "text-brand-ink/65", pill: "border-brand-ink/20 bg-brand-ink/10 text-brand-ink" },
 };
 
@@ -239,7 +239,7 @@ export function Hero(props: HeroProps) {
         "flex min-h-[560px] bg-ink",
         <>
           {image ? <img src={image} alt="" className="absolute inset-0 -z-10 size-full object-cover" /> : null}
-          <div className={cn("absolute inset-0 -z-10", variant === "photo" ? "bg-black/55" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent")} />
+          <div className={cn("absolute inset-0 -z-10", variant === "photo" ? "bg-black/60" : "bg-gradient-to-t from-black/85 via-black/45 to-black/10")} />
           <div className={cn(wrap, "flex py-14", variant === "photo" ? "items-center justify-center" : "items-end", inner)}>
             <Copy h={h} on="photo" center={variant === "photo"} className={variant === "photo" ? "max-w-[760px]" : "max-w-[640px]"} />
           </div>

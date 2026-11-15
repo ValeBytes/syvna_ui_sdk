@@ -59,11 +59,11 @@ export function Bento({ items, columns = 3, animate, className, classNames }: Be
             {it.description ? <p className={cn("m-0 text-body text-pretty", quiet, classNames?.description)}>{it.description}</p> : null}
           </div>
         </div>
-        {it.media ? <div className={cn("mt-auto flex min-h-0 flex-1 items-end overflow-hidden px-6", classNames?.media)}>{it.media}</div> : null}
+        {it.media ? <div className={cn("flex min-h-0 flex-1 items-start overflow-hidden px-6 pb-6 has-[>img]:pb-0 [&>img]:h-full [&>img]:min-h-48 [&>img]:w-full [&>img]:object-cover", classNames?.media)}>{it.media}</div> : null}
       </article>
     );
   });
-  const grid = cn("grid auto-rows-fr gap-4", columns === 4 ? "@3xl:grid-cols-4" : "@3xl:grid-cols-3", classNames?.grid);
+  const grid = cn("grid gap-4", columns === 4 ? "@3xl:grid-cols-4" : "@3xl:grid-cols-3", classNames?.grid);
   const item = (i: number) => cn("h-full", bentoSpan[items[i]?.span ?? "normal"]);
   return (
     <div className={cn("@container w-full", className)}>

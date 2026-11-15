@@ -3,6 +3,7 @@
 A website's top bar: the brand, four to six links, and at the right a quiet "Sign in" with the one main action. On a phone the links fold into a menu button. 21 variants take the same brand, links and actions.
 
 - Use `siteAction("primary")` on a link for the main action: `<a className={siteAction()} href="/signup">Start free</a>`.
+  It takes any of Button's looks and sizes `sm`–`xl`: on a dark page the main action is `siteAction("inverse", "lg")`.
 - Pass `current` (the page's href) so its link is marked.
 - `sticky` keeps it at the top as the page scrolls. With Next.js, pass `as={Link}`.
 

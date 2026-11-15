@@ -91,11 +91,11 @@ export interface Filter {
 
 export interface FilterBarProps {
   /** The filters on offer, each a chip that opens its values. */
-  filters: Filter[];
+  filters?: Filter[];
   /** What's picked, by filter key: { status: ["paid"] }. */
-  values: Record<string, string[]>;
+  values?: Record<string, string[]>;
   /** Called with every filter's picks after one changes. */
-  onValuesChange: (values: Record<string, string[]>) => void;
+  onValuesChange?: (values: Record<string, string[]>) => void;
   /** The search text, when the bar has a search box. */
   query?: string;
   /** Called with the search text; gives the bar a search box. */
@@ -111,7 +111,7 @@ export interface FilterBarProps {
  * Search and filters over a list, in one row above it: chips that open their
  * values, a count on each chip once something's picked, and Clear.
  */
-export function FilterBar({ filters, values, onValuesChange, query, onQueryChange, placeholder = "Search", actions, className }: FilterBarProps) {
+export function FilterBar({ filters = [], values = {}, onValuesChange = () => {}, query, onQueryChange, placeholder = "Search", actions, className }: FilterBarProps) {
   const toggle = (key: string, v: string) => {
     const now = values[key] ?? [];
     onValuesChange({ ...values, [key]: now.includes(v) ? now.filter((x) => x !== v) : [...now, v] });
@@ -249,11 +249,24 @@ export interface ChartPoint {
   value: number;
 }
 
+/** A chart value's formatting: a function, or Intl.NumberFormat options a server page can pass. */
+export type ValueFormat = ((value: number) => string) | Intl.NumberFormatOptions;
+
+function valueFormatter(f?: ValueFormat): (value: number) => string {
+  if (typeof f === "function") return f;
+  const nf = new Intl.NumberFormat(undefined, f);
+  return (v) => nf.format(v);
+}
+
 export interface BarChartProps {
   /** The bars, in order: { label, value }. */
   data: ChartPoint[];
-  /** How a value is written on hover and in the labels: (v) => money.format(v). */
-  format?: (value: number) => string;
+  /**
+   * How a value is written on hover and in the labels: a function ((v) => money.format(v)), or,
+   * from a server page (which can't pass functions), number-format options:
+   * { style: "currency", currency: "EUR", maximumFractionDigits: 0 }.
+   */
+  format?: ValueFormat;
   /** The bar drawn strongest: "Sat", the best day. Others are lighter. */
   highlight?: string;
   /** Pixels. */
@@ -272,7 +285,8 @@ export interface BarChartProps {
 }
 
 /** Amounts side by side: sales by day, orders by month; or, as rows, amounts by gym, product or region. Hover a bar for its value. */
-export function BarChart({ data, format = (v) => new Intl.NumberFormat().format(v), highlight, height = 160, label, layout = "columns", sorted, className }: BarChartProps) {
+export function BarChart({ data, format: formatAs, highlight, height = 160, label, layout = "columns", sorted, className }: BarChartProps) {
+  const format = valueFormatter(formatAs);
   const [hover, setHover] = useState<number | null>(null);
   const top = Math.max(1, ...data.map((d) => d.value));
   if (layout === "rows") {
@@ -331,8 +345,8 @@ export function BarChart({ data, format = (v) => new Intl.NumberFormat().format(
 export interface LineChartProps {
   /** The points, in order: { label, value }. */
   data: ChartPoint[];
-  /** How a value is written on hover: (v) => money.format(v). */
-  format?: (value: number) => string;
+  /** How a value is written on hover: a function, or number-format options (see BarChart). */
+  format?: ValueFormat;
   /** Pixels; a sparkline is usually 32 to 40. */
   height?: number;
   /** Read by screen readers: what the chart shows, and its point. */
@@ -345,7 +359,8 @@ export interface LineChartProps {
 }
 
 /** A trend over time: visitors over a month, revenue over a year. `bare` makes a sparkline. */
-export function LineChart({ data, format = (v) => new Intl.NumberFormat().format(v), height = 160, label, bare, tone = "brand", className }: LineChartProps) {
+export function LineChart({ data, format: formatAs, height = 160, label, bare, tone = "brand", className }: LineChartProps) {
+  const format = valueFormatter(formatAs);
   const [hover, setHover] = useState<number | null>(null);
   const w = 100;
   const h = 100;

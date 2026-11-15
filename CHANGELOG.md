@@ -10,6 +10,37 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- `siteAction` takes every one of Button's looks (`siteAction("inverse", "lg")`
+  is a light button on a dark page) and the sizes `sm` and `xl`. Before, any
+  look but primary, secondary and ghost gave a link with no button at all.
+- `PaletteStyle`'s `neutral` takes a colour too (`neutral: "#8b8373"`): the
+  greys lean toward its hue.
+- `FilterBar` works as a search box alone: `filters`, `values` and
+  `onValuesChange` are optional.
+- `Table` columns take `align: "right"` (and `"left"`) as well as `end`/`start`.
+- `BarChart` and `LineChart` take `format` as number-format options as well as
+  a function (`format={{ style: "currency", currency: "EUR" }}`), so a server
+  page can format a chart; a function from a server page fails the whole page.
+- Palette seeds take `oklch(…)`, `rgb(…)` and short hex colours, not only
+  six-digit hex.
+
+### Fixed
+
+- A seed given as `oklch(…)` made a broken palette (black buttons, black
+  accent); it now reads as the colour it is.
+- A palette scoped to part of a page (`PaletteStyle selector=…` on an element
+  with `data-theme="dark"`) now turns dark there; it stayed light.
+- Words over a `Hero` photo stay readable on bright photos: a soft shadow under
+  the text and a deeper shade on the photo.
+- `Table` numbers (`align: "end"`) never break across two lines.
+- A typeface with one weight (Instrument Serif, Bebas Neue) shows at that
+  weight in headings, instead of a smeared bold the browser made up.
+- `Bento` rows take their own height instead of all matching the tallest, a
+  cell's table or chart follows its words with no hole between, and a lone
+  photo fills the space its cell is given.
+
 ## v0.7.0 (2026-11-14)
 
 ### Added
