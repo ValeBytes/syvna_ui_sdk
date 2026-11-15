@@ -125,9 +125,6 @@
     font-weight: var(--font-weight-normal);
     font-size-adjust: var(--font-size-adjust);
     -webkit-font-smoothing: antialiased;
-    /* A face with one weight (Instrument Serif, Bebas Neue) shows at that
-       weight under font-semibold, never a smeared bold the browser makes up. */
-    font-synthesis-weight: none;
   }
 }
 

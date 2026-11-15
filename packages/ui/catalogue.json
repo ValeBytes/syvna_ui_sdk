@@ -1171,6 +1171,84 @@
       ]
     },
     {
+      "name": "FormPage",
+      "summary": "A page whose job is a form: sections of fields in one of 20 proven layouts, using the page's whole width without stretching the fields.",
+      "file": "src/components/form-page.tsx",
+      "props": [
+        {
+          "name": "sections",
+          "type": "FormSection[]",
+          "required": true,
+          "description": "The form's sections, in order."
+        },
+        {
+          "name": "variant",
+          "type": "FormPageVariant",
+          "values": [
+            "annotated",
+            "annotated-plain",
+            "sheet",
+            "labels-left",
+            "single",
+            "focus",
+            "create",
+            "disclosure",
+            "rows",
+            "cards",
+            "inline-edit",
+            "savebar",
+            "nav",
+            "index",
+            "tabs",
+            "steps",
+            "steps-side",
+            "question",
+            "preview",
+            "record"
+          ],
+          "required": false,
+          "default": "\"annotated\"",
+          "description": "How the page is laid out (all use the full width; fields stay in one column of at most 40rem).\nTitles beside fields: annotated (title and description in a column at the left, fields in a card), annotated-plain\n(the same, ruled, no cards), sheet (one card, ruled sections), labels-left (each field's label in a left column; long\ndesktop admin forms). One column: single (sections down the page), focus (a slim bar on top with the title and\nactions, the form centred under it), create (long create forms: actions in a bar fixed to the bottom), disclosure\n(the main settings, the rest behind \"Advanced settings\"). Settings: rows (each setting a row, its control at the\nright; toggles that save themselves), cards (a card per independent setting with its own Save in a footer),\ninline-edit (values as text; Edit turns a row into its control), savebar (a bar with Discard and Save appears once\nsomething changes). Navigated: nav (categories at the left, one shown at a time), index (a long form with a sticky list\nof its sections at the right), tabs (3 to 7 groups across the top). Sequences: steps and steps-side (one step at a\ntime, Back and Continue), question (one question a screen, its label the heading). With context: preview (a fixed\nform column beside a live preview), record (fields in two thirds, the record's details in a third)."
+        },
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The form's buttons, the submit first (\"Save changes\"), then Cancel. One Save for the page."
+        },
+        {
+          "name": "note",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A line beside the actions: \"Last saved 2 minutes ago\"."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "For focus and question: what the form is (\"New invoice\")."
+        },
+        {
+          "name": "aside",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "For preview and record: what sits beside the form (a live preview; the record's status, owner, dates)."
+        },
+        {
+          "name": "asideTitle",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The aside's heading: \"Preview\", \"Details\"."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "More classes; one here wins over the component's own of the same kind."
+        }
+      ]
+    },
+    {
       "name": "Dialog",
       "summary": "A task that needs the whole of someone's attention: a short form, or a confirmation. Focus stays inside until it closes.",
       "file": "src/components/overlays.tsx",
@@ -1677,6 +1755,8 @@
             "minimal",
             "brand",
             "pills",
+            "cards",
+            "steps",
             "search",
             "classic",
             "rail",
@@ -1690,8 +1770,6 @@
             "tiles",
             "collapsible",
             "workspace",
-            "steps",
-            "cards",
             "colorful",
             "threads"
           ],
@@ -2764,8 +2842,8 @@
           "name": "layout",
           "type": "\"columns\" | \"rows\"",
           "values": [
-            "columns",
-            "rows"
+            "rows",
+            "columns"
           ],
           "required": false,
           "default": "\"columns\"",
@@ -3010,8 +3088,8 @@
           "name": "variant",
           "type": "\"grid\" | \"single\"",
           "values": [
-            "grid",
-            "single"
+            "single",
+            "grid"
           ],
           "required": false,
           "default": "\"grid\"",
@@ -3964,11 +4042,12 @@
           "values": [
             "outline",
             "minimal",
+            "single",
+            "rows",
+            "cards",
+            "tabs",
             "table",
             "compact",
-            "cards",
-            "rows",
-            "single",
             "split",
             "joined",
             "dark-featured",
@@ -3981,7 +4060,6 @@
             "excluded",
             "radio",
             "calculator",
-            "tabs",
             "carousel"
           ],
           "required": false,

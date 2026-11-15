@@ -267,6 +267,21 @@
       ]
     },
     {
+      "name": "form-page",
+      "title": "FormPage",
+      "description": "A page whose job is a form: sections of fields in one of 20 proven layouts, using the page's whole width without stretching the fields.",
+      "components": [
+        "FormPage"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "basics",
+        "button",
+        "tabs"
+      ]
+    },
+    {
       "name": "hero",
       "title": "Hero",
       "description": "The top of a landing page: what it is, why it matters, and the one thing to do next.",

@@ -52,6 +52,7 @@ export {
 } from "./components/display";
 export { Table, type TableProps, type TableColumn } from "./components/table";
 export { Tabs, type TabsProps, type TabItem, type TabsVariant } from "./components/tabs";
+export { FormPage, formPageVariants, type FormPageProps, type FormPageVariant, type FormSection } from "./components/form-page";
 export { Dialog, Alert, type DialogProps, type AlertProps } from "./components/overlays";
 export {
   AppShell,

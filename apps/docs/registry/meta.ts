@@ -18,7 +18,7 @@ export const groups = [
   },
   { kit: "dashboard", name: "Data", items: ["Table", "FilterBar", "Pagination", "StatCard", "BarChart", "LineChart", "Timeline", "Badge", "Avatar", "AvatarGroup", "Progress", "RelativeTime", "Kbd"] },
   { kit: "dashboard", name: "Tables", items: ["BulkActionBar", "ColumnSettings", "SavedViews", "TransferList", "TreeView"] },
-  { kit: "dashboard", name: "Layout", items: ["Card", "Tabs", "Accordion", "Stepper", "EmptyState", "Skeleton"] },
+  { kit: "dashboard", name: "Layout", items: ["FormPage", "Card", "Tabs", "Accordion", "Stepper", "EmptyState", "Skeleton"] },
   { kit: "dashboard", name: "Feedback", items: ["Alert", "Banner", "Toaster", "Dialog", "Popover", "Tooltip", "CommandPalette"] },
   { kit: "dashboard", name: "Workspace", items: ["NotificationCenter", "AuditLog", "PermissionMatrix", "InviteMembers", "UsageMeter", "PlanSummary", "SetupChecklist", "SaveBar", "ConfirmByTyping", "ApprovalCard"] },
   { kit: "website", name: "Marketing", items: ["SiteHeader", "Hero", "Section", "FeatureGrid", "LogoCloud", "Testimonials", "Bento", "FeatureRows", "Stats", "Steps", "PricingTable", "Faq", "CallToAction", "SiteFooter", "AuthLayout"] },

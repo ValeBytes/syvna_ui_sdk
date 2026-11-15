@@ -10,6 +10,22 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- `FormPage`: a page whose job is a form, in 20 layouts drawn from the best
+  settings and create pages (Shopify's annotated sections, GitHub's category
+  nav, Vercel's setting cards, Linear's setting rows, GOV.UK's one question a
+  screen, wizards, a form beside a live preview, a record with its details).
+  The page uses its whole width while the fields stay in one column of at
+  most 40rem, 24px apart, with 40px between sections and one Save. Sections
+  take fields, setting `rows` (a control at the right), a `danger` tone and
+  an `advanced` flag. Guide: docs/FormPage.md.
+
+### Fixed
+
+- `BarChart` with many bars (30 days, say) names every few, counting back
+  from the latest, so each name shows whole instead of cut to "1…".
+
 ## v0.8.1 (2026-11-15)
 
 ### Fixed

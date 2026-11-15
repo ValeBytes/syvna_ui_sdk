@@ -289,6 +289,8 @@ export function BarChart({ data, format: formatAs, highlight, height = 160, labe
   const format = valueFormatter(formatAs);
   const [hover, setHover] = useState<number | null>(null);
   const top = Math.max(1, ...data.map((d) => d.value));
+  // Many bars: name every few, counting back from the latest, so the names fit whole.
+  const every = Math.max(1, Math.ceil(data.length / 8));
   if (layout === "rows") {
     const rows = sorted ? [...data].sort((a, b) => b.value - a.value) : data;
     return (
@@ -332,9 +334,9 @@ export function BarChart({ data, format: formatAs, highlight, height = 160, labe
         })}
       </div>
       <div className="flex gap-2">
-        {data.map((d) => (
-          <span key={d.label} title={d.label} className="flex-1 truncate text-center text-caption text-ink-3">
-            {d.label}
+        {data.map((d, i) => (
+          <span key={d.label} title={d.label} className="flex-1 overflow-visible whitespace-nowrap text-center text-caption text-ink-3">
+            {(data.length - 1 - i) % every === 0 ? d.label : ""}
           </span>
         ))}
       </div>
