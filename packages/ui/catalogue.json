@@ -3871,13 +3871,16 @@
             "minimal",
             "brand",
             "pills",
+            "progress",
             "search",
+            "track",
             "classic",
             "inverted",
             "compact",
             "tall",
             "split",
             "centered",
+            "editorial",
             "announcement",
             "brand-center",
             "stacked",
@@ -3886,11 +3889,12 @@
             "glass",
             "fullscreen",
             "boxed",
-            "utility"
+            "utility",
+            "spotlight"
           ],
           "required": false,
           "default": "\"classic\"",
-          "description": "classic: brand, links, actions. centered: links in the middle. brand-center: brand in the middle.\nstacked: brand on top, links under. floating / floating-card: a pill or card floating off the\nedges. transparent: no background, over a hero. glass: frosted. inverted: on the ink colour.\nbrand: on the brand colour. minimal: brand and a menu button only. fullscreen: the menu opens\nover the whole page. split: links pushed right beside the actions. underline: the current link\nunderlined. pills: links in a track, the current one raised. boxed: every part in a ruled cell.\nannouncement: a strip of news above (announcement). utility: a thin row of small links above\n(utility). search: a search field in the middle (search). tall and compact: more or less height."
+          "description": "classic: brand, links, actions. centered: links in the middle. brand-center: brand in the middle.\nstacked: brand on top, links under. floating / floating-card: a pill or card floating off the\nedges. transparent: no background, over a hero. glass: frosted. inverted: on the ink colour.\nbrand: on the brand colour. minimal: brand and a menu button only. fullscreen: the menu opens\nover the whole page. split: links pushed right beside the actions. underline: the current link\nunderlined. pills: links in a track, the current one raised. boxed: every part in a ruled cell.\nannouncement: a strip of news above (announcement). utility: a thin row of small links above\n(utility). search: a search field in the middle (search). tall and compact: more or less height.\ntrack: links in a track where a highlight slides to the one pointed at. spotlight: the other\nlinks dim while one is pointed at. editorial: numbered small capitals. progress: a line in the\nbrand colour along the bottom fills as the page is read."
         },
         {
           "name": "current",

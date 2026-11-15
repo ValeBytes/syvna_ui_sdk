@@ -10,6 +10,25 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Added
+
+- `SiteHeader` has 25 variants. New: `track` (a highlight slides to the link
+  pointed at), `spotlight` (the other links dim), `editorial` (numbered small
+  capitals) and `progress` (a brand-coloured line fills as the page is read).
+- `SiteHeader`'s links mark the section in view as the page scrolls, when they
+  point at sections of the same page (`#pricing`) and no `current` is given. A
+  hover draws a line in under a link from its middle.
+- Three website templates, one per page shape: a product tour
+  (`/sites/tour`), a place such as a restaurant (`/sites/venue`), and an
+  editorial site for a practice (`/sites/studio`). Each is built around a
+  section only that kind of business has.
+
+### Changed
+
+- `SiteHeader` is solid: no see-through background and no blur, in every
+  variant but `glass`. A sticky bar takes a soft shadow once the page scrolls
+  under it. Nothing to change in apps.
+
 ## v0.7.1 (2026-11-15)
 
 ### Added

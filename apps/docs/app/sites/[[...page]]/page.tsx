@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 
 import { products } from "@/components/sites/catalogue";
 import { Landing, Pricing } from "@/components/sites/northwind";
+import { Studio } from "@/components/sites/studio";
+import { Tour } from "@/components/sites/tour";
+import { Venue } from "@/components/sites/venue";
 import { CartPage, Checkout, ProductPage, Store } from "@/components/sites/shop";
 
 export const metadata: Metadata = { title: "Website templates" };
@@ -14,6 +17,9 @@ export default async function SitePage({ params, searchParams }: { params: Promi
   const [first = "landing", second, third] = page;
   if (first === "landing" && !second) return <Landing />;
   if (first === "pricing" && !second) return <Pricing />;
+  if (first === "tour" && !second) return <Tour />;
+  if (first === "venue" && !second) return <Venue />;
+  if (first === "studio" && !second) return <Studio />;
   if (first === "shop") {
     if (!second) return <Store key={c ?? "All"} category={c} />;
     if (second === "cart") return <CartPage />;

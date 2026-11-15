@@ -9,6 +9,9 @@ export const base = "/sites";
 export const pages = [
   { value: "landing", label: "Landing page", site: "northwind" },
   { value: "pricing", label: "Pricing page", site: "northwind" },
+  { value: "tour", label: "Landing: product tour", site: "requisite" },
+  { value: "venue", label: "Landing: a place", site: "saltbush" },
+  { value: "studio", label: "Landing: editorial", site: "okon" },
   { value: "shop", label: "Shop: store front", site: "shop" },
   { value: "shop/product/hand-thrown-mug", label: "Shop: product", site: "shop" },
   { value: "shop/cart", label: "Shop: cart", site: "shop" },

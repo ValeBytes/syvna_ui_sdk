@@ -1,9 +1,9 @@
 "use client";
 
-// SiteHeader: a website's top bar, in 21 looks. Every variant takes the same
+// SiteHeader: a website's top bar, in 25 looks. Every variant takes the same
 // brand, links and actions; on a phone the links fold into a menu.
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { cn, focusRing } from "../cx";
 import { CloseGlyph, MenuGlyph } from "./icons";
@@ -30,6 +30,10 @@ export const siteHeaderVariants = [
   "search",
   "tall",
   "compact",
+  "track",
+  "spotlight",
+  "editorial",
+  "progress",
 ] as const;
 
 export type SiteHeaderVariant = (typeof siteHeaderVariants)[number];
@@ -57,6 +61,9 @@ export interface SiteHeaderProps {
    * underlined. pills: links in a track, the current one raised. boxed: every part in a ruled cell.
    * announcement: a strip of news above (announcement). utility: a thin row of small links above
    * (utility). search: a search field in the middle (search). tall and compact: more or less height.
+   * track: links in a track where a highlight slides to the one pointed at. spotlight: the other
+   * links dim while one is pointed at. editorial: numbered small capitals. progress: a line in the
+   * brand colour along the bottom fills as the page is read.
    */
   variant?: SiteHeaderVariant;
   /** The href of the page they're on; its link is marked. */
@@ -79,15 +86,15 @@ export interface SiteHeaderProps {
 type On = "default" | "inverse" | "brand";
 
 const tone: Record<On, { link: string; active: string; muted: string; fix: string }> = {
-  default: { link: "text-ink-2 hover:bg-surface-2 hover:text-ink", active: "text-ink", muted: "text-ink-3", fix: "" },
+  default: { link: "text-ink-2 hover:text-ink", active: "text-ink", muted: "text-ink-3", fix: "" },
   inverse: {
-    link: "text-ground/70 hover:bg-ground/10 hover:text-ground",
+    link: "text-ground/70 hover:text-ground",
     active: "text-ground",
     muted: "text-ground/60",
     fix: "[&_.bg-brand]:bg-ground [&_.bg-brand]:text-ink [&_.text-ink-2]:text-ground/80 [&_.text-ink-2:hover]:bg-ground/10 [&_.text-ink-2:hover]:text-ground",
   },
   brand: {
-    link: "text-brand-ink/80 hover:bg-brand-ink/10 hover:text-brand-ink",
+    link: "text-brand-ink/80 hover:text-brand-ink",
     active: "text-brand-ink",
     muted: "text-brand-ink/70",
     fix: "[&_.bg-brand]:bg-brand-ink [&_.bg-brand]:text-brand [&_.text-ink-2]:text-brand-ink/85 [&_.text-ink-2:hover]:bg-brand-ink/10",
@@ -100,6 +107,53 @@ const SearchGlyph = () => (
     <path d="m20 20-3.5-3.5" />
   </svg>
 );
+
+// What the page scrolls in: the window, or a scrolling box around the bar (a
+// preview frame, a page inside a panel).
+type Scroller = HTMLElement | Window;
+function scrollerOf(el: HTMLElement | null): Scroller {
+  for (let p = el?.parentElement; p; p = p.parentElement) {
+    const o = getComputedStyle(p).overflowY;
+    if ((o === "auto" || o === "scroll") && p.scrollHeight > p.clientHeight) return p;
+  }
+  return window;
+}
+const isWin = (s: Scroller): s is Window => s === window;
+const scrolledBy = (s: Scroller) => (isWin(s) ? window.scrollY : s.scrollTop);
+const viewOf = (s: Scroller) => (isWin(s) ? { top: 0, height: window.innerHeight, full: document.documentElement.scrollHeight } : { top: s.getBoundingClientRect().top, height: s.clientHeight, full: s.scrollHeight });
+
+// The section in view, for links to sections of the same page (#pricing): a
+// landing page's links then say where the reader is without a current.
+function useSectionInView(hrefs: string[], on: boolean, head: React.RefObject<HTMLElement | null>) {
+  const [inView, setInView] = useState<string>();
+  const key = hrefs.join("|");
+  useEffect(() => {
+    if (!on) return;
+    const sections = hrefs
+      .filter((h) => h.startsWith("#") && h.length > 1)
+      .map((h) => document.getElementById(decodeURIComponent(h.slice(1))))
+      .filter((el): el is HTMLElement => !!el);
+    if (!sections.length) return;
+    const box = scrollerOf(head.current);
+    const read = () => {
+      const view = viewOf(box);
+      const line = view.top + view.height * 0.35;
+      let at: string | undefined;
+      for (const el of sections) if (el.getBoundingClientRect().top <= line) at = "#" + el.id;
+      if (view.height + scrolledBy(box) >= view.full - 4) at = "#" + sections[sections.length - 1]!.id;
+      setInView(at);
+    };
+    read();
+    box.addEventListener("scroll", read, { passive: true });
+    window.addEventListener("resize", read);
+    return () => {
+      box.removeEventListener("scroll", read);
+      window.removeEventListener("resize", read);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, on]);
+  return inView;
+}
 
 /** A website's top bar: the brand, the main links and one call to action. On a phone, the links fold into a menu. */
 export function SiteHeader({
@@ -119,7 +173,37 @@ export function SiteHeader({
 }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
+  const head = useRef<HTMLElement>(null);
   const v = variant;
+  const inView = useSectionInView(links.map((l) => l.href), current === undefined, head);
+  const now = current ?? inView;
+  // Scrolled: a sticky bar takes a shadow once the page moves under it; the progress line fills.
+  useEffect(() => {
+    if (!sticky && v !== "progress") return;
+    const box = scrollerOf(head.current);
+    const read = () => {
+      const y = scrolledBy(box);
+      setScrolled(y > 8);
+      if (bar.current) {
+        const view = viewOf(box);
+        const max = view.full - view.height;
+        bar.current.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
+      }
+    };
+    read();
+    box.addEventListener("scroll", read, { passive: true });
+    return () => box.removeEventListener("scroll", read);
+  }, [sticky, v]);
+  // track: where the sliding highlight sits.
+  const navRef = useRef<HTMLElement>(null);
+  const [mark, setMark] = useState<{ left: number; width: number } | null>(null);
+  const markAt = (el: HTMLElement | null) => setMark(el ? { left: el.offsetLeft, width: el.offsetWidth } : null);
+  useEffect(() => {
+    if (v !== "track" || !navRef.current) return;
+    markAt(navRef.current.querySelector<HTMLElement>("[aria-current]"));
+  }, [v, now]);
   const on: On = v === "inverted" ? "inverse" : v === "brand" ? "brand" : "default";
   const t = tone[on];
   const menuOnly = v === "minimal" || v === "fullscreen";
@@ -132,26 +216,40 @@ export function SiteHeader({
     </A>
   );
 
+  // The default link: its colour deepens and a line grows in under it, from the middle.
+  const grow = (active: boolean) =>
+    cn(
+      "relative after:pointer-events-none after:absolute after:inset-x-3 after:bottom-0.5 after:h-px after:origin-center after:bg-current after:transition-transform after:duration-300 after:ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:after:transition-none",
+      active ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100",
+    );
   const linkClass = (active: boolean) =>
     cn(
-      "whitespace-nowrap no-underline transition-colors",
+      "whitespace-nowrap no-underline transition-[color,opacity,background-color] duration-200",
       v === "tall" ? "text-body-lg" : v === "compact" ? "text-small" : "text-body",
       v === "underline"
-        ? cn("flex h-full items-center border-b-2 px-1 pt-0.5", active ? "border-current font-medium text-ink" : "border-transparent text-ink-2 hover:text-ink")
+        ? cn("relative flex h-full items-center px-1 pt-0.5 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:bg-current after:transition-transform after:duration-300 after:ease-[cubic-bezier(.16,1,.3,1)]", active ? "font-medium text-ink after:scale-x-100" : "text-ink-2 after:scale-x-0 hover:text-ink hover:after:scale-x-100")
+        : v === "track"
+          ? cn("relative z-10 rounded-full px-3.5 py-1.5", active ? "font-medium text-ink" : "text-ink-2 hover:text-ink")
+          : v === "editorial"
+            ? cn("group/l inline-flex items-baseline gap-1.5 px-2.5 py-1.5 text-label uppercase tracking-[0.12em]", grow(active), active ? "text-ink" : "text-ink-3 hover:text-ink")
         : v === "pills"
           ? cn("rounded-full px-3 py-1", active ? "bg-surface font-medium text-ink shadow-1" : "text-ink-2 hover:text-ink")
           : v === "boxed"
             ? cn("flex h-full items-center border-l border-line px-5", active ? "bg-surface-2 font-medium text-ink" : "text-ink-2 hover:bg-surface-2 hover:text-ink")
-            : cn("rounded-md px-3 py-1.5", t.link, active && cn("font-medium", t.active)),
+            : cn("rounded-md px-3 py-1.5", grow(active), t.link, active && cn("font-medium", t.active), v === "spotlight" && "group-hover/nav:opacity-40 hover:opacity-100!"),
       focusRing,
       classNames?.link,
     );
 
   const Links = (
     <nav
+      ref={navRef}
       aria-label="Main"
+      onMouseLeave={v === "track" ? () => markAt(navRef.current?.querySelector<HTMLElement>("[aria-current]") ?? null) : undefined}
       className={cn(
         "hidden items-center @3xl:flex",
+        v === "spotlight" && "group/nav",
+        v === "track" && "relative rounded-full bg-surface-2 p-1",
         v === "underline" || v === "boxed" ? "h-full gap-5 self-stretch" : "gap-1",
         v === "underline" && "gap-6",
         v === "boxed" && "gap-0",
@@ -159,8 +257,22 @@ export function SiteHeader({
         v === "search" && "@3xl:hidden @5xl:flex",
       )}
     >
+      {v === "track" && mark ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-1 rounded-full bg-surface shadow-1 transition-[left,width] duration-300 ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none"
+          style={{ left: mark.left, width: mark.width }}
+        />
+      ) : null}
       {links.map((l, i) => (
-        <A key={i} href={l.href} aria-current={current === l.href ? "page" : undefined} className={linkClass(current === l.href)}>
+        <A
+          key={i}
+          href={l.href}
+          aria-current={now === l.href ? (current ? "page" : "location") : undefined}
+          onMouseEnter={v === "track" ? (e: React.MouseEvent<HTMLElement>) => markAt(e.currentTarget) : undefined}
+          className={linkClass(now === l.href)}
+        >
+          {v === "editorial" ? <span className="font-mono text-caption tracking-normal text-ink-4 transition-colors group-hover/l:text-brand">{String(i + 1).padStart(2, "0")}</span> : null}
           {l.label}
         </A>
       ))}
@@ -212,7 +324,7 @@ export function SiteHeader({
 
   // The bar's row, by variant.
   let row: React.ReactNode;
-  if (v === "centered" || v === "pills") {
+  if (v === "centered" || v === "pills" || v === "track") {
     row = (
       <div className={cn("grid items-center gap-4", height, "grid-cols-[1fr_auto] @3xl:grid-cols-[1fr_auto_1fr]")}>
         {Brand}
@@ -295,21 +407,25 @@ export function SiteHeader({
     floating && "bg-transparent px-3 pt-3",
     // The fullscreen menu is fixed to the page, so this bar can't blur (a blur would hold it inside).
     v === "fullscreen" && "border-b border-line bg-ground",
-    !["inverted", "brand", "transparent", "glass", "fullscreen"].includes(v) && !floating && "border-b border-line bg-ground/85 backdrop-blur-md",
+    // Solid, never frosted (only glass is): text under a blurred bar reads as smudge.
+    !["inverted", "brand", "transparent", "glass", "fullscreen"].includes(v) && !floating && "border-b border-line bg-ground",
+    v === "progress" && !sticky && "relative",
+    sticky && scrolled && !floating && !["transparent"].includes(v) && "shadow-1",
+    "transition-shadow duration-300",
     className,
   );
   const inner = cn(
     "mx-auto max-w-[1200px]",
     v === "boxed" ? "border-x border-line pl-4 @3xl:pl-6" : "px-4 @3xl:px-6",
-    v === "floating" && "max-w-[1080px] rounded-full border border-line bg-surface/85 pl-5 pr-2 shadow-2 backdrop-blur-md @3xl:pl-6 @3xl:pr-2",
-    v === "floating-card" && "max-w-[1140px] rounded-xl border border-line bg-surface/90 shadow-2 backdrop-blur-md",
+    v === "floating" && "max-w-[1080px] rounded-full border border-line bg-surface pl-5 pr-2 shadow-2 @3xl:pl-6 @3xl:pr-2",
+    v === "floating-card" && "max-w-[1140px] rounded-xl border border-line bg-surface shadow-2",
     classNames?.inner,
   );
 
   const panelLink = cn("rounded-md px-2 py-2.5 text-body-lg no-underline", on === "default" ? "text-ink hover:bg-surface-2" : t.link, focusRing);
 
   return (
-    <header className={shell}>
+    <header ref={head} className={shell}>
       {v === "announcement" && announcement ? <div className="flex min-h-9 items-center justify-center bg-ink px-4 py-1.5 text-center text-small text-ground">{announcement}</div> : null}
       {v === "utility" && utility?.length ? (
         <div className="hidden border-b border-line @3xl:block">
@@ -323,6 +439,7 @@ export function SiteHeader({
         </div>
       ) : null}
       <div className={inner}>{row}</div>
+      {v === "progress" ? <div ref={bar} aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 origin-left bg-brand" style={{ transform: "scaleX(0)" }} /> : null}
       {open && v === "fullscreen" ? (
         <div className="fixed inset-0 z-40 flex animate-fade-in flex-col bg-ground">
           <div className="flex h-14 flex-none items-center justify-between px-4 @3xl:px-6">
