@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.7.1 (2026-11-15)
+
 ### Added
 
 - `siteAction` takes every one of Button's looks (`siteAction("inverse", "lg")`
