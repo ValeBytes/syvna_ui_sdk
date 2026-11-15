@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.8.1 (2026-11-15)
+
 ### Fixed
 
 - In dark mode, a black or grey brand (the Neutral palette, a `#171717`
