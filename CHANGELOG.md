@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.8.0 (2026-11-15)
+
 ### Added
 
 - `SiteHeader` has 25 variants. New: `track` (a highlight slides to the link

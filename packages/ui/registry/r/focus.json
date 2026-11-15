@@ -1,6 +1,6 @@
 {
   "name": "focus",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "type": "registry:lib",
   "title": "focus",
   "description": "Shared code the components use (focus.ts).",
