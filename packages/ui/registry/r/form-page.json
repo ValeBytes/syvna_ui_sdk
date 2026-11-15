@@ -1,6 +1,6 @@
 {
   "name": "form-page",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "type": "registry:ui",
   "title": "FormPage",
   "description": "A page whose job is a form: sections of fields in one of 20 proven layouts, using the page's whole width without stretching the fields.",

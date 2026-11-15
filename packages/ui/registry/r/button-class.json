@@ -1,6 +1,6 @@
 {
   "name": "button-class",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "type": "registry:lib",
   "title": "button-class",
   "description": "Shared code the components use (button-class.ts).",

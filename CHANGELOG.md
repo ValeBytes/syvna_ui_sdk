@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.9.1 (2026-11-15)
+
 ### Fixed
 
 - v0.9.0 dropped `font-synthesis-weight: none` from the theme by mistake, so
