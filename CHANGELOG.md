@@ -10,6 +10,12 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+### Fixed
+
+- v0.9.0 dropped `font-synthesis-weight: none` from the theme by mistake, so
+  one-weight fonts (Instrument Serif, Bebas Neue) were smeared into a fake bold
+  again under `font-semibold`. It's back.
+
 ## v0.9.0 (2026-11-15)
 
 ### Added
