@@ -1,6 +1,6 @@
 {
   "name": "datepicker",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "type": "registry:ui",
   "title": "Calendar, DatePicker",
   "description": "A month to pick a day from. DatePicker opens one from a field; use it alone for a booking screen.",

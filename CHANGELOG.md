@@ -10,6 +10,8 @@ Write what changed under **Unreleased** as you go (Added, Changed, Fixed), in wo
 
 ## Unreleased
 
+## v0.9.0 (2026-11-15)
+
 ### Added
 
 - `FormPage`: a page whose job is a form, in 20 layouts drawn from the best

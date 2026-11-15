@@ -1,6 +1,6 @@
 {
   "name": "motion",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "type": "registry:ui",
   "title": "Reveal, Stagger",
   "description": "A container that eases in when it's scrolled to, or as the page opens.\nNothing is hidden without JavaScript or for people who ask for less motion,\nand what is already on screen never jumps.",
